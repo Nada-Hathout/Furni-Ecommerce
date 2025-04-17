@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class OrderItemService
+    public class OrderItemService:IOrderItemService
     {
         public IOrderItemRepository orderItemRepository;
         public OrderItemService(IOrderItemRepository orderItemRepository)

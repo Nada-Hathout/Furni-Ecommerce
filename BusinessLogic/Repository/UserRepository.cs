@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Repository
 {
-    internal class UserRepository : IUsersRepository
+    public class UserRepository : IUsersRepository
     {
       public  FurniDbContext context;
         public UserRepository(FurniDbContext dbContext)
@@ -33,6 +33,11 @@ namespace BusinessLogic.Repository
         public ApplicationUser GetByID(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public string? GetUniquPhone(string phone)
+        {
+           return context.Users.FirstOrDefault(u=>u.PhoneNumber == phone)?.PhoneNumber;
         }
 
         public int Save()

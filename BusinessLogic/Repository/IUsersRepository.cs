@@ -9,6 +9,7 @@ namespace BusinessLogic.Repository
 {
     public interface IUsersRepository : IRepository<ApplicationUser>
     {
+        public string GetUniquPhone(string phone);
 
     }
 }

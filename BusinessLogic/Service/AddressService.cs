@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class AddressService
+    public class AddressService:IAddressService
     {
       public  IAddressRepository addressRepository;
         public AddressService( IAddressRepository addressRepository)

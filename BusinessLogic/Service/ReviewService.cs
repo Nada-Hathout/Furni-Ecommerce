@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class ReviewService
+    public class ReviewService:IReviewService
     {
         public IReviewRepository reviewRepository;
         public ReviewService(IReviewRepository reviewRepository)

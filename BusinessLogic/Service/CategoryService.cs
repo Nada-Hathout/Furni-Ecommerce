@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class CategoryService
+    public class CategoryService:ICategoryService
     {
         ICategoryRepository categoryRepository;
         public CategoryService(ICategoryRepository categoryRepository)

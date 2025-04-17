@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class UserService
+    public class UserService:IUserService
     {
         IUsersRepository usersRepository;
         public UserService(IUsersRepository usersRepository)

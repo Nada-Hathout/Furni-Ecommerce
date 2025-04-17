@@ -7,8 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
-    <ProjectReference Include="..\Furni_Ecommerce_Shared\Furni_Ecommerce_Shared.csproj" />
+    <Folder Include="AdminViewModel\" />
+    <Folder Include="UserViewModel\" />
   </ItemGroup>
+
+
 
 </Project>

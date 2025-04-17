@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+    <ProjectReference Include="..\Furni_Ecommerce_Shared\Furni_Ecommerce_Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

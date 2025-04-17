@@ -20,10 +20,45 @@
 			</ul>
 
 			<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-				<li><a class="nav-link" href="#"><img src="images/user.svg"></a></li>
+				
+				<li>
+				<!--person button-->
+			     <button type="button" class="icon-button" data-bs-toggle="modal" data-bs-target="#authModal"><img class="image-person" src="images/user.svg"></button></li>
+				
+				  <!-- Modal -->
+				  <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered">
+					  <div class="modal-content text-center">
+						<div class="modal-header">
+						  <h5 class="modal-title" id="authModalLabel">Welcome</h5>
+						  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+						  <p>Choose an option:</p>
+						  <div class="d-grid gap-2 col-8 mx-auto">
+							<a href="#" class="btn btn-primary">Login</a>
+							<a href="#" class="btn btn-outline-secondary">Register</a>
+						  </div>
+						</div>
+					  </div>
+					</div>
+				  </div>
+
 				<li><a class="nav-link" href="cart.html"><img src="images/cart.svg"></a></li>
 			</ul>
 		</div>
 	</div>
 
 </nav>
+  <style>
+
+	.icon-button {
+	  background: none;
+	  border: none;
+	  color: white;
+	  font-size: 44px;
+		width:30px;
+		height:40px;
+	}
+	
+  </style>

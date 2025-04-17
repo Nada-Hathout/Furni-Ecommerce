@@ -27,7 +27,7 @@ namespace BusinessLogic.Repository
 
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Products.ToList();
         }
 
         public Product GetByID(int id)

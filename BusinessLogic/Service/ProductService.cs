@@ -1,4 +1,6 @@
 ﻿using BusinessLogic.Repository;
+using DataAccess.Models;
+using Furni_Ecommerce_Shared.UserViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +17,7 @@ namespace BusinessLogic.Service
             this.productRepository = productRepository;
             
         }
+
+
     }
 }

@@ -1,27 +1,54 @@
+
 # 🛒 Furni Ecommerce Website
 
 **Furni** is a modular, scalable, and professional eCommerce platform built using **ASP.NET MVC (Framework)**.  
 It offers a seamless online shopping experience for furniture with a modern **customer-facing storefront** and a secure **admin dashboard**.  
-The application follows clean architecture principles for maximum maintainability and scalability.
+The application follows **clean architecture principles** for maintainability, scalability, and separation of concerns.
 
 ---
 
 ## 📦 Solution Architecture
 
-The solution uses a **multi-project structure** to promote separation of concerns and clean code organization:
+The solution is structured into multiple projects with clear separation between presentation, business logic, and data access.
 
-```
+```plaintext
 /FurniEcommerceSolution
 │
-├── /UserWebsite       → Frontend MVC app for customers
-├── /AdminDashboard    → Backend MVC panel for administrators
-├── /CoreLibrary       → Shared services, models, DTOs
-├── /DataAccess        → Entity Framework Core DbContext, repositories, migrations
+├── Furni-Ecommerce-Website       → MVC frontend for customers
+├── Furni-Ecommerce-DashBoard     → MVC admin dashboard
+├── BusinessLogic                 → Application layer (services, managers)
+├── DataAccess                    → EF6 DbContext, repositories, migrations
+├── Furni_Ecommerce_Shared        → Shared DTOs, enums, interfaces
 ```
 
-- ✅ **Single SQL Server database** shared between user and admin apps
-- 🔒 **Separate authentication flows** for users and administrators
-- 🧱 Built on **clean architecture** with a layered approach
+### 🔗 Project Reference Diagram
+
+```plaintext
+[Furni-Ecommerce-Website]
+   ├── references → BusinessLogic
+   └── references → Furni_Ecommerce_Shared
+
+[Furni-Ecommerce-DashBoard]
+   ├── references → BusinessLogic
+   └── references → Furni_Ecommerce_Shared
+
+[BusinessLogic]
+   ├── references → DataAccess
+   └── references → Furni_Ecommerce_Shared
+
+[DataAccess]
+   └── references → Furni_Ecommerce_Shared
+
+[Furni_Ecommerce_Shared]
+   └── No project dependencies (pure shared layer)
+```
+
+### ✅ Highlights
+
+- Shared **SQL Server database** for all apps
+- Clean separation of business logic, UI, and data
+- Role-based access with **user/admin flows**
+- Each project can be independently deployed and maintained
 
 ---
 
@@ -29,60 +56,65 @@ The solution uses a **multi-project structure** to promote separation of concern
 
 ### 👤 User Website
 
-- Home, product listing, and product detail pages
-- Fully functional shopping cart and checkout flow
-- User registration and secure login
-- Razor Views with responsive Bootstrap-based UI
-- Role-based access control for users
+- Home, product listings, and detail views
+- Shopping cart & checkout flow
+- User registration and login
+- Responsive Razor views using Bootstrap
+- Role-based access control
 
 ### 🛠 Admin Dashboard
 
-- Secure admin login with role-based access
-- Dashboard for managing:
-  - 🛋 Products
-  - 🗂 Categories
-  - 📦 Orders
-  - 👥 Users & roles
-- Full CRUD operations with form validation
-- Admin-only route protection
+- Secure login for admins
+- Admin dashboard with:
+  - 🛋 Product Management
+  - 🗂 Category Management
+  - 📦 Order Management
+  - 👥 User & Role Management
+- CRUD operations with validation and error handling
 
-### 🧠 Core Library
+### 🧠 Business Logic Layer
 
-- Centralized business logic
-- Shared interfaces and services
-- DTOs for structured data flow between layers
+- Centralized service classes for all operations
+- Clean abstraction of business rules
+- Reusable service interfaces
+- Handles business validation and orchestration
 
 ### 💾 Data Access Layer
 
-- **Entity Framework 6 (EF6)** with Code-First approach
-- Repository pattern for abstraction
-- Lazy loading support enabled
-- Migrations and centralized DbContext
-- SQL Server database integration
+- **Entity Framework 6 (EF6)** with Code-First
+- Repository & Unit of Work patterns
+- SQL Server integration
+- Lazy loading enabled
+- Centralized migrations
+
+### 🧩 Shared Layer
+
+- DTOs and view models
+- Role enums and constants
+- Interfaces for services and repositories
+- Zero dependencies – usable across all layers
 
 ---
 
 ## 🔐 Authentication & Authorization
 
-- Built with **ASP.NET Identity**
-- Role-based access control for `User` and `Admin`
-- Separate login views and routes
-- Views and actions protected via `[Authorize(Roles = "...")]`
+- Powered by **ASP.NET Identity**
+- Role-based access (`User`, `Admin`)
+- Separate login endpoints for customers and admins
+- Route and view protection using `[Authorize]`
 
 ---
 
 ## ⚙️ Dependency Injection
 
-- Implemented using `Microsoft.Extensions.DependencyInjection`
+- Powered by `Microsoft.Extensions.DependencyInjection`
 - All services and repositories registered in `Startup.cs`
-- Organized via a shared `ServiceConfigurator` for clean initialization
-- Constructor injection across controllers and services
+- Shared `ServiceConfigurator` to wire up dependencies cleanly
+- Constructor injection throughout the solution
 
 ---
 
 ## 🧪 Entity Framework Setup
-
-Furni uses **Entity Framework 6** with Code-First and migration support.
 
 ### 🔧 Configuration Example
 
@@ -95,47 +127,48 @@ services.AddDbContext<FurniDbContext>(options =>
 });
 ```
 
-### 🗃 Running Migrations
+### 🗃 EF Migrations
 
-Using **Package Manager Console (PMC)**:
+#### Using PMC:
 
 ```powershell
-Add-Migration InitialCreate -Project DataAccess -StartupProject UserWebsite
-Update-Database -Project DataAccess -StartupProject UserWebsite
+Add-Migration InitialCreate -Project DataAccess -StartupProject Furni-Ecommerce-Website
+Update-Database -Project DataAccess -StartupProject Furni-Ecommerce-Website
 ```
 
-Using **.NET CLI**:
+#### Using .NET CLI:
 
 ```bash
-dotnet ef migrations add InitialCreate --project DataAccess --startup-project UserWebsite
-dotnet ef database update --project DataAccess --startup-project UserWebsite
+dotnet ef migrations add InitialCreate --project DataAccess --startup-project Furni-Ecommerce-Website
+dotnet ef database update --project DataAccess --startup-project Furni-Ecommerce-Website
 ```
 
 ---
 
 ## 🌍 Hosting & Deployment
 
-| App              | Example URL               |
-|------------------|---------------------------|
-| User Website     | `https://www.furni.com`   |
-| Admin Dashboard  | `https://admin.furni.com` |
+| App               | Example URL                |
+|------------------|----------------------------|
+| User Website      | `https://www.furni.com`    |
+| Admin Dashboard   | `https://admin.furni.com`  |
 
-- Can be hosted via **IIS**, **Azure App Services**, or any .NET-compatible hosting
-- Single database instance for both portals
-- Projects are deployable independently
+- Hosted on **IIS**, **Azure**, or compatible .NET hosting
+- One SQL Server instance
+- Can be deployed independently
+- Supports CI/CD and production-ready scaling
 
 ---
 
 ## 🧰 Tech Stack
 
-| Layer             | Technology                            |
-|-------------------|----------------------------------------|
-| Frontend          | Razor Views, Bootstrap                |
-| Backend           | ASP.NET MVC (.NET Framework)          |
-| ORM               | Entity Framework 6 (EF6)              |
-| Authentication    | ASP.NET Identity                      |
+| Layer              | Technology                              |
+|--------------------|------------------------------------------|
+| Frontend           | Razor Views, Bootstrap                   |
+| Backend            | ASP.NET MVC (.NET Framework)             |
+| ORM                | Entity Framework 6 (EF6)                 |
+| Authentication     | ASP.NET Identity                         |
 | Dependency Injection | Microsoft.Extensions.DependencyInjection |
-| Database          | Microsoft SQL Server                  |
+| Database           | Microsoft SQL Server                     |
 
 ---
 
@@ -144,11 +177,11 @@ dotnet ef database update --project DataAccess --startup-project UserWebsite
 ### ✅ Prerequisites
 
 - Visual Studio 2019 or later
-- .NET Framework 4.7.2 or higher
+- .NET Framework 4.7.2 or newer
 - SQL Server (Express or Full)
-- NuGet Package Manager / .NET CLI
+- NuGet CLI / .NET CLI
 
-### ⚙️ Installation Steps
+### ⚙️ Installation
 
 1. **Clone the Repository**
 
@@ -158,52 +191,52 @@ dotnet ef database update --project DataAccess --startup-project UserWebsite
 
 2. **Configure Connection Strings**
 
-   Update SQL connection strings in the following files:
-   - `UserWebsite\web.config`
-   - `AdminDashboard\web.config`
+   Update the following:
+   - `Furni-Ecommerce-Website\web.config`
+   - `Furni-Ecommerce-DashBoard\web.config`
 
-3. **Apply Migrations**
+3. **Run EF Migrations**
 
-   Run EF migration commands from the **DataAccess** project with **UserWebsite** as the startup project.
+   Execute migration commands as outlined above.
 
 4. **Run the Application**
 
-   - Set `UserWebsite` or `AdminDashboard` as the startup project in Visual Studio
-   - Press `F5` or `Ctrl + F5` to build and run
+   - Set either frontend or dashboard as the startup project
+   - Press `F5` to build and launch
 
 ---
 
 ## 📷 Screenshots (Optional)
 
-Include screenshots of:
-- User storefront
-- Product details
-- Admin panel
-- Order management
-- Login/register forms
+Include:
+- Product catalog view
+- Product detail page
+- Cart and checkout
+- Admin dashboard
+- Order history
+- Login / Register UI
 
 ---
 
 ## 🙌 Contributing
 
-We welcome community contributions to improve Furni!
+We welcome contributions!
 
-### How to Contribute:
+### How to Contribute
 
-1. Fork this repository
-2. Create a new feature/bugfix branch
-3. Commit your changes
-4. Push to your forked repo
-5. Submit a Pull Request
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Push and create a Pull Request
 
-Please open issues for bugs, feature requests, or enhancement ideas.
+Open issues for bugs, enhancements, or discussions.
 
 ---
 
 ## 📝 License
 
 This project is licensed under the **MIT License**.  
-See the [LICENSE](./LICENSE) file for full license information.
+See the [LICENSE](./LICENSE) file for details.
 
 ---
 

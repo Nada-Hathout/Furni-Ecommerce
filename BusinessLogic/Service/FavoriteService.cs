@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class FavoriteService
+    public class FavoriteService:IFavoriteService
     {
         public IFavoriteRepository FavoriteRepository;
         public FavoriteService(IFavoriteRepository favoriteRepository)

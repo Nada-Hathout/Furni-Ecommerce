@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class PaymentService
+    public class PaymentService:IPaymentService
     {
         public IPaymentRepository paymentRepository;
         public PaymentService(IPaymentRepository paymentRepository)

@@ -39,6 +39,7 @@ namespace Furni_Ecommerce_Website.Controllers
 
                 if (result.Succeeded)
                 {
+                   await  userManager.AddToRoleAsync(user, "User");
                     await signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }

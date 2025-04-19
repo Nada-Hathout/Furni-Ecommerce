@@ -41,7 +41,9 @@ namespace Furni_Ecommerce_Website.Controllers
                 {
                    await  userManager.AddToRoleAsync(user, "User");
                     await signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
+
+                    return RedirectToAction("Login", "Auth");
                 }
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);

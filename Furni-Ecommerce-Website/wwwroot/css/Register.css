@@ -1,0 +1,106 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.Left-image {
+  /* background-image: url('https://img.freepik.com/free-photo/medium-shot-women-scanning-qr-code_23-2149357854.jpg?t=st=1744752945~exp=1744756545~hmac=4585435b92e7021c2bc4e650fe8f0438b9b511b93e21e0d16c9069a685f16f34&w=740');
+   */
+   background-image: url('https://media.istockphoto.com/id/2150698630/photo/tablet-screen-or-mature-couple-on-app-for-home-renovation-interior-design-or-aesthetic.jpg?s=612x612&w=0&k=20&c=u6Jj7kKCPPtymi-qa7uaz10vRulwFZ8yhPkMIk7WNk8=');
+  
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+}
+
+.form-container {
+  background-color: #3b5d50;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 40px;
+}
+
+.signup-form {
+  width: 100%;
+  max-width: 400px;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: bold;
+  color: white;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.form-group i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #ffc107;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  color: white;
+  outline: none;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+.label-agree-term {
+  font-size: 14px;
+  color: #eee;
+}
+
+.label-agree-term a {
+  color: #ffc107;
+  text-decoration: none;
+}
+
+.form-submit {
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  width: 60%;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  display: block;
+  margin:0px auto;
+  box-shadow: 0 4px 6px rgba(206, 82, 10, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+
+.form-submit:hover {
+  box-shadow: 0 6px 12px rgba(255, 39, 39, 0.2);
+  background-color: #0d1a07;
+  transform: scale(1.05);
+  color: beige;
+   
+}

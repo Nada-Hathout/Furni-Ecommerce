@@ -1,43 +1,63 @@
 ﻿@model Furni_Ecommerce_Shared.UserViewModel.LoginViewModel
 
 @{
+    Layout = "Auth";
     ViewData["Title"] = "Login";
 }
 
-<h1>Login</h1>
-
-<h4>LoginViewModel</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login" method="post">
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<link rel="stylesheet" href="~/css/login.css" />
+<section class="main-container">
+    <form asp-action="Login" method="post">
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-</div>
+}
+        <h1 class="Login-header">Login</h1>
 
-<div>
-    <a asp-action="Register" asp-controller="Auth">Create Account</a>
-</div>
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label">User Name</label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" class="form-control" type="password" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+
+            <a href="#" style="display: block; margin-top: 10px; color: rgb(0, 128, 75);">
+                Forgot your password?
+            </a>
+        </div>
+
+        <div class="mb-3 form-check">
+            <input asp-for="RememberMe" class="form-check-input bg-success" />
+            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+        </div>
+
+        <button type="submit" class="btn btn-login">Login</button><br /><br />
+
+        <p style="display: inline;">Don't have an account?</p>
+        <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
+    </form>
+</section>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
+<script>
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if (alert) {
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+        }
+    }, 4000); // fade out after 4 seconds
+</script>

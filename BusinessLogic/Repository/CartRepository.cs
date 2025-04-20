@@ -9,41 +9,45 @@ namespace BusinessLogic.Repository
 {
     public class CartRepository : ICartRepository
     {
-        public FurniDbContext context;
+        private readonly FurniDbContext _context;
 
         public CartRepository(FurniDbContext context)
         {
-            
-            this.context = context;
+            _context = context;
         }
+
         public void Add(Cart entity)
         {
-            throw new NotImplementedException();
+            _context.Carts.Add(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var cart = _context.Carts.Find(id);
+            if (cart != null)
+            {
+                _context.Carts.Remove(cart);
+            }
         }
 
         public List<Cart> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.Carts.ToList();
         }
 
         public Cart GetByID(int id)
         {
-            throw new NotImplementedException();
+            return _context.Carts.Find(id);
         }
 
         public int Save()
         {
-            throw new NotImplementedException();
+            return _context.SaveChanges();
         }
 
         public void Update(Cart entity)
         {
-            throw new NotImplementedException();
+            _context.Carts.Update(entity);
         }
     }
 }

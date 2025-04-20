@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Repository;
+using DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,39 @@ namespace BusinessLogic.Service
 {
     public class CartService:ICartService
     {
-        public ICartRepository CartRepository;
+        private readonly ICartRepository _cartRepository;
+
         public CartService(ICartRepository cartRepository)
         {
-            CartRepository = cartRepository;
-            
+            _cartRepository = cartRepository;
+        }
+
+        public void AddCart(Cart cart)
+        {
+            _cartRepository.Add(cart);
+            _cartRepository.Save();
+        }
+
+        public void UpdateCart(Cart cart)
+        {
+            _cartRepository.Update(cart);
+            _cartRepository.Save();
+        }
+
+        public void DeleteCart(int id)
+        {
+            _cartRepository.Delete(id);
+            _cartRepository.Save();
+        }
+
+        public Cart GetCartById(int id)
+        {
+            return _cartRepository.GetByID(id);
+        }
+
+        public List<Cart> GetAllCarts()
+        {
+            return _cartRepository.GetAll();
         }
     }
 }

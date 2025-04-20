@@ -9,5 +9,11 @@ namespace BusinessLogic.Repository
 {
     public interface ICartItemRepository:IRepository<CartItem>
     {
+        //void Add(CartItem entity);
+        //void Delete(int id);
+        //void Update(CartItem entity);
+        //CartItem GetByID(int id);
+        //List<CartItem> GetAll();
+        //int Save();
     }
 }

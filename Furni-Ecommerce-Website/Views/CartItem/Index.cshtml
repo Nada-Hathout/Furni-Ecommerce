@@ -1,0 +1,316 @@
+﻿@model List<Furni_Ecommerce_Shared.UserViewModel.CartItemViewModel>
+
+@{
+    ViewData["Title"] = "Cart";
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="favicon.png">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="~/css/tiny-slider.css" rel="stylesheet">
+    <link href="~/css/style.css" rel="stylesheet">
+    <title>Furni Cart</title>
+    <style>
+        #generate-coupon {
+            display: none;
+        }
+        /* Style to ensure apply-coupon button maintains style when disabled */
+        #apply-coupon:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Start Header/Navigation -->
+    <nav class="custom-navbar navbar navbar-expand-md navbar-dark bg-dark" aria-label="Furni navigation bar">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Furni<span>.</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarsFurni">
+                <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+                    <li class="nav-item"><a class="nav-link" href="/Home">Home</a></li>
+                    <li><a class="nav-link" href="shop.html">Shop</a></li>
+                    <li><a class="nav-link" href="about.html">About us</a></li>
+                    <li><a class="nav-link" href="services.html">Services</a></li>
+                    <li><a class="nav-link" href="blog.html">Blog</a></li>
+                    <li><a class="nav-link" href="contact.html">Contact us</a></li>
+                </ul>
+                <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
+                    <li><a class="nav-link" href="#"><img src="~/images/user.svg"></a></li>
+                    <li><a class="nav-link" href="cart.html"><img src="~/images/cart.svg"></a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Header/Navigation -->
+    <!-- Start Hero Section -->
+    <div class="hero">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-lg-5">
+                    <div class="intro-excerpt">
+                        <h1>Cart</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Hero Section -->
+
+    <div class="untree_co-section before-footer-section">
+        <div class="container">
+            <div class="row mb-5">
+                <form class="col-md-12" method="post">
+                    <div class="site-blocks-table">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="product-thumbnail">Image</th>
+                                    <th class="product-name">Product</th>
+                                    <th class="product-price">Price</th>
+                                    <th class="product-quantity">Quantity</th>
+                                    <th class="product-total">Total</th>
+                                    <th class="product-remove">Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="product-thumbnail">
+                                            <img src="~/images/@item.ImagePath" class="img-fluid" style="max-width: 80px;" />
+                                        </td>
+                                        <td class="product-name">
+                                            <h2 class="h5 text-black">@item.ProductName</h2>
+                                        </td>
+                                        <td class="product-price">@item.UnitPrice.ToString("0.00")</td>
+                                        <td>
+                                            <div class="input-group mb-3 d-flex align-items-center quantity-container" style="max-width: 120px;" data-stock="@item.AvailableQuantity">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-outline-black decrease" type="button">&minus;</button>
+                                                </div>
+                                                <input type="text" class="form-control text-center quantity" value="0" readonly>
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-outline-black increase" type="button">&plus;</button>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="product-total">@((item.UnitPrice * 0).ToString("0.00"))</td>
+                                        <td><a class="btn btn-black btn-sm remove" href="/CartItem/Delete/@item.CartItemId" onclick="return confirm('Are you sure?');">X</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row mb-5">
+                        <div class="col-md-6 mb-3">
+                            <button class="btn btn-black btn-sm btn-block" id="update-cart">Update Cart</button>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/Shop" class="btn btn-outline-black btn-sm btn-block">Continue Shopping</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="text-black h4" for="coupon">Coupon</label>
+                            <p>Enter your coupon code if you have one.</p>
+                        </div>
+                        <div class="col-md-8 mb-3 mb-md-0">
+                            <input type="text" class="form-control py-3" id="coupon" placeholder="Coupon Code">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-black" id="apply-coupon" disabled>Apply Coupon</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mt-3">
+                        <button id="generate-coupon" class="btn btn-primary" onclick="generateCoupon()">Generate Coupon</button>
+                    </div>
+                </div>
+                <div class="col-md-6 pl-5">
+                    <div class="row justify-content-end">
+                        <div class="col-md-7">
+                            <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
+                            <div class="row mb-3">
+                                <div class="col-md-6"><span class="text-black">Subtotal</span></div>
+                                <div class="col-md-6 text-right"><strong class="text-black" id="subtotal">$0.00</strong></div>
+                            </div>
+                            <div class="row mb-5">
+                                <div class="col-md-6"><span class="text-black">Total</span></div>
+                                <div class="col-md-6 text-right"><strong class="text-black" id="total">$0.00</strong></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn btn-black btn-lg py-3 btn-block" onclick="window.location='checkout.html'">Proceed To Checkout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_FooterPartial")
+
+    <script>
+
+        function updateTotals() {
+            let subtotal = 0;
+            let total = 0;
+
+            document.querySelectorAll("tbody tr").forEach(row => {
+                const price = parseFloat(row.querySelector(".product-price").textContent);
+                const qtyInput = row.querySelector(".quantity");
+                const qty = parseInt(qtyInput.value);
+                const totalRow = price * qty;
+                row.querySelector(".product-total").textContent = totalRow.toFixed(2);
+                subtotal += totalRow;
+            });
+
+            total = subtotal;
+            document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById("total").textContent = `$${total.toFixed(2)}`;
+            toggleCouponButton(total); 
+            checkCouponEligibility(total); 
+        }
+
+        
+        function checkCouponEligibility(total) {
+            const applyCouponButton = document.getElementById("apply-coupon");
+            const couponInput = document.getElementById("coupon");
+
+            if (total >= 10000 && couponInput.value.trim() !== '') {
+                applyCouponButton.disabled = false; 
+            } else {
+                applyCouponButton.disabled = true; 
+            }
+        }
+
+        function toggleCouponButton(total) {
+            const couponButton = document.getElementById("generate-coupon");
+
+            if (total >= 10000 && total < 15000) {
+                couponButton.style.display = "block";
+                couponButton.dataset.discount = "10";
+                couponButton.textContent = "Generate 10% Coupon";
+            } else if (total >= 15000 && total < 20000) {
+                couponButton.style.display = "block";
+                couponButton.dataset.discount = "15";
+                couponButton.textContent = "Generate 15% Coupon";
+            } else if (total >= 20000) {
+                couponButton.style.display = "block";
+                couponButton.dataset.discount = "20";
+                couponButton.textContent = "Generate 20% Coupon";
+            } else {
+                couponButton.style.display = "none"; 
+            }
+
+            if (total < 10000) {
+                document.getElementById("coupon").value = ''; 
+            }
+        }
+
+        function generateCoupon() {
+            const discount = document.getElementById("generate-coupon").dataset.discount;
+            const couponCode = Math.random().toString(36).substring(2, 8).toUpperCase(); 
+            const couponInput = document.getElementById("coupon");
+            couponInput.value = couponCode;
+            alert(`Generated Coupon: ${couponCode} - ${discount}% off`); 
+
+            document.getElementById("apply-coupon").disabled = false;
+        }
+
+        function clearCouponField() {
+            document.getElementById("coupon").value = ''; 
+            document.getElementById("apply-coupon").disabled = true;
+        }
+
+        document.getElementById("coupon").addEventListener("input", function() {
+            const total = parseFloat(document.getElementById("total").textContent.replace('$', ''));
+            if (this.value.trim() !== '' && total >= 10000) {
+                document.getElementById("apply-coupon").disabled = false;
+            } else {
+                document.getElementById("apply-coupon").disabled = true;
+            }
+        });
+
+        document.getElementById("apply-coupon").addEventListener("click", (e) => {
+            e.preventDefault();
+            const total = parseFloat(document.getElementById("total").textContent.replace('$', ''));
+            const couponInput = document.getElementById("coupon").value;
+
+            let discount = 0;
+            if (total >= 10000) {
+                if (total >= 10000 && total < 15000) {
+                    discount = 10;
+                } else if (total >= 15000 && total < 20000) {
+                    discount = 15;
+                } else if (total >= 20000) {
+                    discount = 20;
+                }
+            }
+
+            if (discount > 0 && couponInput) {
+                const discountedTotal = total * (1 - discount / 100);
+                document.getElementById("total").textContent = `$${discountedTotal.toFixed(2)}`;
+                alert(`Coupon applied! New total: $${discountedTotal.toFixed(2)}`);
+            } else {
+                alert("Invalid coupon or total is too low.");
+            }
+        });
+
+        document.querySelectorAll(".increase").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const container = btn.closest(".quantity-container");
+                const input = container.querySelector(".quantity");
+                const stock = parseInt(container.dataset.stock);
+                let value = parseInt(input.value);
+                if (value < stock) {
+                    value++;
+                    input.value = value;
+                    updateTotals(); 
+                    clearCouponField();
+                }
+            });
+        });
+
+        document.querySelectorAll(".decrease").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const container = btn.closest(".quantity-container");
+                const input = container.querySelector(".quantity");
+                let value = parseInt(input.value);
+                if (value > 0) {
+                    value--;
+                    input.value = value;
+                    updateTotals();
+                    clearCouponField(); 
+                }
+            });
+        });
+
+        document.getElementById("update-cart").addEventListener("click", (e) => {
+            e.preventDefault();
+            updateTotals(); 
+        });
+
+        updateTotals();
+    </script>
+
+</body>
+</html>

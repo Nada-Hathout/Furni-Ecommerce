@@ -12,9 +12,9 @@
 		<div class="collapse navbar-collapse" id="navbarsFurni">
 			<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
 				<li class="nav-item active">
-					<a class="nav-link" href="index.html">Home</a>
+					<a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
 				</li>
-				<li><a class="nav-link" href="shop.html">Shop</a></li>
+				<li><a class="nav-link" asp-action="index" asp-controller="shop">Shop</a></li>
 				<li><a class="nav-link" href="about.html">About us</a></li>
 				<li><a class="nav-link" href="services.html">Services</a></li>
 				<li><a class="nav-link" href="blog.html">Blog</a></li>
@@ -24,10 +24,76 @@
 			</ul>
 
 			<ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
-				<li><a class="nav-link" href="#"><img src="images/user.svg"></a></li>
+				
+				<li>
+				<!--person button-->
+			     <button type="button" class="icon-button" data-bs-toggle="modal" data-bs-target="#authModal"><img class="image-person" src="images/user.svg"></button></li>
+	<!-- Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+	<div class="modal-content text-center rounded-4 shadow-lg animate__animated animate__fadeInDown"
+		 style="background: url('https://images.unsplash.com/photo-1604147706284-3d2e3a8d01d9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') no-repeat center center / cover; backdrop-filter: blur(10px); border: 2px solid #3b5d50;">
+
+	  <!-- Overlay to soften the background image -->
+	  <div style="background-color: rgba(255, 255, 255, 0.85); border-radius: 1rem;">
+		<!-- Modal Header -->
+		<div class="modal-header text-white rounded-top-4 border-0"
+			 style="background-color: #3b5d50;">
+		  <h5 class="modal-title w-100">Welcome</h5>
+		  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+
+		<!-- Modal Body -->
+		<div class="modal-body py-4">
+		  <p class="text-muted mb-4 fs-5">Choose how you'd like to continue</p>
+		  <div class="d-grid gap-3 col-10 mx-auto">
+
+			<!-- Login Button -->
+			<a href="#" class="btn btn-lg rounded-pill shadow-sm transition"
+			   style="background-color: rgba(59, 93, 80, 0.1); color: #3b5d50; border: 2px solid #3b5d50;">
+			  <i class="bi bi-box-arrow-in-right me-2"></i> Login
+			</a>
+
+			<!-- Register Button -->
+			<a href="#" class="btn btn-lg rounded-pill shadow-sm transition"
+			   style="background-color: rgba(248, 184, 16, 0.1); color: #f8b810; border: 2px solid #f8b810;">
+			  <i class="bi bi-person-plus me-2"></i> Register
+			</a>
+		  </div>
+		</div>
+	  </div>
+
+	</div>
+  </div>
+</div>
+
+
 				<li><a class="nav-link" href="cart.html"><img src="images/cart.svg"></a></li>
+
 			</ul>
 		</div>
 	</div>
 
 </nav>
+  <style>
+
+	.icon-button {
+	  background: none;
+	  border: none;
+	  color: white;
+	  font-size: 44px;
+		width:30px;
+		height:40px;
+	}
+	.transition {
+       transition: all 0.3s ease-in-out;
+}
+
+.transition:hover {
+  transform: scale(1.05);
+  background-color: #3b5d50 !important;
+  box-shadow: 0 0 15px rgba(0,0,0,0.15);
+  color:#f8b810 !important;
+}
+
+  </style>

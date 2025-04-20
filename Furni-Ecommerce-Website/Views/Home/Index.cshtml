@@ -1,4 +1,7 @@
-﻿@{
+﻿
+@model List<Furni_Ecommerce_Shared.UserViewModel.ProductsAndCommentsViewModel>
+
+@{
     ViewData["Title"] = "Home Page";
 }
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -35,78 +38,24 @@
 			</div>
 			<!-- End Column 1 -->
 			<!-- Start Column 2 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-	<div class="position-relative">
-		<a class="product-item d-block position-relative" href="cart.html">
-			<img src="~/images/product-1.png" class="img-fluid product-thumbnail">
-			<h3 class="product-title">Nordic Chair</h3>
-			<strong class="product-price">$50.00</strong>
 
-			<!-- Hidden icons until hover -->
-			<span class="icon-tools d-none align-items-center gap-4 position-absolute" style="bottom: 10px; right: 10px;">
-		<span class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px;">
-		  <i class="bi bi-plus-lg text-dark" style="font-size: 18px;"></i>
-			  </span>
+			@for (int i = 0; i < 3; i++)
+			{
+					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
+						<a class="product-item"	 asp-controller="Home" asp-action="PrdDetails" asp-route-id="@Model[i].Id">
+							<img src="~/images/@Model[i].ImagePath" class="img-fluid product-thumbnail">
+							<h3 class="product-title">@Model[i].Name</h3>
+							<strong class="product-price">$@Model[i].Price</strong>
 
-
-@* <span class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px;"> *@
-@* 		<i class="bi bi-heart text-dark" style="font-size: 18px;"></i> *@
-@* 	</span> *@
-  <label class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px; cursor: pointer; margin: 0;">
-	<input type="checkbox" class="d-none heart-toggle">
-	<i class="bi bi-heart-fill toggle-icon" style="font-size: 18px;"></i>
-  </label>
-</span>
-		</a>
-	</div>
-</div>
-
-			<!-- End Column 2 -->
-			<!-- Start Column 3 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-				<a class="product-item" href="cart.html">
-					<img src="~/images/product-2.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Kruzo Aero Chair</h3>
-					<strong class="product-price">$78.00</strong>
-
-	<span class="icon-tools d-none align-items-center gap-4 position-absolute" style="bottom: 10px; right: 10px;">
-		<span class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px;">
-		  <i class="bi bi-plus-lg text-dark" style="font-size: 18px;"></i>
-			  </span>
-
-
-<label class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px; cursor: pointer; margin: 0;">
-	<input type="checkbox" class="d-none heart-toggle">
-	<i class="bi bi-heart-fill toggle-icon" style="font-size: 18px;"></i>
-  </label>
-</span>
-
-				</a>
-			</div>
-			<!-- End Column 3 -->
-			<!-- Start Column 4 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
-				<a class="product-item" href="cart.html">
-					<img src="~/images/product-3.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Ergonomic Chair</h3>
-					<strong class="product-price">$43.00</strong>
-
-<span class="icon-tools d-none align-items-center gap-4 position-absolute" style="bottom: 10px; right: 10px;">
-		<span class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px;">
-          <i class="bi bi-plus-lg text-dark" style="font-size: 18px;"></i>
-              </span>
-	
-
-<label class="d-inline-flex justify-content-center align-items-center rounded-circle bg-white shadow-sm" style="width: 36px; height: 36px; cursor: pointer; margin: 0;">
-	<input type="checkbox" class="d-none heart-toggle">
-	<i class="bi bi-heart-fill toggle-icon" style="font-size: 18px;"></i>
-  </label>
-</span>
-
-
-				</a>
-			</div>
-			<!-- End Column 4 -->
+						<span class="icon-cross">
+							<img src="~/images/cross.svg" class="img-fluid">
+						</span>
+					</a>
+				</div>
+		
+			}
+			
+		
 
 		</div>
 	</div>
@@ -206,46 +155,24 @@
 	<div class="container">
 		<div class="row">
 
-			<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
-				<div class="product-item-sm d-flex">
-					<div class="thumbnail">
-						<img src="~/images/product-1.png" alt="Image" class="img-fluid">
-					</div>
-					<div class="pt-3">
-						<h3>Nordic Chair</h3>
-						<p>Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio </p>
-						<p><a href="#">Read More</a></p>
-					</div>
-				</div>
-			</div>
-
-			<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
-				<div class="product-item-sm d-flex">
-					<div class="thumbnail">
-						<img src="~/images/product-2.png" alt="Image" class="img-fluid">
-					</div>
-					<div class="pt-3">
-						<h3>Kruzo Aero Chair</h3>
-						<p>Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio </p>
-						<p><a href="#">Read More</a></p>
+			@for (int i = 0; i < 3; i++)
+			{
+					
+					<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
+					<div class="product-item-sm d-flex">
+						<div class="thumbnail">
+							<img src="~/images/@Model[i].ImagePath" alt="Image" class="img-fluid ">
+						</div>
+						<div class="pt-3">
+							<h3>@Model[i].Name</h3>
+								<p>@Model[i].Description.Substring(0, 100)  </p>
+										<p><a  asp-controller="Home" asp-action="PrdDetails" asp-route-id="@Model[i].Id">Read More</a></p>
+						</div>
 					</div>
 				</div>
-			</div>
+			}
 
-			<div class="col-12 col-md-6 col-lg-4 mb-4 mb-lg-0">
-				<div class="product-item-sm d-flex">
-					<div class="thumbnail">
-						<img src="~/images/product-3.png" alt="Image" class="img-fluid">
-					</div>
-					<div class="pt-3">
-						<h3>Ergonomic Chair</h3>
-						<p>Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio </p>
-						<p><a href="#">Read More</a></p>
-					</div>
-				</div>
-			</div>
 
-		</div>
 	</div>
 </div>
 <!-- End Popular Product -->
@@ -275,14 +202,14 @@
 
 									<div class="testimonial-block text-center">
 										<blockquote class="mb-5">
-											<p>&ldquo;Donec facilisis quam ut purus rutrum lobortis. Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer convallis volutpat dui quis scelerisque.&rdquo;</p>
+											<p>@Model[0].Comments[0].Text</p>
 										</blockquote>
 
 										<div class="author-info">
 											<div class="author-pic">
 												<img src="~/images/person-1.png" alt="Maria Jones" class="img-fluid">
 											</div>
-											<h3 class="font-weight-bold">Maria Jones</h3>
+											<h3 class="font-weight-bold">@Model[0].Comments[0].UserName</h3>
 											<span class="position d-block mb-3">CEO, Co-Founder, XYZ Inc.</span>
 										</div>
 									</div>
@@ -409,3 +336,4 @@
 	color: red;
   }
 </style>
+

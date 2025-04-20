@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +28,14 @@ namespace BusinessLogic.Repository
 
         public List<Product> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Products.ToList();
         }
 
         public Product GetByID(int id)
         {
-            throw new NotImplementedException();
+            return context.Products.Include(p => p.Category)
+                                  .Include(p => p.Reviews)
+                                 .ThenInclude(r => r.User).FirstOrDefault(p => p.Id == id);
         }
 
         public int Save()

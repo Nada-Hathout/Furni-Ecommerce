@@ -32,7 +32,7 @@ namespace BusinessLogic.Repository
 
         public Category GetByID(int id)
         {
-            throw new NotImplementedException();
+            return context.Categories.FirstOrDefault(c => c.Id == id);
         }
 
         public int Save()

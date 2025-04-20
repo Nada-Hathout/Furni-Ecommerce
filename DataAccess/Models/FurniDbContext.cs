@@ -29,6 +29,13 @@ namespace DataAccess.Models
         public virtual DbSet<Payment> Payments { get; set; }
         public virtual DbSet<Favorite> Favorites { get; set; }
         public virtual DbSet<Review> Reviews { get; set; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<ApplicationUser>()
+              .HasIndex(u => u.PhoneNumber)
+              .IsUnique();
+        }
 
     }
 }

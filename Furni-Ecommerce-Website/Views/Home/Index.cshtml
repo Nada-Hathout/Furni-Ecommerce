@@ -165,7 +165,7 @@
 						</div>
 						<div class="pt-3">
 							<h3>@Model[i].Name</h3>
-								<p>@Model[i].Description.Substring(0, 100)  </p>
+								<p>@Model[i]?.Description </p>
 										<p><a  asp-controller="Home" asp-action="PrdDetails" asp-route-id="@Model[i].Id">Read More</a></p>
 						</div>
 					</div>

@@ -25,6 +25,7 @@ namespace BusinessLogic.Service
         public Product? GetProductById(int id)
         {
             return _context.Products.FirstOrDefault(p => p.Id == id);
+        }
 
        public IProductRepository productRepository;
         public IReviewRepository reviewRepository;

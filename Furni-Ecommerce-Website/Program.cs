@@ -32,9 +32,9 @@ namespace Furni_Ecommerce_Website
 
 
 
-                    );
+                  
                
-            });
+           
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 options.User.RequireUniqueEmail = true;

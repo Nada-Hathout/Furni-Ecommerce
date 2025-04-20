@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class CartItemService
+    public class CartItemService:ICartItemService
     {
         private readonly ICartItemRepository _cartItemRepository;
 

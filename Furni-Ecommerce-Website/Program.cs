@@ -1,4 +1,7 @@
+using BusinessLogic.Repository;
+using BusinessLogic.Service;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Service;
 using BusinessLogic.Repository;
@@ -27,8 +30,29 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<CartItemService>();
             builder.Services.AddScoped<ProductService>();
 
-            builder.Services.AddControllersWithViews();
 
+
+                    );
+               
+            });
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireNonAlphanumeric=false;
+                op.Password.RequireUppercase=false;
+            }).AddEntityFrameworkStores<FurniDbContext>();
+            builder.Services.AddScoped<IUserService , UserService>();
+            builder.Services.AddScoped<IUsersRepository, UserRepository>();
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IProductService,ProductService>();
+            builder.Services.AddScoped<IProductRepository,ProductRepository>();
+
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())

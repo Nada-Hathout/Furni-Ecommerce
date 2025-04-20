@@ -1,3 +1,7 @@
+using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 namespace Furni_Ecommerce_DashBoard
 {
     public class Program
@@ -8,6 +12,24 @@ namespace Furni_Ecommerce_DashBoard
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<FurniDbContext>(options =>
+            {
+                options.UseLazyLoadingProxies().UseSqlServer(
+                    builder.Configuration.GetConnectionString("cs"),
+                    sql => sql.MigrationsAssembly("DataAccess")
+
+                    );
+
+            });
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireNonAlphanumeric = false;
+                op.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<FurniDbContext>();
 
             var app = builder.Build();
 

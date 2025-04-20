@@ -8,6 +8,9 @@
 
   <ItemGroup>
     <Folder Include="AdminViewModel\" />
+
+	  <Folder Include="UserViewModel\" />
+
   </ItemGroup>
 
 

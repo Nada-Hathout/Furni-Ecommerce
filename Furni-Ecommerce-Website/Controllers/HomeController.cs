@@ -21,11 +21,21 @@ namespace Furni_Ecommerce_Website.Controllers
         {
             return View();
         }
+        public ActionResult Favorite()
+        {
+
+            return View("Favorite");
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        //public ActionResult favPro()
+        //{
+
+        //    return View("Cart");
+        //}
     }
 }

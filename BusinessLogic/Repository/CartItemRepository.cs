@@ -7,42 +7,47 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Repository
 {
-    internal class CartItemRepository : ICartItemRepository
+    public class CartItemRepository : ICartItemRepository
     {
-        public FurniDbContext context;
-        public CartItemRepository(FurniDbContext furniDbContext)
+        private readonly FurniDbContext _context;
+
+        public CartItemRepository(FurniDbContext context)
         {
-            
-            this.context = furniDbContext;
+            _context = context;
         }
+
         public void Add(CartItem entity)
         {
-            throw new NotImplementedException();
+            _context.CartItems.Add(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var item = _context.CartItems.Find(id);
+            if (item != null)
+            {
+                _context.CartItems.Remove(item);
+            }
         }
 
         public List<CartItem> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.CartItems.ToList();
         }
 
         public CartItem GetByID(int id)
         {
-            throw new NotImplementedException();
+            return _context.CartItems.Find(id);
         }
 
         public int Save()
         {
-            throw new NotImplementedException();
+            return _context.SaveChanges();
         }
 
         public void Update(CartItem entity)
         {
-            throw new NotImplementedException();
+            _context.CartItems.Update(entity);
         }
     }
 }

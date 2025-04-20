@@ -48,6 +48,11 @@ namespace Furni_Ecommerce_Website.Controllers
         {
             return View();
         }
+        public ActionResult Favorite()
+        {
+
+            return View("Favorite");
+        }
 
        
 

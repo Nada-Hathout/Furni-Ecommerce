@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Repository;
 using DataAccess.Models;
+
 using Furni_Ecommerce_Shared.UserViewModel;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,29 @@ namespace BusinessLogic.Service
 {
     public class ProductService : IProductService
     {
+
+        private readonly FurniDbContext _context;
+
+       
+
+        public List<Product> GetAllProducts()
+        {
+            return _context.Products.ToList();
+        }
+
+        public Product? GetProductById(int id)
+        {
+            return _context.Products.FirstOrDefault(p => p.Id == id);
+
        public IProductRepository productRepository;
         public IReviewRepository reviewRepository;
       
-        public ProductService(IProductRepository productRepository, IReviewRepository reviewRepository)
+        public ProductService(IProductRepository productRepository, IReviewRepository reviewRepository,FurniDbContext context)
         {
             this.productRepository = productRepository;
 
             this.reviewRepository = reviewRepository;
+           this. _context = context;
            
 
         }

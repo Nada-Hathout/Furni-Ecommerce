@@ -8,15 +8,13 @@
 
   <ItemGroup>
     <Folder Include="AdminViewModel\" />
-<<<<<<< HEAD
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.7" />
-=======
+
 	  <Folder Include="UserViewModel\" />
 
->>>>>>> 551d20608d3ffae05b98f25585a56c6d7ca9a376
   </ItemGroup>
 
 

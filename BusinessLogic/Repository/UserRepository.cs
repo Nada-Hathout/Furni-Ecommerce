@@ -27,12 +27,13 @@ namespace BusinessLogic.Repository
 
         public List<ApplicationUser> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Users.ToList();
         }
 
         public ApplicationUser GetByID(int id)
         {
             throw new NotImplementedException();
+
         }
 
         public int Save()

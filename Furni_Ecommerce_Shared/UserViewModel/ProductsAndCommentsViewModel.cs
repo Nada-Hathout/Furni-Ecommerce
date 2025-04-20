@@ -10,7 +10,7 @@ namespace Furni_Ecommerce_Shared.UserViewModel
 {
     public class ProductsAndCommentsViewModel
     {
-        [Key]
+        
         public int Id { get; set; }
 
         [Required]
@@ -26,16 +26,20 @@ namespace Furni_Ecommerce_Shared.UserViewModel
         [Required]
         public int Stock { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        [Required]
-        public int CategoryId { get; set; }
-        public  string? Category { get; set; }
-
         [MaxLength(300)]
         public string? ImagePath { get; set; }
 
-        [MaxLength(500)]
-        public string? Comment { get; set; }
+      
+        public List<CommentViewModel> Comments { get; set; }
+       
+        public String CategoryName { get; set; }
+
     }
+    public class CommentViewModel
+    {
+        public string Text { get; set; }
+        public string UserName { get; set; }
+    }
+
+  
 }

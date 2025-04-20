@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Service
 {
-    public class ProductService:IProductService
+    public class ProductService : IProductService
     {
 
         private readonly FurniDbContext _context;
@@ -84,6 +84,21 @@ namespace BusinessLogic.Service
            
             return prdViewModel;
            
+        }
+
+        public List<Product> GetAllProducts()
+        {
+            return productRepository.GetAll();
+        }
+
+        public IEnumerable<ShopProductViewModel> SearchProduct(string keyword)
+        {
+            return productRepository.SearchProduct(keyword);
+        }
+
+        IEnumerable<ShopProductViewModel> IProductService.GetProducts()
+        {
+            return productRepository.GetAllProducts();
         }
     }
 }

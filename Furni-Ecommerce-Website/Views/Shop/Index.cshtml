@@ -59,10 +59,24 @@
 					<h3 class="product-title">Kruzo Aero Chair</h3>
 					<strong class="product-price">$78.00</strong>
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+	function GetProducts(){
+		// console.log("Search");
+		var keyword = $("#keyword").val();
+			 $("#products-container").html("");
+			 $.ajax({
+				url: "/Shop/SearchProduct?keyword="+keyword,
+				method: "GET",
+				success: function (result) {
+					// console.log(result);
+					if(result.length == 0 )
+					{
+						$("#products-container").html(
+					`
+					<div class="col-12 text-center">
+					<h4> No Products Found</h4>
 			</div>
 			<!-- End Column 3 -->
 			<!-- Start Column 4 -->

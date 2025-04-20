@@ -27,7 +27,7 @@ namespace BusinessLogic.Repository
 
         public List<Review> GetAll()
         {
-            throw new NotImplementedException();
+           return context.Reviews.ToList();
         }
 
         public Review GetByID(int id)

@@ -1,5 +1,9 @@
 ﻿using DataAccess.Models;
+<<<<<<< HEAD
 using Furni_Ecommerce_Shared.UserViewModel;
+=======
+using Microsoft.EntityFrameworkCore;
+>>>>>>> 551d20608d3ffae05b98f25585a56c6d7ca9a376
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +42,21 @@ namespace BusinessLogic.Repository
             throw new NotImplementedException();
         }
 
+<<<<<<< HEAD
+=======
+        public List<Product> GetAll()
+        {
+            return context.Products.ToList();
+        }
+
+        public Product GetByID(int id)
+        {
+            return context.Products.Include(p => p.Category)
+                                  .Include(p => p.Reviews)
+                                 .ThenInclude(r => r.User).FirstOrDefault(p => p.Id == id);
+        }
+
+>>>>>>> 551d20608d3ffae05b98f25585a56c6d7ca9a376
         public int Save()
         {
             throw new NotImplementedException();

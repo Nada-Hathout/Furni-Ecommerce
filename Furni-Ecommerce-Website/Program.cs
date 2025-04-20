@@ -1,6 +1,7 @@
 using BusinessLogic.Repository;
 using BusinessLogic.Service;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Furni_Ecommerce_Website
@@ -16,13 +17,33 @@ namespace Furni_Ecommerce_Website
                 options.UseLazyLoadingProxies().UseSqlServer(
                     builder.Configuration.GetConnectionString("cs"),
                     sql => sql.MigrationsAssembly("DataAccess")
+
                     );
+               
             });
+<<<<<<< HEAD
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IProductService,ProductService>();
+=======
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireNonAlphanumeric=false;
+                op.Password.RequireUppercase=false;
+            }).AddEntityFrameworkStores<FurniDbContext>();
+            builder.Services.AddScoped<IUserService , UserService>();
+            builder.Services.AddScoped<IUsersRepository, UserRepository>();
+>>>>>>> 551d20608d3ffae05b98f25585a56c6d7ca9a376
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IProductService,ProductService>();
+            builder.Services.AddScoped<IProductRepository,ProductRepository>();
 
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Furni_Ecommerce_Shared.UserViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace BusinessLogic.Service
 {
     public interface ICategoryService
     {
+        ProductsAndCommentsViewModel GetCategory(int id);
     }
 }

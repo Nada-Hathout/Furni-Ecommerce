@@ -1,0 +1,69 @@
+﻿@model Furni_Ecommerce_Shared.UserViewModel.LoginViewModel
+
+@{
+    Layout = "Auth"; // Use your auth layout or set to null if not needed
+    ViewData["Title"] = "Login";
+}
+
+<link rel="stylesheet" href="~/css/login.css" />
+
+<section class="main-container">
+    <form asp-action="Login" method="post">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <h1 class="Login-header">Login</h1>
+
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <!-- Username -->
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label">User Name</label>
+            <input asp-for="UserName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+            <label asp-for="Password" class="form-label">Password</label>
+            <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+
+            <a href="#" style="display: block; margin-top: 10px; color: rgb(0, 128, 75);">
+                Forgot your password?
+            </a>
+        </div>
+
+        <!-- Remember Me -->
+        <div class="mb-3 form-check">
+            <input asp-for="RememberMe" class="form-check-input bg-success" id="exampleCheck1" />
+            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+        </div>
+
+        <!-- Login button -->
+        <button type="submit" class="btn btn-login">Login</button><br /><br />
+
+        <!-- Register link -->
+        <p style="display: inline;">Don't have an account?</p>
+        <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
+    </form>
+</section>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<script>
+    setTimeout(() => {
+        const alert = document.querySelector('.alert');
+        if (alert) {
+            alert.classList.remove('show');
+            alert.classList.add('fade');
+        }
+    }, 4000);
+</script>

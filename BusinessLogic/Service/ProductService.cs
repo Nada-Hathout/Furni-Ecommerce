@@ -17,10 +17,7 @@ namespace BusinessLogic.Service
 
        
 
-        public List<Product> GetAllProducts()
-        {
-            return _context.Products.ToList();
-        }
+      
 
         public Product? GetProductById(int id)
         {

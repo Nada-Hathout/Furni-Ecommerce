@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Furni_Ecommerce_Shared.UserViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,7 @@ namespace BusinessLogic.Repository
 {
     public interface IProductRepository:IRepository<Product>
     {
+        IEnumerable<ShopProductViewModel> SearchProduct(string keyword);
+        IEnumerable<ShopProductViewModel> GetAllProducts();
     }
 }

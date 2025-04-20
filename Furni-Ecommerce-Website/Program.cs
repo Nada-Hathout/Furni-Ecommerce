@@ -1,3 +1,5 @@
+using BusinessLogic.Repository;
+using BusinessLogic.Service;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +18,8 @@ namespace Furni_Ecommerce_Website
                     sql => sql.MigrationsAssembly("DataAccess")
                     );
             });
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService,ProductService>();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 

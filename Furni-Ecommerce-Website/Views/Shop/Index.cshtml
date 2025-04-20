@@ -1,17 +1,79 @@
-﻿
+﻿@model List< Furni_Ecommerce_Shared.UserViewModel.ShopProductViewModel>
 @{
 	ViewData["Title"] = "Index";
 	Layout = "~/Views/Shared/_ShopLayout.cshtml";
 }
+
+<style>
+	.pagination .page-item.active .page-link {
+		background-color: #3B5D50;
+		color: white;
+		border-color: #3B5D50;
+	}
+
+	.pagination .page-link {
+		color: #3B5D50; 
+	}
+
+		.pagination .page-link:hover {
+			background-color: #e9ecef;
+			border-color: #dee2e6;
+		}
+</style>
 
 <!-- Start Hero Section -->
 <div class="hero">
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
-				<div class="intro-excerpt">
+				<div class="intro-excerpt ">
 					<h1>Shop</h1>
+					<div class="row">
+						<form>
+							<div class="row">
+								<div class="col-md-6">
+									<input type="search" class="form form-control" id="keyword" placeholder="Search Products..." />
+								</div>
+								<div class="col-md-3 ">
+									 <input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
+										<datalist id="price-options">
+											<option value="1000"/>
+											<option value="2000"/>
+											<option value="3000"/>
+											<option value="5000"/>
+											<option value="7000" />
+										<option value="10000" />
+
+										</datalist>
+								</div>
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="maxPrice" placeholder="Max Price" list="price-max">
+									<datalist id="price-max">
+										<option value="10000" />
+										<option value="15000" />
+										<option value="20000" />
+										<option value="25000" />
+										<option value="30000" />
+										<option value="50000" />
+										<option value="75000" />
+										<option value="100000" />
+
+
+
+									</datalist>
+								</div>
+								<div class="col-md-6">
+									<input type="button" value="Search" class="btn btn-primary m-2" onclick="GetProducts(1)" />
+								</div>
+							</div>
+
+						</form>
+					</div>
 				</div>
+				<div class="row">
+					
+				</div>
+
 			</div>
 			<div class="col-lg-7">
 			</div>
@@ -24,129 +86,132 @@
 
 <div class="untree_co-section product-section before-footer-section">
 	<div class="container">
-		<div class="row">
-
+		<div class="row" id="products-container">
 			<!-- Start Column 1 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-3.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Nordic Chair</h3>
-					<strong class="product-price">$50.00</strong>
+			@* products  *@
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 1 -->
-			<!-- Start Column 2 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-1.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Nordic Chair</h3>
-					<strong class="product-price">$50.00</strong>
+		</div>
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 2 -->
-			<!-- Start Column 3 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-2.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Kruzo Aero Chair</h3>
-					<strong class="product-price">$78.00</strong>
+		<div id="pagination-container" class="text-center mt-3">
+		@* pagination buttons  *@
+	</div>
+	
+	</div>
+</div>
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-	function GetProducts(){
+	let currentPage =1;
+	let totalPages= 1;
+	function GetProducts(page =1){
 		// console.log("Search");
+		currentPage = page;
 		var keyword = $("#keyword").val();
+		var minPrice = $("#minPrice").val();
+		var maxPrice = $("#maxPrice").val();
 			 $("#products-container").html("");
+			 $("#pagination-container").html("");
+
 			 $.ajax({
-				url: "/Shop/SearchProduct?keyword="+keyword,
+				url: `/Shop/SearchProduct?keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${currentPage}&pageSize=8`,
 				method: "GET",
 				success: function (result) {
 					// console.log(result);
-					if(result.length == 0 )
+					let products = result.data;
+					let total =result.total;
+					let pageSiz= 8;
+					let totalPages = Math.ceil(total / pageSiz);
+					if(products.length == 0 )
 					{
 						$("#products-container").html(
 					`
 					<div class="col-12 text-center">
 					<h4> No Products Found</h4>
-			</div>
-			<!-- End Column 3 -->
-			<!-- Start Column 4 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-3.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Ergonomic Chair</h3>
-					<strong class="product-price">$43.00</strong>
+					</div>
+					`
+				);
+				return;
+				}
+			
+					for (let item of products) {
+						let card = 
+					`<div class="col-12 col-md-4 col-lg-3 mb-5" >
+						<a class="product-item" href="#">
+	
+							<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail">
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 4 -->
-			<!-- Start Column 1 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-3.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Nordic Chair</h3>
-					<strong class="product-price">$50.00</strong>
+							<h3 class="product-title">${item.name}</h3>
+							<p class="product-price"> <strong>${item.price} EG</strong></p>
+							<p class="product-price"> <strong> Stock: ${item.stock}</strong></p>
+							<span class="icon-cross">
+							<img src="/images/cross.svg" class="img-fluid">
+							</span>
+						</a>
+					</div>`
+						$("#products-container").append(card)
+					}
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 1 -->
-			<!-- Start Column 2 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-1.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Nordic Chair</h3>
-					<strong class="product-price">$50.00</strong>
+				let paginationHtml = `<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">`;
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 2 -->
-			<!-- Start Column 3 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-2.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Kruzo Aero Chair</h3>
-					<strong class="product-price">$78.00</strong>
+				// Previous Button
+				if (currentPage > 1) {
+					paginationHtml += `
+					<li class="page-item">
+						<a class="page-link  rounded-1"  href="javascript:void(0)" onclick="GetProducts(${currentPage - 1})">Previous</a>
+					</li>`;
+				} else {
+					paginationHtml += `
+					<li class="page-item disabled">
+						<span class="page-link">Previous</span>
+					</li>`;
+				}
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 3 -->
-			<!-- Start Column 4 -->
-			<div class="col-12 col-md-4 col-lg-3 mb-5">
-				<a class="product-item" href="#">
-					<img src="~/images/product-3.png" class="img-fluid product-thumbnail">
-					<h3 class="product-title">Ergonomic Chair</h3>
-					<strong class="product-price">$43.00</strong>
+				
+				for (let i = 1; i <= totalPages; i++) {
+					paginationHtml += `
+					<li class="page-item ${i === currentPage ? 'active' : ''}">
+						<a class="page-link rounded-1"  href="javascript:void(0)" onclick="GetProducts(${i})">${i}</a>
+					</li>`;
+				}
 
-					<span class="icon-cross">
-						<img src="~/images/cross.svg" class="img-fluid">
-					</span>
-				</a>
-			</div>
-			<!-- End Column 4 -->
+				// Next Button
+				if (currentPage < totalPages) {
+					paginationHtml += `
+					<li class="page-item">
+						<a class="page-link  rounded-1"  href="javascript:void(0)" onclick="GetProducts(${currentPage + 1})">Next</a>
+					</li>`;
+				} else {
+					paginationHtml += `
+					<li class="page-item disabled">
+						<span class="page-link">Next</span>
+					</li>`;
+				}
 
-		</div>
-	</div>
-</div>
+				paginationHtml += `</ul></nav>`;
+				$("#pagination-container").html(paginationHtml);
+	
+				},
+				error: function(err){
+						alert(err,"Error With Loading Products");
+				}
+				
+			});
+
+	}
+	
+			const inputSearch = document.getElementById("keyword");
+				if(inputSearch != null){
+				inputSearch.addEventListener("change", ()=>{
+				if(inputSearch.value == ""){
+					GetProducts();
+				}
+				})
+			}
+
+			$(document).ready( function(){
+				GetProducts();
+			});
+</script>
 
 

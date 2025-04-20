@@ -35,6 +35,10 @@ namespace Furni_Ecommerce_Website
                     );
                
             });
+<<<<<<< HEAD
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService,ProductService>();
+=======
             builder.Services.Configure<IdentityOptions>(options =>
             {
                 options.User.RequireUniqueEmail = true;
@@ -46,6 +50,7 @@ namespace Furni_Ecommerce_Website
             }).AddEntityFrameworkStores<FurniDbContext>();
             builder.Services.AddScoped<IUserService , UserService>();
             builder.Services.AddScoped<IUsersRepository, UserRepository>();
+>>>>>>> 551d20608d3ffae05b98f25585a56c6d7ca9a376
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IProductService,ProductService>();

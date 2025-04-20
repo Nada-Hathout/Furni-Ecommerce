@@ -8,6 +8,10 @@
 
   <ItemGroup>
     <Folder Include="AdminViewModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.7" />
 
 	  <Folder Include="UserViewModel\" />
 

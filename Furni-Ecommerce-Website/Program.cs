@@ -1,6 +1,7 @@
 using BusinessLogic.Repository;
 using BusinessLogic.Service;
 using DataAccess.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Furni_Ecommerce_Website
@@ -16,8 +17,21 @@ namespace Furni_Ecommerce_Website
                 options.UseLazyLoadingProxies().UseSqlServer(
                     builder.Configuration.GetConnectionString("cs"),
                     sql => sql.MigrationsAssembly("DataAccess")
+
                     );
+               
             });
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+            });
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
+            {
+                op.Password.RequireNonAlphanumeric=false;
+                op.Password.RequireUppercase=false;
+            }).AddEntityFrameworkStores<FurniDbContext>();
+            builder.Services.AddScoped<IUserService , UserService>();
+            builder.Services.AddScoped<IUsersRepository, UserRepository>();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IProductService,ProductService>();

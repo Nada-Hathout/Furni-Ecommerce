@@ -34,7 +34,11 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<IUsersRepository, UserRepository>();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IProductService,ProductService>();
+            builder.Services.AddScoped<IProductRepository,ProductRepository>();
 
+            builder.Services.AddScoped<IReviewService, ReviewService>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

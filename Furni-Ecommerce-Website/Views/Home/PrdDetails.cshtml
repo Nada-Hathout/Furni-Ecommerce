@@ -1,0 +1,52 @@
+﻿@model Furni_Ecommerce_Shared.UserViewModel.ProductsAndCommentsViewModel
+
+@{
+    ViewData["Title"] = "PrdDetails";
+}
+
+<div class="container-fluid px-0">
+  <div class="row" style:"margin:0px auto;height: 250vh;">
+    <div class="card mb-3" style="width: 100%; ">
+      <div class="row g-0 h-100"  style="height: 800px;">
+        <!-- Image Column -->
+        <div class="col-md-5 text-center mt-5" >
+          <img src="~/images/@Model.ImagePath" class="img-fluid rounded-start shadow" alt="..." style="max-height: 100%; max-width: 100%; object-fit: contain;">
+        </div>
+
+      <!-- Text Column -->
+        <div class="col-md-7 mt-5 " style="margin: 0 auto;padding-bottom:200px;">
+          <div class="card-body p-3" style="height: auto; padding: 15px; max-width: 100%; overflow: hidden;">
+            <h1 class="card-title"> @Model.Name</h1>
+            <p class="card-text">Stock: @Model.Description</p>
+            <h4 class="card-text">💰 <strong>Price:</strong> $@Model.Price</h4>
+            <h4 class="card-text">📦 <strong>Stock:</strong> @Model.Stock Item</h4>
+            <h4 class="card-text">🏷️ <strong>Category:</strong> @Model.CategoryName</h4>
+   
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+@* <div style="height:200px; width:100%;background-color:#ffffff;"> *@
+
+</div>
+
+             <style>
+                 body {
+                  margin: 0;
+                  padding: 0;
+                }
+ 
+
+                .imges{
+                    width:300px;
+                    height:300px
+                }
+                .card-text{
+                    padding-bottom:20px
+                }
+            </style>

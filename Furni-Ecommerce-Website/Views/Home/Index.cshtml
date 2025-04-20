@@ -4,6 +4,8 @@
 @{
     ViewData["Title"] = "Home Page";
 }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 <div class="hero">
 	<div class="container">
 		<div class="row justify-content-between">
@@ -36,6 +38,7 @@
 			</div>
 			<!-- End Column 1 -->
 			<!-- Start Column 2 -->
+
 			@for (int i = 0; i < 3; i++)
 			{
 					<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0">
@@ -53,7 +56,6 @@
 			}
 			
 		
-			<!-- End Column 1 -->
 
 		</div>
 	</div>
@@ -325,5 +327,13 @@
 	</div>
 </div>
 <!-- End Blog Section -->	
+<style>
+	/* Show icons on hover */
+	.product-item:hover .icon-tools {
+		display: inline-flex !important;
+	}
+	 .heart-toggle:checked + .toggle-icon {
+	color: red;
+  }
+</style>
 
-			

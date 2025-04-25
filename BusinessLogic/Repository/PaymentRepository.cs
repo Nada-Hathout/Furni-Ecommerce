@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,14 @@ namespace BusinessLogic.Repository
         }
         public void Add(Payment entity)
         {
-            throw new NotImplementedException();
+            context.Payments.Add(entity);
+        }
+
+        public async Task<Payment> AddPaymentAsc(Payment payment)
+        {
+            context.Payments.Add(payment);
+            await context.SaveChangesAsync();
+            return payment;
         }
 
         public void Delete(int id)
@@ -33,6 +41,11 @@ namespace BusinessLogic.Repository
         public Payment GetByID(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Payment> GetPaymentByIdAsc(int id)
+        {
+            return await context.Payments.Where(p=>p.Id==id).FirstOrDefaultAsync();
         }
 
         public int Save()

@@ -40,9 +40,20 @@ namespace BusinessLogic.Service
             return _cartItemRepository.GetByID(id);
         }
 
-        public List<CartItem> GetAllCartItems()
+        public  List<CartItem> GetAllCartItems(string userID)
         {
-            return _cartItemRepository.GetAll();
+            return _cartItemRepository.GetAllByuserID(userID);
+        }
+
+        public async Task<List<CartItem>> GetAllCartItemsAsc(string userID)
+        {
+            return await _cartItemRepository.GetAllByuserIDASC(userID);
+        }
+
+        public async Task<int> RemoveRangeCartItemAsc(List<CartItem> cartItems)
+        {
+           await _cartItemRepository.RemoveRangeCartItemRepoAsc(cartItems);
+            return cartItems.Count;
         }
     }
 

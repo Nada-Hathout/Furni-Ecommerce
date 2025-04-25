@@ -1,4 +1,4 @@
-﻿@model List< Furni_Ecommerce_Shared.UserViewModel.ShopProductViewModel>
+﻿@model List<Furni_Ecommerce_Shared.UserViewModel.ShopProductViewModel>
 @{
 	ViewData["Title"] = "Index";
 	Layout = "~/Views/Shared/_ShopLayout.cshtml";
@@ -12,21 +12,24 @@
 	}
 
 	.pagination .page-link {
-		color: #3B5D50; 
+		color: #3B5D50;
 	}
 
 		.pagination .page-link:hover {
 			background-color: #e9ecef;
 			border-color: #dee2e6;
 		}
-</style>
 
+	#cart-message {
+		z-index: 1050;
+	}
+</style>
 <!-- Start Hero Section -->
 <div class="hero">
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
-				<div class="intro-excerpt ">
+				<div class="intro-excerpt">
 					<h1>Shop</h1>
 					<div class="row">
 						<form>
@@ -34,17 +37,16 @@
 								<div class="col-md-6">
 									<input type="search" class="form form-control" id="keyword" placeholder="Search Products..." />
 								</div>
-								<div class="col-md-3 ">
-									 <input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
-										<datalist id="price-options">
-											<option value="1000"/>
-											<option value="2000"/>
-											<option value="3000"/>
-											<option value="5000"/>
-											<option value="7000" />
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
+									<datalist id="price-options">
+										<option value="1000" />
+										<option value="2000" />
+										<option value="3000" />
+										<option value="5000" />
+										<option value="7000" />
 										<option value="10000" />
-
-										</datalist>
+									</datalist>
 								</div>
 								<div class="col-md-3">
 									<input type="text" class="form-control" id="maxPrice" placeholder="Max Price" list="price-max">
@@ -57,161 +59,154 @@
 										<option value="50000" />
 										<option value="75000" />
 										<option value="100000" />
-
-
-
 									</datalist>
 								</div>
 								<div class="col-md-6">
 									<input type="button" value="Search" class="btn btn-primary m-2" onclick="GetProducts(1)" />
 								</div>
 							</div>
-
 						</form>
 					</div>
 				</div>
-				<div class="row">
-					
-				</div>
-
 			</div>
-			<div class="col-lg-7">
-			</div>
+			<div class="col-lg-7"></div>
 		</div>
 	</div>
 </div>
 <!-- End Hero Section -->
+<!-- Cart Toast Message -->
+<div id="cart-message" class="alert alert-success position-fixed top-0 end-0 m-3 d-none" role="alert">
+	Product added to cart!
+</div>
 
-
-
+<!-- Product Section -->
 <div class="untree_co-section product-section before-footer-section">
 	<div class="container">
 		<div class="row" id="products-container">
-			<!-- Start Column 1 -->
-			@* products  *@
-
+			@* Dynamic Products Go Here *@
 		</div>
 
 		<div id="pagination-container" class="text-center mt-3">
-		@* pagination buttons  *@
-	</div>
-	
+			@* Pagination Buttons Here *@
+		</div>
 	</div>
 </div>
 
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
-	let currentPage =1;
-	let totalPages= 1;
-	function GetProducts(page =1){
-		// console.log("Search");
+	let currentPage = 1;
+	let totalPages = 1;
+
+	function GetProducts(page = 1) {
 		currentPage = page;
 		var keyword = $("#keyword").val();
 		var minPrice = $("#minPrice").val();
 		var maxPrice = $("#maxPrice").val();
-			 $("#products-container").html("");
-			 $("#pagination-container").html("");
 
-			 $.ajax({
-				url: `/Shop/SearchProduct?keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${currentPage}&pageSize=8`,
-				method: "GET",
-				success: function (result) {
-					// console.log(result);
-					let products = result.data;
-					let total =result.total;
-					let pageSiz= 8;
-					let totalPages = Math.ceil(total / pageSiz);
-					if(products.length == 0 )
-					{
-						$("#products-container").html(
-					`
-					<div class="col-12 text-center">
-					<h4> No Products Found</h4>
-					</div>
-					`
-				);
-				return;
-				}
-			
-					for (let item of products) {
-						let card = 
-					`<div class="col-12 col-md-4 col-lg-3 mb-5" >
-						<a class="product-item" href="#">
-	
-							<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail">
+		$("#products-container").html("");
+		$("#pagination-container").html("");
 
-							<h3 class="product-title">${item.name}</h3>
-							<p class="product-price"> <strong>${item.price} EG</strong></p>
-							<p class="product-price"> <strong> Stock: ${item.stock}</strong></p>
-							<span class="icon-cross">
-							<img src="/images/cross.svg" class="img-fluid">
-							</span>
-						</a>
-					</div>`
-						$("#products-container").append(card)
-					}
+		$.ajax({
+			url: `/Shop/SearchProduct?keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${currentPage}&pageSize=8`,
+			method: "GET",
+			success: function (result) {
+				let products = result.data;
+				let total = result.total;
+				let pageSiz = 8;
+				let totalPages = Math.ceil(total / pageSiz);
 
-				let paginationHtml = `<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">`;
-
-				// Previous Button
-				if (currentPage > 1) {
-					paginationHtml += `
-					<li class="page-item">
-						<a class="page-link  rounded-1"  href="javascript:void(0)" onclick="GetProducts(${currentPage - 1})">Previous</a>
-					</li>`;
-				} else {
-					paginationHtml += `
-					<li class="page-item disabled">
-						<span class="page-link">Previous</span>
-					</li>`;
+				if (products.length === 0) {
+					$("#products-container").html(`
+						<div class="col-12 text-center">
+							<h4>No Products Found</h4>
+						</div>
+					`);
+					return;
 				}
 
-				
+				for (let item of products) {
+					let card = `
+						<div class="col-12 col-md-4 col-lg-3 mb-5">
+							<a class="product-item" href="#">
+								<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail">
+								<h3 class="product-title">${item.name}</h3>
+								<p class="product-price"><strong>${item.price} EG</strong></p>
+																<p class="product-price"><strong>id: ${item.id}</strong></p>
+
+								<p class="product-price"><strong>Stock: ${item.stock}</strong></p>
+								<span class="icon-cross" onclick="addtocart(${item.id})">
+									<img src="/images/cross.svg" class="img-fluid">
+								</span>
+							</a>
+						</div>`;
+					$("#products-container").append(card);
+				}
+
+				let paginationHtml = `<nav aria-label="Page navigation"><ul class="pagination justify-content-center">`;
+
+				paginationHtml += currentPage > 1
+					? `<li class="page-item"><a class="page-link rounded-1" href="javascript:void(0)" onclick="GetProducts(${currentPage - 1})">Previous</a></li>`
+					: `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
+
 				for (let i = 1; i <= totalPages; i++) {
-					paginationHtml += `
-					<li class="page-item ${i === currentPage ? 'active' : ''}">
-						<a class="page-link rounded-1"  href="javascript:void(0)" onclick="GetProducts(${i})">${i}</a>
+					paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
+						<a class="page-link rounded-1" href="javascript:void(0)" onclick="GetProducts(${i})">${i}</a>
 					</li>`;
 				}
 
-				// Next Button
-				if (currentPage < totalPages) {
-					paginationHtml += `
-					<li class="page-item">
-						<a class="page-link  rounded-1"  href="javascript:void(0)" onclick="GetProducts(${currentPage + 1})">Next</a>
-					</li>`;
-				} else {
-					paginationHtml += `
-					<li class="page-item disabled">
-						<span class="page-link">Next</span>
-					</li>`;
-				}
+				paginationHtml += currentPage < totalPages
+					? `<li class="page-item"><a class="page-link rounded-1" href="javascript:void(0)" onclick="GetProducts(${currentPage + 1})">Next</a></li>`
+					: `<li class="page-item disabled"><span class="page-link">Next</span></li>`;
 
 				paginationHtml += `</ul></nav>`;
 				$("#pagination-container").html(paginationHtml);
-	
-				},
-				error: function(err){
-						alert(err,"Error With Loading Products");
-				}
-				
-			});
-
+			},
+			error: function (err) {
+				showCartMessage("Error loading products.", true);
+			}
+		});
 	}
-	
-			const inputSearch = document.getElementById("keyword");
-				if(inputSearch != null){
-				inputSearch.addEventListener("change", ()=>{
-				if(inputSearch.value == ""){
+
+		function addtocart(productId) {
+		$.ajax({
+			url: '/Shop/AddToCart',
+			type: 'POST',
+			data: { productId: productId },
+			success: function (response) {
+				$('#cart-message').removeClass('d-none').fadeIn();
+				setTimeout(() => {
+					$('#cart-message').fadeOut();
+				}, 3000);
+			},
+			error: function (xhr) {
+				alert("Error adding product to cart.");
+				console.error(xhr.responseText);
+			}
+		});
+	}
+
+
+	function showCartMessage(message, isError = false) {
+		const messageBox = $("#cart-message");
+		messageBox.removeClass("d-none alert-success alert-danger");
+		messageBox.addClass(isError ? "alert-danger" : "alert-success");
+		messageBox.text(message).fadeIn(300);
+
+		setTimeout(() => {
+			messageBox.fadeOut(500);
+		}, 3000);
+	}
+
+	$(document).ready(function () {
+		GetProducts();
+
+		const inputSearch = document.getElementById("keyword");
+		if (inputSearch) {
+			inputSearch.addEventListener("change", () => {
+				if (inputSearch.value === "") {
 					GetProducts();
 				}
-				})
-			}
-
-			$(document).ready( function(){
-				GetProducts();
 			});
+		}
+	});
 </script>
-
-

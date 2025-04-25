@@ -72,6 +72,7 @@ namespace BusinessLogic.Repository
             }
             return productQuery.Select(p => new ShopProductViewModel
             {
+                Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
@@ -82,7 +83,7 @@ namespace BusinessLogic.Repository
 
         public IEnumerable<ShopProductViewModel> GetAllProducts()
         {
-            return context.Products.Select(p => new ShopProductViewModel { Name = p.Name, Price = p.Price, Stock = p.Stock ,imgUrl = p.ImagePath}).ToList();
+            return context.Products.Select(p => new ShopProductViewModel {Id=p.Id, Name = p.Name, Price = p.Price, Stock = p.Stock ,imgUrl = p.ImagePath}).ToList();
         }
     }
 }

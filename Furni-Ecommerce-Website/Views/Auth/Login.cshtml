@@ -1,69 +1,157 @@
-﻿@model Furni_Ecommerce_Shared.UserViewModel.LoginViewModel
+﻿@model Furni_Ecommerce_Shared.UserViewModel.CheckoutViewModel
 
 @{
-    Layout = "Auth"; // Use your auth layout or set to null if not needed
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Checkout";
 }
 
-<link rel="stylesheet" href="~/css/login.css" />
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<section class="main-container">
-    <form asp-action="Login" method="post">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+<style>
+    .stepper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+        .stepper div {
+            width: 48%;
+            text-align: center;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
         }
 
-        <h1 class="Login-header">Login</h1>
+        .stepper .active {
+            background-color: #007bff;
+            color: white;
+        }
 
-        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+        .stepper .completed {
+            background-color: #28a745;
+            color: white;
+        }
 
-        <!-- Username -->
-        <div class="mb-3">
-            <label asp-for="UserName" class="form-label">User Name</label>
-            <input asp-for="UserName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
+        .stepper .disabled {
+            background-color: #6c757d;
+            color: white;
+        }
+
+    .step-content {
+        display: none;
+    }
+
+        .step-content.active {
+            display: block;
+        }
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Checkout Process</h2>
+
+    <div class="stepper">
+        <div class="step active" id="step-1">Step 1: Address</div>
+        <div class="step disabled" id="step-2">Step 2: Payment</div>
+    </div>
+
+    <form asp-action="SubmitOrder" asp-controller="Checkout" method="post" novalidate>
+        @Html.AntiForgeryToken()
+
+        <!-- Address Step -->
+        <div class="step-content active" id="address-step">
+            <h4>Shipping Address</h4>
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.Street" class="form-label"></label>
+                <input asp-for="ShippingAddress.Street" class="form-control" />
+                <span asp-validation-for="ShippingAddress.Street" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.City" class="form-label"></label>
+                <input asp-for="ShippingAddress.City" class="form-control" />
+                <span asp-validation-for="ShippingAddress.City" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.State" class="form-label"></label>
+                <input asp-for="ShippingAddress.State" class="form-control" />
+                <span asp-validation-for="ShippingAddress.State" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.ZipCode" class="form-label"></label>
+                <input asp-for="ShippingAddress.ZipCode" class="form-control" />
+                <span asp-validation-for="ShippingAddress.ZipCode" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.Country" class="form-label"></label>
+                <input asp-for="ShippingAddress.Country" class="form-control" />
+                <span asp-validation-for="ShippingAddress.Country" class="text-danger"></span>
+            </div>
         </div>
 
-        <!-- Password -->
-        <div class="mb-3">
-            <label asp-for="Password" class="form-label">Password</label>
-            <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+        <!-- Payment Step -->
+        <div class="step-content" id="payment-step">
+            <h4>Payment Details</h4>
+            <div class="mb-3">
+                <label asp-for="PaymentDetails.PaymentMethod" class="form-label"></label>
+                <input asp-for="PaymentDetails.PaymentMethod" class="form-control" />
+                <span asp-validation-for="PaymentDetails.PaymentMethod" class="text-danger"></span>
+            </div>
 
-            <a href="#" style="display: block; margin-top: 10px; color: rgb(0, 128, 75);">
-                Forgot your password?
-            </a>
+            <div class="mb-3">
+                <label asp-for="PaymentDetails.PaymentStatus" class="form-label"></label>
+                <input asp-for="PaymentDetails.PaymentStatus" class="form-control" />
+                <span asp-validation-for="PaymentDetails.PaymentStatus" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PaymentDetails.TransactionId" class="form-label"></label>
+                <input asp-for="PaymentDetails.TransactionId" class="form-control" />
+                <span asp-validation-for="PaymentDetails.TransactionId" class="text-danger"></span>
+            </div>
         </div>
 
-        <!-- Remember Me -->
-        <div class="mb-3 form-check">
-            <input asp-for="RememberMe" class="form-check-input bg-success" id="exampleCheck1" />
-            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+        <!-- Navigation Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-secondary" id="back-to-address" style="display:none;">Back</button>
+            <button type="button" class="btn btn-primary" id="next-to-payment">Next</button>
+            <button type="submit" class="btn btn-success" id="submit-btn" style="display:none;">Submit Order</button>
         </div>
-
-        <!-- Login button -->
-        <button type="submit" class="btn btn-login">Login</button><br /><br />
-
-        <!-- Register link -->
-        <p style="display: inline;">Don't have an account?</p>
-        <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
     </form>
-</section>
+</div>
 
 @section Scripts {
-    @await Html.PartialAsync("_ValidationScriptsPartial")
-}
+    <partial name="_ValidationScriptsPartial" />
 
-<script>
-    setTimeout(() => {
-        const alert = document.querySelector('.alert');
-        if (alert) {
-            alert.classList.remove('show');
-            alert.classList.add('fade');
-        }
-    }, 4000);
-</script>
+    <script>
+        document.getElementById('next-to-payment').addEventListener('click', function () {
+            const form = document.querySelector('form');
+            if ($(form).valid()) {
+                document.getElementById('address-step').classList.remove('active');
+                document.getElementById('payment-step').classList.add('active');
+                document.getElementById('step-1').classList.remove('active');
+                document.getElementById('step-1').classList.add('completed');
+                document.getElementById('step-2').classList.remove('disabled');
+                document.getElementById('step-2').classList.add('active');
+                document.getElementById('submit-btn').style.display = 'inline-block';
+                document.getElementById('next-to-payment').style.display = 'none';
+                document.getElementById('back-to-address').style.display = 'inline-block';
+            } else {
+                $(form).validate().form();
+            }
+        });
+
+        document.getElementById('back-to-address').addEventListener('click', function () {
+            document.getElementById('payment-step').classList.remove('active');
+            document.getElementById('address-step').classList.add('active');
+            document.getElementById('step-1').classList.add('active');
+            document.getElementById('step-1').classList.remove('completed');
+            document.getElementById('step-2').classList.remove('active');
+            document.getElementById('step-2').classList.add('disabled');
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('next-to-payment').style.display = 'inline-block';
+            document.getElementById('back-to-address').style.display = 'none';
+        });
+    </script>
+}

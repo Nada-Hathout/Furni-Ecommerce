@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,10 +32,35 @@ namespace DataAccess.Models
         public virtual DbSet<Review> Reviews { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            //base.OnModelCreating(builder);
+            //builder.Entity<ApplicationUser>()
+            //  .HasIndex(u => u.PhoneNumber)
+            //  .IsUnique();
             base.OnModelCreating(builder);
-            builder.Entity<ApplicationUser>()
-              .HasIndex(u => u.PhoneNumber)
-              .IsUnique();
+            builder.Entity<Order>()
+            .Property(o => o.TotalAmount)
+            .HasColumnType("decimal(18,2)"); // 18 total digits, 2 decimal places
+
+            builder.Entity<OrderItem>()
+                .Property(oi => oi.UnitPrice)
+                .HasColumnType("decimal(18,2)");
+
+            builder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
+
+            // You can also specify precision and scale directly
+            builder.Entity<Order>()
+                .Property(o => o.TotalAmount)
+            .HasPrecision(18, 2);
+
+            builder.Entity<OrderItem>()
+                .Property(oi => oi.UnitPrice)
+            .HasPrecision(18, 2);
+                
+            builder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
         }
 
     }

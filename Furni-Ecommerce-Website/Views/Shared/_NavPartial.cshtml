@@ -113,7 +113,7 @@
                     {
                         <!-- Person button for guests -->
                         <button type="button" class="icon-button" data-bs-toggle="modal" data-bs-target="#authModal">
-                            <img class="image-person" src="images/user.svg">
+                            <img class="image-person" src="~/images/user.svg">
                         </button>
 
                         <!-- Modal for login/register -->
@@ -146,10 +146,10 @@
                         </div>
                     }
                 </li>
-                <li><a class="nav-link" href="/CartItem"><img src="images/cart.svg"></a>
+                <li><a class="nav-link" href="/CartItem"><img src="~/images/cart.svg"></a>
               					<span id="cart-count" class="badge bg-danger position-absolute top-0 left-0">0</span></li>
 
-              				<li> <a class="nav-link" href="@Url.Action("Favorite")"><i class="bi bi-heart me-2 fs-5 "></i></a></li>
+              				<li> <a class="nav-link" href="/@Url.Action("Favorite")"><i class="bi bi-heart me-2 fs-5 "></i></a></li>
 
             </ul>
         </div>

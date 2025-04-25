@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="User")]
     public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

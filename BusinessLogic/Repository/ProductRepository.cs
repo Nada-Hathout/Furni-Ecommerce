@@ -83,7 +83,7 @@ namespace BusinessLogic.Repository
 
         public IQueryable<ShopProductViewModel> GetAllProducts()
         {
-            return context.Products.Select(p => new ShopProductViewModel {Id=p.Id, Name = p.Name, Price = p.Price, Stock = p.Stock ,imgUrl = p.ImagePath}).ToList();
+            return context.Products.Select(p => new ShopProductViewModel { Id = p.Id, Name = p.Name, Price = p.Price, Stock = p.Stock, imgUrl = p.ImagePath });
 
         }
     }

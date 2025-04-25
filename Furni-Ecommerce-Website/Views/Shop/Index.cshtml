@@ -1,10 +1,44 @@
 ﻿@model List<Furni_Ecommerce_Shared.UserViewModel.ShopProductViewModel>
 @{
 	ViewData["Title"] = "Index";
-	Layout = "~/Views/Shared/_ShopLayout.cshtml";
+    Layout = "~/Views/Shared/_ShopLayout.cshtml";
 }
 
 <style>
+	#animation-container {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100vw;
+		height: 100vh;
+		background-color: rgba(255, 255, 255, 0.8); 
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		z-index: 9999;
+	}
+
+	.spinner {
+		width: 60px;
+		height: 60px;
+		border: 7px solid #e0e0e0;
+		border: 7px dashed #3B5D50;
+		border-radius: 50%;
+		animation: spin 5s linear infinite;
+	}
+
+	keyframes spin {
+		 0%
+	{
+		transform: rotate(0deg);
+	}
+
+	100%
+	{
+		transform: rotate(360deg);
+	}
+	}
+
 	.pagination .page-item.active .page-link {
 		background-color: #3B5D50;
 		color: white;
@@ -26,6 +60,7 @@
 </style>
 <!-- Start Hero Section -->
 <div class="hero">
+	
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
@@ -71,6 +106,9 @@
 			</div>
 			<div class="col-lg-7"></div>
 		</div>
+	<div id="toast-container" class=" position-fixed top-50 start-50 translate-middle" style="z-index:999; width:fit-content; max-width:100%;">
+
+	</div>
 	</div>
 </div>
 <!-- End Hero Section -->
@@ -82,6 +120,9 @@
 <!-- Product Section -->
 <div class="untree_co-section product-section before-footer-section">
 	<div class="container">
+		<div id="animation-container">
+			<div class="spinner"></div>
+		</div>
 		<div class="row" id="products-container">
 			@* Dynamic Products Go Here *@
 		</div>
@@ -93,120 +134,232 @@
 </div>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-	let currentPage = 1;
-	let totalPages = 1;
 
-	function GetProducts(page = 1) {
-		currentPage = page;
-		var keyword = $("#keyword").val();
-		var minPrice = $("#minPrice").val();
-		var maxPrice = $("#maxPrice").val();
 
-		$("#products-container").html("");
-		$("#pagination-container").html("");
-
-		$.ajax({
-			url: `/Shop/SearchProduct?keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${currentPage}&pageSize=8`,
-			method: "GET",
-			success: function (result) {
-				let products = result.data;
-				let total = result.total;
-				let pageSiz = 8;
-				let totalPages = Math.ceil(total / pageSiz);
-
-				if (products.length === 0) {
-					$("#products-container").html(`
-						<div class="col-12 text-center">
-							<h4>No Products Found</h4>
-						</div>
-					`);
-					return;
-				}
-
-				for (let item of products) {
-					let card = `
-						<div class="col-12 col-md-4 col-lg-3 mb-5">
-							<a class="product-item" href="#">
-								<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail">
-								<h3 class="product-title">${item.name}</h3>
-								<p class="product-price"><strong>${item.price} EG</strong></p>
-																<p class="product-price"><strong>id: ${item.id}</strong></p>
-
-								<p class="product-price"><strong>Stock: ${item.stock}</strong></p>
-								<span class="icon-cross" onclick="addtocart(${item.id})">
-									<img src="/images/cross.svg" class="img-fluid">
-								</span>
-							</a>
-						</div>`;
-					$("#products-container").append(card);
-				}
-
-				let paginationHtml = `<nav aria-label="Page navigation"><ul class="pagination justify-content-center">`;
-
-				paginationHtml += currentPage > 1
-					? `<li class="page-item"><a class="page-link rounded-1" href="javascript:void(0)" onclick="GetProducts(${currentPage - 1})">Previous</a></li>`
-					: `<li class="page-item disabled"><span class="page-link">Previous</span></li>`;
-
-				for (let i = 1; i <= totalPages; i++) {
-					paginationHtml += `<li class="page-item ${i === currentPage ? 'active' : ''}">
-						<a class="page-link rounded-1" href="javascript:void(0)" onclick="GetProducts(${i})">${i}</a>
-					</li>`;
-				}
-
-				paginationHtml += currentPage < totalPages
-					? `<li class="page-item"><a class="page-link rounded-1" href="javascript:void(0)" onclick="GetProducts(${currentPage + 1})">Next</a></li>`
-					: `<li class="page-item disabled"><span class="page-link">Next</span></li>`;
-
-				paginationHtml += `</ul></nav>`;
-				$("#pagination-container").html(paginationHtml);
-			},
-			error: function (err) {
-				showCartMessage("Error loading products.", true);
+	<script>
+		function showAnimation(){
+			let container = document.getElementById("animation-container");
+			if(container != null & container != undefined){
+				container.classList.remove("d-none");
 			}
-		});
-	}
-
-		function addtocart(productId) {
-		$.ajax({
-			url: '/Shop/AddToCart',
-			type: 'POST',
-			data: { productId: productId },
-			success: function (response) {
-				$('#cart-message').removeClass('d-none').fadeIn();
-				setTimeout(() => {
-					$('#cart-message').fadeOut();
-				}, 3000);
-			},
-			error: function (xhr) {
-				alert("Error adding product to cart.");
-				console.error(xhr.responseText);
-			}
-		});
-	}
-
-
-	function showCartMessage(message, isError = false) {
-		const messageBox = $("#cart-message");
-		messageBox.removeClass("d-none alert-success alert-danger");
-		messageBox.addClass(isError ? "alert-danger" : "alert-success");
-		messageBox.text(message).fadeIn(300);
-
-		setTimeout(() => {
-			messageBox.fadeOut(500);
-		}, 3000);
-	}
-
-	$(document).ready(function () {
-		GetProducts();
-
-		const inputSearch = document.getElementById("keyword");
-		if (inputSearch) {
-			inputSearch.addEventListener("change", () => {
-				if (inputSearch.value === "") {
-					GetProducts();
-				}
-			});
 		}
-	});
-</script>
+
+		function hideAnimation(){
+			let container = document.getElementById("animation-container");
+			if(container != null & container != undefined){
+				container.classList.add("d-none");
+			}
+		}
+		let currentPage =1;
+		let totalPages= 1;
+		function GetProducts(page =1){
+			showAnimation();
+			// console.log("Search");
+			currentPage = page;
+			var keyword = $("#keyword").val();
+			var minPrice = $("#minPrice").val();
+			var maxPrice = $("#maxPrice").val();
+				 $("#products-container").html("");
+				 $("#pagination-container").html("");
+
+				 $.ajax({
+					url: `/Shop/SearchProduct?keyword=${keyword}&minPrice=${minPrice}&maxPrice=${maxPrice}&page=${currentPage}&pageSize=8`,
+					method: "GET",
+					success: function (result) {
+						hideAnimation();
+						// console.log(result);
+						let products = result.data;
+						let total =result.total;
+						let pageSiz= 8;
+						let totalPages = Math.ceil(total / pageSiz);
+						if(products.length == 0 )
+						{
+							$("#products-container").html(
+						`
+						<div class="col-12 text-center">
+						<h4> No Products Found</h4>
+						</div>
+						`
+					);
+					return;
+					}
+
+						for (let item of products) {
+							let card =
+						`<div class="col-12 col-md-4 col-lg-3 mb-5" >
+								<div class="product-item">
+								 <a href="/Home/PrdDetails?id=${item.id}">
+									<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail">
+								  </a>
+								  <h3 class="product-title">
+									<a href="/Home/prodDetails?id=${item.id}" class="text-decoration-none h4">${item.name}</a>
+								  </h3>
+								  <p class="product-price"><strong>${item.price} EG</strong></p>
+								  <p class="product-price"><strong>Stock: ${item.stock}</strong></p>
+
+								  <button class="btn btn-outline-primary btn-sm mt-2" onclick="event.stopPropagation(); AddToCart(${item.id})">
+									<img src="/images/cross.svg" class="img-fluid" style="width:15px">
+								  </button>
+								</div>
+
+							</div>`
+							$("#products-container").append(card)
+						}
+
+					let paginationHtml = `<nav aria-label="Page navigation example"><ul class="pagination justify-content-center">`;
+
+					// Previous Button
+					if (currentPage > 1) {
+						paginationHtml += `
+						<li class="page-item">
+							<a class="page-link  rounded-1"  href="javascript:void(0)" onclick="GetProducts(${currentPage - 1})">Previous</a>
+						</li>`;
+					} else {
+						paginationHtml += `
+						<li class="page-item disabled">
+							<span class="page-link">Previous</span>
+						</li>`;
+					}
+
+
+					for (let i = 1; i <= totalPages; i++) {
+						paginationHtml += `
+						<li class="page-item ${i === currentPage ? 'active' : ''}">
+							<a class="page-link rounded-1"  href="javascript:void(0)" onclick="GetProducts(${i})">${i}</a>
+						</li>`;
+					}
+
+					// Next Button
+					if (currentPage < totalPages) {
+						paginationHtml += `
+						<li class="page-item">
+							<a class="page-link  rounded-1"  href="javascript:void(0)" onclick="GetProducts(${currentPage + 1})">Next</a>
+						</li>`;
+					} else {
+						paginationHtml += `
+						<li class="page-item disabled">
+							<span class="page-link">Next</span>
+						</li>`;
+					}
+
+					paginationHtml += `</ul></nav>`;
+					$("#pagination-container").html(paginationHtml);
+
+					},
+					error: function(){
+						hideAnimation();
+						ShowErrorToast("Error To Loading Products");
+					}
+
+				});
+
+		}
+
+				const inputSearch = document.getElementById("keyword");
+					if(inputSearch != null){
+					inputSearch.addEventListener("change", ()=>{
+					if(inputSearch.value == ""){
+						GetProducts();
+					}
+					})
+				}
+
+
+				function AddToCart(productId)
+				{
+					$.ajax
+					({
+						url:'/Cart/AddItemToCart',
+						type:'post',
+						data: {productId:productId},
+						withCredentials: true,
+						success : function(response)
+						{
+							if(response.success)
+							{
+								//alert("Add To Cart Successfully");
+								ShowToast("Add To Cart Successfully!");
+								UpdateCartCount();
+							} else if(response.redirectUrl)
+							{
+								window.location.href = response.redirectUrl;
+							}
+						},
+						error : function(err)
+						{
+							ShowErrorToast("Error!,Failed To Add To Cart")
+						}
+					});
+				}
+
+
+				function ShowToast(message)
+				{
+					const toastHtml =`
+							<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+								  <div class="toast-header">
+									<img src="images/true.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
+									<strong class="me-auto">Success!</strong>
+									<small>Now</small>
+									<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+								  </div>
+								  <div class="toast-body text-dark">
+									${message}
+								  </div>
+							</div>
+					`;
+					$('#toast-container').html(toastHtml);
+					$('.toast').toast({delay:3000});
+					$('.toast').toast('show');
+
+				}
+
+				$('#keyword').on("keypress", function (e) {
+					if(e.which ==13)
+					{
+						GetProducts(1);
+					}
+				}
+				);
+
+				function ShowErrorToast(message)
+			{
+				const toastHtml =`
+						<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+							  <div class="toast-header">
+								<img src="images/error.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
+								<strong class="me-auto">Error!</strong>
+								<small>Now</small>
+								<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+							  </div>
+							  <div class="toast-body text-dark">
+								${message}
+							  </div>
+						</div>
+				`;
+				$('#toast-container').html(toastHtml);
+				$('.toast').toast({delay:3000});
+				$('.toast').toast('show');
+
+			}
+
+			function UpdateCartCount()
+			{
+				$.ajax({
+			url:'/Cart/GetCartItemsCount',
+				method:'Get',
+				success: function (response){
+					$("#cart-count").text(response.count)
+				}
+				});
+			}
+
+				$(document).ready( function(){
+					GetProducts();
+					UpdateCartCount();
+				});
+
+	</script>
+
+
+

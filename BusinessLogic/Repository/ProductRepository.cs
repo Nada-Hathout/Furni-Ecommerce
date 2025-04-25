@@ -51,7 +51,7 @@ namespace BusinessLogic.Repository
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ShopProductViewModel> SearchProduct(string keyword)
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword)
         {
 
             if(string.IsNullOrEmpty(keyword))
@@ -77,13 +77,14 @@ namespace BusinessLogic.Repository
                 Price = p.Price,
                 Stock = p.Stock,
                 imgUrl = p.ImagePath
-            }) .ToList();
+            });
 
         }
 
-        public IEnumerable<ShopProductViewModel> GetAllProducts()
+        public IQueryable<ShopProductViewModel> GetAllProducts()
         {
             return context.Products.Select(p => new ShopProductViewModel {Id=p.Id, Name = p.Name, Price = p.Price, Stock = p.Stock ,imgUrl = p.ImagePath}).ToList();
+
         }
     }
 }

@@ -182,14 +182,14 @@ namespace BusinessLogic.Service
             return productRepository.GetAll();
         }
 
-        public IEnumerable<ShopProductViewModel> SearchProduct(string keyword)
+        public IQueryable <ShopProductViewModel> SearchProduct(string keyword)
         {
-            return productRepository.SearchProduct(keyword);
+            return (IQueryable<ShopProductViewModel>)productRepository.SearchProduct(keyword);
         }
 
-        IEnumerable<ShopProductViewModel> IProductService.GetProducts()
+        IQueryable<ShopProductViewModel> IProductService.GetProducts()
         {
-            return productRepository.GetAllProducts();
+            return (IQueryable<ShopProductViewModel>)productRepository.GetAllProducts();
         }
 
         public ProductsAndCommentsViewModel getDetails(int id)

@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
@@ -43,6 +46,18 @@ namespace Furni_Ecommerce_Website.Controllers
 
                 if (result.Succeeded)
                 {
+
+                   await  userManager.AddToRoleAsync(user, "User");
+                    var claims = new List<Claim>
+                    {
+                       new Claim(ClaimTypes.Name, user.UserName),
+                       new Claim ("UserId", user.Id)
+                    };
+                    await userManager.AddClaimsAsync(user, claims);
+
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
+
                     // Check if role exists before adding
                     if (await userManager.GetRolesAsync(user) is var roles && !roles.Contains("User"))
                     {
@@ -124,6 +139,20 @@ namespace Furni_Ecommerce_Website.Controllers
                     bool found = await userManager.CheckPasswordAsync(user, model.Password);
                     if (found)
                     {
+                        //await signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+
+                        var claim = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, user.UserName),
+                            new Claim("UserId",user.Id)
+                        };
+                        var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+                        var principal = new ClaimsPrincipal(identity);
+                         await signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+                        //await HttpContext.SignInAsync(IdentityConstants.ApplicationScheme, principal);
+
+                        await userManager.AddClaimAsync(user, new Claim("UserId", user.Id));
+
                         await signInManager.SignInAsync(user, isPersistent: model.RememberMe);
                         HttpContext.Session.SetString("UserId", user.Id);
                         return RedirectToAction("Index", "Home");

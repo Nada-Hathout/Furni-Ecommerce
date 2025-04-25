@@ -14,7 +14,7 @@ namespace Furni_Ecommerce_Website.Controllers
         public IActionResult Index()
         {
             var products = _productService.GetProducts();
-            return View("Index", products);
+            return View("Index", products.ToList());
 
         }
         [HttpGet]

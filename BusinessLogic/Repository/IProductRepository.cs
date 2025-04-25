@@ -10,8 +10,8 @@ namespace BusinessLogic.Repository
 {
     public interface IProductRepository:IRepository<Product>
     {
-        IEnumerable<ShopProductViewModel> SearchProduct(string keyword);
-        IEnumerable<ShopProductViewModel> GetAllProducts();
+        IQueryable<ShopProductViewModel> SearchProduct(string keyword);
+        IQueryable<ShopProductViewModel> GetAllProducts();
 
        
     }

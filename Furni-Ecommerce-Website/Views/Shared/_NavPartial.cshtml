@@ -71,6 +71,7 @@
 </style>
 
 <nav class="custom-navbar navbar navbar navbar-expand-md navbar-dark bg-dark" arial-label="Furni navigation bar">
+
     <div class="container">
         <a class="navbar-brand" href="index.html">Furni<span>.</span></a>
 
@@ -145,7 +146,9 @@
                         </div>
                     }
                 </li>
-                <li><a class="nav-link" href="/CartItem"><img src="images/cart.svg"></a></li>
+                <li><a class="nav-link" href="/CartItem"><img src="images/cart.svg"></a>
+              					<span id="cart-count" class="badge bg-danger position-absolute top-0 left-0">0</span></li>
+
               				<li> <a class="nav-link" href="@Url.Action("Favorite")"><i class="bi bi-heart me-2 fs-5 "></i></a></li>
 
             </ul>

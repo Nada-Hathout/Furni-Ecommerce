@@ -12,8 +12,8 @@ namespace BusinessLogic.Service
     public interface IProductService
     {
         public List<Product> GetAllProducts();
-        public IEnumerable<ShopProductViewModel> SearchProduct(string keyword);
-        public IEnumerable<ShopProductViewModel> GetProducts();
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword);
+        public IQueryable<ShopProductViewModel> GetProducts();
 
         List<ProductsAndCommentsViewModel> GetProductsInfo();
         ProductsAndCommentsViewModel getDetails(int id);

@@ -9,5 +9,7 @@ namespace BusinessLogic.Repository
 {
     public interface ICartRepository:IRepository<Cart>
     {
+        public void AddItemToCart(string userId, int productId);
+        public int GetCartItemsCountByUserId(string userId);
     }
 }

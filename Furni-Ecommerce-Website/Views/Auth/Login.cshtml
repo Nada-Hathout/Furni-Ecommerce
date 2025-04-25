@@ -4,6 +4,10 @@
     Layout = "Auth"; // Use your auth layout or set to null if not needed
     ViewData["Title"] = "Login";
 }
+<!-- Bootstrap & Font Awesome -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
 
 <link rel="stylesheet" href="~/css/login.css" />
 
@@ -11,7 +15,7 @@
     <form asp-action="Login" method="post">
         @if (TempData["SuccessMessage"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success alert-dismissible fade show success-message" role="alert">
                 @TempData["SuccessMessage"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
@@ -29,15 +33,22 @@
         </div>
 
         <!-- Password -->
-        <div class="mb-3">
+        <div class="mb-3" style="position: relative; ">
             <label asp-for="Password" class="form-label">Password</label>
-            <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" />
+
+            <input asp-for="Password" type="password" class="form-control " id="exampleInputPassword1" />
+
+            <!-- Eye Icon Positioned Absolutely Inside Input -->
+           <i class="fa-solid fa-eye" onclick="togglePassword()" id="toggleIcon"
+            style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+
             <span asp-validation-for="Password" class="text-danger"></span>
 
             <a href="#" style="display: block; margin-top: 10px; color: rgb(0, 128, 75);">
                 Forgot your password?
             </a>
         </div>
+
 
         <!-- Remember Me -->
         <div class="mb-3 form-check">
@@ -66,4 +77,36 @@
             alert.classList.add('fade');
         }
     }, 4000);
+    //hash password
+    
+    function togglePassword() {
+        const input = document.getElementById('exampleInputPassword1');
+        const icon = document.getElementById('toggleIcon');
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    }
+
+
 </script>
+
+<style>
+    /* Style for success message to appear on top without taking space */
+.success-message {
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    width: 100%;
+    margin: 0 auto;
+}
+
+</style>

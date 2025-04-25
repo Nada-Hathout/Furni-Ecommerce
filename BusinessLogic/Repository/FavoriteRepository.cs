@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,24 @@ namespace BusinessLogic.Repository
             context = furniDbContext;
             
         }
-        public void Add(Favorite entity)
+        public bool Exists(string userId, int productId)
         {
-            throw new NotImplementedException();
+            return context.Favorites.Any(f => f.UserId == userId && f.ProductId == productId);
+        }
+        public void Add(string userId, int productId)
+        {
+            var fav = new Favorite { UserId = userId, ProductId = productId };
+            context.Favorites.Add(fav);
+            context.SaveChanges();
+        }
+        public void Remove(string userId, int productId)
+        {
+            var fav = context.Favorites.FirstOrDefault(f => f.UserId == userId && f.ProductId == productId);
+            if (fav != null)
+            {
+                context.Favorites.Remove(fav);
+                context.SaveChanges();
+            }
         }
 
         public void Delete(int id)
@@ -41,6 +57,11 @@ namespace BusinessLogic.Repository
         }
 
         public void Update(Favorite entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Add(Favorite entity)
         {
             throw new NotImplementedException();
         }

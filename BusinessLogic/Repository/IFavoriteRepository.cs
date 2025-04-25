@@ -9,6 +9,9 @@ namespace BusinessLogic.Repository
 {
     public interface IFavoriteRepository:IRepository<Favorite> 
     {
-
+        public bool Exists(string userId, int productId);
+        public void Add(string userId, int productId);
+        public void Remove(string userId, int productId);
     }
-}
+
+ }

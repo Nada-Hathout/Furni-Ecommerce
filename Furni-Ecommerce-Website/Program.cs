@@ -25,14 +25,15 @@ namespace Furni_Ecommerce_Website
             //Add Repositories
             builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
-
+            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
             //Add Services
             builder.Services.AddScoped<CartItemService>();
             builder.Services.AddScoped<ProductService>();
+            
 
-
-
+            builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
+   
             builder.Services.AddScoped<IProductService,ProductService>();
             builder.Services.Configure<IdentityOptions>(options =>
             {

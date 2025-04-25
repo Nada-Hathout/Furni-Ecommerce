@@ -5,23 +5,23 @@
 }
 
 <div class="container-fluid px-0">
-  <div class="row" style:"margin:0px auto;height: 250vh;">
-    <div class="card mb-3" style="width: 100%; ">
-      <div class="row g-0 h-100"  style="height: 800px;">
+  <div class="row" style:"margin:0px auto;height: 250vh; padding-top:60px;">
+    <div class="card mb-3" style="width: 100%;">
+      <div class="row g-0 h-100"  style="height:800px;padding-top:50px;">
         <!-- Image Column -->
-        <div class="col-md-5 text-center mt-5" >
-          <img src="~/images/@Model.ImagePath" class="img-fluid rounded-start shadow" alt="..." style="max-height: 100%; max-width: 100%; object-fit: contain;">
+        <div class="col-md-7 text-center mt-5" style="padding" >
+          <img src="~/images/@Model.ImagePath" class="img-fluid rounded-start shadow" alt="..." style="max-height: 80%; max-width: 90%; ">
         </div>
 
       <!-- Text Column -->
-        <div class="col-md-7 mt-5 " style="margin: 0 auto;padding-bottom:200px;">
-          <div class="card-body p-3" style="height: auto; padding: 15px; max-width: 100%; overflow: hidden;">
+        <div class="col-md-5 mt-5 " style="margin: 0 auto;padding-bottom:200px;">
+          <div class="card-body p-3  text-center text-md-start" style="height: auto; padding: 15px; max-width: 100%; overflow: hidden;">
             <h1 class="card-title"> @Model.Name</h1>
-            <p class="card-text">Stock: @Model.Description</p>
+            <p class="card-text">@Model.Description</p>
             <h4 class="card-text">💰 <strong>Price:</strong> $@Model.Price</h4>
             <h4 class="card-text">📦 <strong>Stock:</strong> @Model.Stock Item</h4>
-            <h4 class="card-text">🏷️ <strong>Category:</strong> @Model.CategoryName</h4>
-   
+            <h4 class="card-text">🏷️ <strong>Category:</strong> @Model.CategoryName</h4><br>
+            <p ><a href="#" class=" btn btn-buy shadow" >Buy Now</a></p>
 
           </div>
         </div>
@@ -48,5 +48,13 @@
                 }
                 .card-text{
                     padding-bottom:20px
+                }
+                .btn-buy{
+                background-color:#3b5d50;
+
+                }
+                 .btn-buy:hover{
+                background-color:#3b8d50;
+
                 }
             </style>

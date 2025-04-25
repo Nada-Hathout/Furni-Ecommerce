@@ -1,11 +1,12 @@
-* {
+﻿* {
   box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
 }
 
 .Left-image {
@@ -13,24 +14,35 @@ body {
    */
    background-image: url('https://media.istockphoto.com/id/2150698630/photo/tablet-screen-or-mature-couple-on-app-for-home-renovation-interior-design-or-aesthetic.jpg?s=612x612&w=0&k=20&c=u6Jj7kKCPPtymi-qa7uaz10vRulwFZ8yhPkMIk7WNk8=');
   
-  height: 100vh;
+  min-height: 100vh;
   background-position: center;
   background-size: cover;
 }
 
 .form-container {
-  background-color: #3b5d50;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  padding: 40px;
+    background-color: #3b5d50;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 40px;
+    overflow: visible;
 }
 
 .signup-form {
-  width: 100%;
-  max-width: 400px;
+    width: 100%;
+    max-width: 400px;
+    overflow: visible;
+}
+.validation-summary-errors {
+    max-height: 60px; 
+    overflow-y: hidden; 
+    font-size: 14px;
+    color: red;
+    margin-bottom: 15px;
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 .form-title {
@@ -42,17 +54,19 @@ body {
 }
 
 .form-group {
-  position: relative;
-  margin-bottom: 25px;
+    position: relative;
+    margin-bottom: 40px;
 }
 
-.form-group i {
-  position: absolute;
-  top: 50%;
-  left: 10px;
-  transform: translateY(-50%);
-  color: #ffc107;
-}
+    .form-group:not(.password-group) i {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+        color: #ffc107;
+        z-index: 2;
+    }
+
 
 .form-group input[type="text"],
 .form-group input[type="email"],
@@ -68,9 +82,7 @@ body {
   outline: none;
 }
 
-input::placeholder {
-  color: #ccc;
-}
+
 
 .label-agree-term {
   font-size: 14px;
@@ -97,6 +109,11 @@ input::placeholder {
   box-shadow: 0 4px 6px rgba(206, 82, 10, 0.1);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
+.form-group input::placeholder {
+    color: white;
+    opacity: 1;
+    font-size:20px
+}
 
 
 .form-submit:hover {
@@ -105,4 +122,48 @@ input::placeholder {
   transform: scale(1.05);
   color: beige;
    
+}
+
+
+.password-group {
+    position: relative;
+}
+
+.password-input {
+    padding-left: 40px; 
+    padding-right: 40px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    color: white;
+    outline: none;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.lock-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #ffc107;
+    z-index: 2;
+}
+
+.toggle-password-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #ffc107;
+    cursor: pointer;
+    z-index: 2;
+}
+.form-group span.text-danger {
+    position: absolute;
+    bottom: -18px; 
+    left: 0;
+    font-size: 13px;
+    color: red;
 }

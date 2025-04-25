@@ -1,4 +1,4 @@
-﻿@model List< Furni_Ecommerce_Shared.UserViewModel.ShopProductViewModel>
+﻿@model List<Furni_Ecommerce_Shared.UserViewModel.ShopProductViewModel>
 @{
 	ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_ShopLayout.cshtml";
@@ -46,22 +46,25 @@
 	}
 
 	.pagination .page-link {
-		color: #3B5D50; 
+		color: #3B5D50;
 	}
 
 		.pagination .page-link:hover {
 			background-color: #e9ecef;
 			border-color: #dee2e6;
 		}
-</style>
 
+	#cart-message {
+		z-index: 1050;
+	}
+</style>
 <!-- Start Hero Section -->
 <div class="hero">
 	
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
-				<div class="intro-excerpt ">
+				<div class="intro-excerpt">
 					<h1>Shop</h1>
 					<div class="row">
 						<form>
@@ -69,17 +72,16 @@
 								<div class="col-md-6">
 									<input type="search" class="form form-control" id="keyword" placeholder="Search Products..." />
 								</div>
-								<div class="col-md-3 ">
-									 <input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
-										<datalist id="price-options">
-											<option value="1000"/>
-											<option value="2000"/>
-											<option value="3000"/>
-											<option value="5000"/>
-											<option value="7000" />
+								<div class="col-md-3">
+									<input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
+									<datalist id="price-options">
+										<option value="1000" />
+										<option value="2000" />
+										<option value="3000" />
+										<option value="5000" />
+										<option value="7000" />
 										<option value="10000" />
-
-										</datalist>
+									</datalist>
 								</div>
 								<div class="col-md-3">
 									<input type="text" class="form-control" id="maxPrice" placeholder="Max Price" list="price-max">
@@ -92,26 +94,17 @@
 										<option value="50000" />
 										<option value="75000" />
 										<option value="100000" />
-
-
-
 									</datalist>
 								</div>
 								<div class="col-md-6">
 									<input type="button" value="Search" class="btn btn-primary m-2" onclick="GetProducts(1)" />
 								</div>
 							</div>
-
 						</form>
 					</div>
 				</div>
-				<div class="row">
-					
-				</div>
-
 			</div>
-			<div class="col-lg-7">
-			</div>
+			<div class="col-lg-7"></div>
 		</div>
 	<div id="toast-container" class=" position-fixed top-50 start-50 translate-middle" style="z-index:999; width:fit-content; max-width:100%;">
 
@@ -119,29 +112,29 @@
 	</div>
 </div>
 <!-- End Hero Section -->
+<!-- Cart Toast Message -->
+<div id="cart-message" class="alert alert-success position-fixed top-0 end-0 m-3 d-none" role="alert">
+	Product added to cart!
+</div>
 
-
-
+<!-- Product Section -->
 <div class="untree_co-section product-section before-footer-section">
 	<div class="container">
 		<div id="animation-container">
 			<div class="spinner"></div>
 		</div>
 		<div class="row" id="products-container">
-			<!-- Start Column 1 -->
-			@* products  *@
-
+			@* Dynamic Products Go Here *@
 		</div>
 
 		<div id="pagination-container" class="text-center mt-3">
-		@* pagination buttons  *@
-	</div>
-	
+			@* Pagination Buttons Here *@
+		</div>
 	</div>
 </div>
 
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
 
 	<script>
 		function showAnimation(){

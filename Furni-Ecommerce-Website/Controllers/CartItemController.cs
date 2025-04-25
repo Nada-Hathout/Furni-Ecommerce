@@ -2,15 +2,16 @@
 using Furni_Ecommerce_Shared.UserViewModel;
 using Microsoft.AspNetCore.Mvc;
 using BusinessLogic.Service;
+using System.Security.Claims;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
     public class CartItemController : Controller
     {
-        private readonly CartItemService _cartItemService;
-        private readonly ProductService _productService;
+        private readonly ICartItemService _cartItemService;
+        private readonly IProductService _productService;
 
-        public CartItemController(CartItemService cartItemService, ProductService productService)
+        public CartItemController(ICartItemService cartItemService, IProductService productService)
         {
             _cartItemService = cartItemService;
             _productService = productService;
@@ -18,7 +19,9 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public IActionResult Index()
         {
-            var cartItems = _cartItemService.GetAllCartItems();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var cartItems = _cartItemService.GetAllCartItems(userId);
             var cartItemViewModels = cartItems.Select(item => new CartItemViewModel
             {
                 CartItemId = item.Id,

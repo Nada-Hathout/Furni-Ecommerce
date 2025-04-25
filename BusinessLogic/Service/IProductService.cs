@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Service
 {
@@ -17,5 +18,6 @@ namespace BusinessLogic.Service
 
         List<ProductsAndCommentsViewModel> GetProductsInfo();
         ProductsAndCommentsViewModel getDetails(int id);
+        public bool AddCart(int productId, HttpContext httpContext,string userID);
     }
 }

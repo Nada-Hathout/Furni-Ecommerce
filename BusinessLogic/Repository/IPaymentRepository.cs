@@ -9,5 +9,7 @@ namespace BusinessLogic.Repository
 {
     public interface IPaymentRepository:IRepository<Payment>
     {
+        public Task<Payment> AddPaymentAsc(Payment payment);
+        public Task<Payment> GetPaymentByIdAsc(int id);
     }
 }

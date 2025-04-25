@@ -1,0 +1,79 @@
+﻿@model Furni_Ecommerce_Shared.UserViewModel.OrderConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Order Confirmation";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5">Thank You for Your Order!</h1>
+        <p class="lead">Your order has been placed successfully.</p>
+    </div>
+
+    <div class="row gy-4">
+        <!-- Order Summary -->
+        <div class="col-lg-8">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Order #@Model.OrderId</h5>
+                    <small>Placed on @Model.OrderDate.ToString("MMMM d, yyyy 'at' h:mm tt")</small>
+                </div>
+                <div class="card-body">
+                    <h6>Items</h6>
+                    <ul class="list-group list-group-flush mb-3">
+                        @foreach (var item in Model.Items)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>@item.ProductName</strong><br />
+                                    <small>Qty: @item.Quantity</small>
+                                </div>
+                                <span>@item.UnitPrice.ToString("C")</span>
+                            </li>
+                        }
+                    </ul>
+                    <div class="d-flex justify-content-between">
+                        <strong>Total:</strong>
+                        <h5>@Model.TotalAmount.ToString("C")</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping & Payment Details -->
+        <div class="col-lg-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header">
+                    <h6 class="mb-0">Shipping Address</h6>
+                </div>
+                <div class="card-body">
+                    <address class="mb-0">
+                        @Model.ShippingAddress.Street<br />
+                        @Model.ShippingAddress.City, @Model.ShippingAddress.State @Model.ShippingAddress.ZipCode<br />
+                        @Model.ShippingAddress.Country
+                    </address>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h6 class="mb-0">Payment</h6>
+                </div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>Method:</strong> @Model.PaymentMethod</p>
+                    <p class="mb-1"><strong>Status:</strong> @Model.PaymentStatus</p>
+                    @if (!string.IsNullOrEmpty(Model.TransactionId))
+                    {
+                        <p class="mb-0"><strong>Transaction ID:</strong> @Model.TransactionId</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">Continue Shopping</a>
+    </div>
+</div>

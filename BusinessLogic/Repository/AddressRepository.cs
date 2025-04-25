@@ -1,4 +1,5 @@
 ﻿using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +18,17 @@ namespace BusinessLogic.Repository
         }
         public void Add(Address entity)
         {
-            throw new NotImplementedException();
+            context.Addresses.Add(entity);
         }
 
         public void Delete(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Address> GetAddressByIdAsc(int id)
+        {
+            return await context.Addresses.Where(a=>a.Id==id).FirstOrDefaultAsync();
         }
 
         public List<Address> GetAll()
@@ -37,7 +43,13 @@ namespace BusinessLogic.Repository
 
         public int Save()
         {
-            throw new NotImplementedException();
+          return context.SaveChanges();
+        }
+        public async Task<Address> SaveAddressAsync(Address address)
+        {
+            context.Addresses.Add(address);
+            await context.SaveChangesAsync();
+            return address;
         }
 
         public void Update(Address entity)

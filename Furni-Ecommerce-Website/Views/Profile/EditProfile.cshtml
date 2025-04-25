@@ -1,0 +1,136 @@
+﻿@model Furni_Ecommerce_Shared.UserViewModel.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+    Layout = "_Layout";
+}
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header card-header-profile">
+                    <h4 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Edit Profile Information</h4>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="EditProfile" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="FirstName" class="form-label fw-medium"></label>
+                                <input asp-for="FirstName" class="form-control py-2" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="LastName" class="form-label fw-medium"></label>
+                                <input asp-for="LastName" class="form-control py-2" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-medium"></label>
+                            <input asp-for="Email" class="form-control py-2" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="PhoneNumber" class="form-label fw-medium"></label>
+                            <input asp-for="PhoneNumber" class="form-control py-2" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="UserName" class="form-label fw-medium"></label>
+                            <input asp-for="UserName" class="form-control py-2" />
+                            <span asp-validation-for="UserName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-3 mt-4">
+                            <button type="submit" class="btn btn-profile-primary py-2">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn btn-profile-secondary py-2">
+                                <i class="bi bi-x-circle me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    :root {
+        --primary-color: #3b5d50;
+        --primary-hover: #2d473d;
+        --primary-active: #1f352b;
+        --secondary-color: #d4a017;
+        --secondary-hover: #b38915;
+        --secondary-active: #957412;
+        --transition-speed: 0.25s;
+    }
+
+    .card-header-profile {
+        background-color: var(--primary-color);
+        color: white;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-profile-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: white;
+        transition: all var(--transition-speed) ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-profile-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-profile-primary:active {
+            background-color: var(--primary-active) !important;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+    .btn-profile-secondary {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        color: white;
+        transition: all var(--transition-speed) ease;
+    }
+
+        .btn-profile-secondary:hover {
+            background-color: var(--secondary-hover);
+            border-color: var(--secondary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-profile-secondary:active {
+            background-color: var(--secondary-active) !important;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(59, 93, 80, 0.25);
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

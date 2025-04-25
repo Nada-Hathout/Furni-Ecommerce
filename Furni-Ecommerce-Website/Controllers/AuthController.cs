@@ -14,16 +14,20 @@ namespace Furni_Ecommerce_Website.Controllers
         public UserManager<ApplicationUser> userManager;
         public SignInManager<ApplicationUser> signInManager;
         public IUserService userService;
-        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IUserService userService)
+        public AuthController(UserManager<ApplicationUser> userManager,
+                           SignInManager<ApplicationUser> signInManager,
+                           IUserService userService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
         }
+
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -39,28 +43,44 @@ namespace Furni_Ecommerce_Website.Controllers
 
                 if (result.Succeeded)
                 {
-                   await  userManager.AddToRoleAsync(user, "User");
-                    await signInManager.SignInAsync(user, isPersistent: false);
-                    TempData["SuccessMessage"] = "Registration successful! Please log in.";
+                    // Check if role exists before adding
+                    if (await userManager.GetRolesAsync(user) is var roles && !roles.Contains("User"))
+                    {
+                        var roleResult = await userManager.AddToRoleAsync(user, "User");
+                        if (!roleResult.Succeeded)
+                        {
+                            // Handle role assignment error
+                            foreach (var error in roleResult.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                            // Delete user if role assignment fails
+                            await userManager.DeleteAsync(user);
+                            return View(model);
+                        }
+                    }
 
-                    return RedirectToAction("Login", "Auth");
+                    await signInManager.SignInAsync(user, isPersistent: false);
+                    HttpContext.Session.SetString("UserId", user.Id);
+                    TempData["SuccessMessage"] = "Registration successful!";
+                    return RedirectToAction("Index", "Home");
                 }
+
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error.Description);
             }
             catch (DbUpdateException dbEx)
             {
-
                 if (dbEx.InnerException is SqlException sqlEx
                     && (sqlEx.Number == 2627 || sqlEx.Number == 2601))
                 {
                     var msg = sqlEx.Message;
                     if (msg.Contains("IX_AspNetUsers_PhoneNumber"))
                         ModelState.AddModelError(nameof(model.PhoneNumber),
-                                                 "This phone number is already in use.");
+                                             "This phone number is already in use.");
                     else if (msg.Contains("IX_AspNetUsers_Email"))
                         ModelState.AddModelError(nameof(model.Email),
-                                                 "This email is already in use.");
+                                             "This email is already in use.");
                     else
                         ModelState.AddModelError(string.Empty,
                             "A duplicate value error occurred. Please check your input.");
@@ -71,18 +91,27 @@ namespace Furni_Ecommerce_Website.Controllers
                         "An error occurred while creating your account. Please try again.");
                 }
             }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty,
+                    $"An unexpected error occurred: {ex.Message}");
+            }
 
             return View(model);
         }
+
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            return RedirectToAction("Login", "Auth");
+            HttpContext.Session.Remove("UserId");
+            return RedirectToAction("Index", "Home");
         }
+
         public IActionResult Login()
         {
             return View("Login");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -90,17 +119,17 @@ namespace Furni_Ecommerce_Website.Controllers
             if (ModelState.IsValid)
             {
                 ApplicationUser? user = await userManager.FindByNameAsync(model.UserName);
-                if (user != null) 
+                if (user != null)
                 {
-                 bool found=await userManager.CheckPasswordAsync(user, model.Password);
-                    if (found) 
+                    bool found = await userManager.CheckPasswordAsync(user, model.Password);
+                    if (found)
                     {
-                       await signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+                        await signInManager.SignInAsync(user, isPersistent: model.RememberMe);
+                        HttpContext.Session.SetString("UserId", user.Id);
                         return RedirectToAction("Index", "Home");
                     }
                 }
                 ModelState.AddModelError(string.Empty, "UserName Or Password Invalid");
-                
             }
             return View("Login", model);
         }

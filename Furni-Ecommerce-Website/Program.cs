@@ -3,14 +3,12 @@ using BusinessLogic.Service;
 using DataAccess.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using BusinessLogic.Service;
-using BusinessLogic.Repository;
 
 namespace Furni_Ecommerce_Website
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +20,7 @@ namespace Furni_Ecommerce_Website
                 );
             });
 
-            //Add Repositories
+            // Add Repositories
             builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
@@ -30,6 +28,10 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<CartItemService>();
             builder.Services.AddScoped<ProductService>();
             
+
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+
 
             builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -39,21 +41,46 @@ namespace Furni_Ecommerce_Website
             {
                 options.User.RequireUniqueEmail = true;
             });
+
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
             {
-                op.Password.RequireNonAlphanumeric=false;
-                op.Password.RequireUppercase=false;
+                op.Password.RequireNonAlphanumeric = false;
+                op.Password.RequireUppercase = false;
             }).AddEntityFrameworkStores<FurniDbContext>();
-            builder.Services.AddScoped<IUserService , UserService>();
-            builder.Services.AddScoped<IUsersRepository, UserRepository>();
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IProductService,ProductService>();
-            builder.Services.AddScoped<IProductRepository,ProductRepository>();
 
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUsersRepository, UserRepository>();
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IReviewService, ReviewService>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+
+            // Add session support
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             var app = builder.Build();
+
+            // Seed roles and admin user
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                    await SeedRoles(roleManager);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding roles");
+                }
+            }
 
             if (!app.Environment.IsDevelopment())
             {
@@ -62,7 +89,9 @@ namespace Furni_Ecommerce_Website
 
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
@@ -70,6 +99,20 @@ namespace Furni_Ecommerce_Website
             );
 
             app.Run();
+        }
+
+        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            // Create roles if they don't exist
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+
+            if (!await roleManager.RoleExistsAsync("User"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("User"));
+            }
         }
     }
 }

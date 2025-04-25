@@ -1,0 +1,106 @@
+﻿@model IEnumerable<DataAccess.Models.Order>
+@{
+    ViewData["Title"] = "Purchase History";
+    Layout = "_Layout";
+}
+
+<div class="container py-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark">Your Purchase History</h2>
+        <a asp-action="Index" class="btn" style="background-color: #3b5d50; color: white;">
+            <i class="bi bi-arrow-left me-2"></i> Back to Profile
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>You haven't placed any orders yet.
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-header text-white" style="background-color: #3b5d50;">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Order History</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order #</th>
+                                <th>Date</th>
+                                <th class="text-center">Items</th>
+                                <th class="text-end">Total</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@order.Id</td>
+                                    <td>@order.OrderDate.ToString("MMMM dd, yyyy")</td>
+                                    <td class="text-center">@order.OrderItems.Count</td>
+                                    <td class="text-end">@order.TotalAmount.ToString("C")</td>
+                                    <td>
+                                        <span class="badge" style="background-color: @(order.Status == "Completed" ? "#28a745" : "#ffc107"); color: @(order.Status == "Completed" ? "white" : "#212529");">
+                                            @order.Status
+                                        </span>
+                                    </td>
+                                    <td class="text-end">
+                                        <a asp-action="OrderDetails" asp-route-id="@order.Id"
+                                           class="btn btn-sm" style="background-color: #3b5d50; color: white;">
+                                            <i class="bi bi-eye me-1"></i>Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    /* Consistent styling with Order Details */
+    .card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+    .card-header {
+        border-radius: 0 !important;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #3b5d50;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 0.5em 0.75em;
+        border-radius: 0.25rem;
+    }
+
+    .alert-info {
+        background-color: #e8f3ee;
+        border-color: #3b5d50;
+        color: #3b5d50;
+    }
+
+    .container.mb-5 {
+        margin-bottom: 5rem !important;
+    }
+</style>

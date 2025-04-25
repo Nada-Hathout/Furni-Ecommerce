@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLogic.Service
+namespace Furni_Ecommerce_Shared.UserViewModel
 {
-    public interface IFavoriteService
+    internal class FavouriteViewModel
     {
-        bool ToggleFavourite(string userId, int productId);
     }
 }

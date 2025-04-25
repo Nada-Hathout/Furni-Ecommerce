@@ -21,6 +21,8 @@ namespace BusinessLogic.Repository
             _context.CartItems.Add(entity);
         }
 
+       
+
         public void Delete(int id)
         {
             var item = _context.CartItems.Find(id);
@@ -49,5 +51,6 @@ namespace BusinessLogic.Repository
         {
             _context.CartItems.Update(entity);
         }
+
     }
 }

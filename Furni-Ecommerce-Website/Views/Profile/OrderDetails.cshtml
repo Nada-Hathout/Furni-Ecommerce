@@ -1,0 +1,196 @@
+﻿@model DataAccess.Models.Order
+@{
+    ViewData["Title"] = "Order Details";
+    Layout = "_Layout";
+}
+
+<div class="container py-5" style="margin-bottom: 100px;">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark">Order #@Model.Id</h2>
+        <a asp-action="PurchaseHistory" class="btn" style="background-color: #3b5d50; color: white; border: none;">
+            <i class="bi bi-arrow-left me-2"></i> Back to History
+        </a>
+    </div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header text-white" style="background-color: #3b5d50;">
+                    <h5 class="mb-0"><i class="bi bi-receipt me-2"></i> Order Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4 text-muted">Order Date:</dt>
+                        <dd class="col-sm-8">@Model.OrderDate.ToString("MMMM dd, yyyy hh:mm tt")</dd>
+
+                        <dt class="col-sm-4 text-muted">Status:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge" style="background-color: @(Model.Status == "Completed" ? "#28a745" : "#ffc107"); color: @(Model.Status == "Completed" ? "white" : "#212529");">
+                                @Model.Status
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Total Amount:</dt>
+                        <dd class="col-sm-8 fw-bold text-success">@Model.TotalAmount.ToString("C")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header text-white" style="background-color: #3b5d50;">
+                    <h5 class="mb-0"><i class="bi bi-truck me-2"></i> Shipping Information</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Address != null)
+                    {
+                        <address>
+                            @Model.Address.Street<br>
+                            @Model.Address.City, @Model.Address.State @Model.Address.ZipCode<br>
+                        </address>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header text-white" style="background-color: #3b5d50;">
+            <h5 class="mb-0"><i class="bi bi-cart-check me-2"></i> Order Items</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product</th>
+                            <th class="text-end">Price</th>
+                            <th class="text-center">Qty</th>
+                            <th class="text-end">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (item.Product != null)
+                                        {
+                                            <img src="@Url.Content($"~/images/{item.Product.ImagePath}")"
+                                                 alt="@item.Product.Name"
+                                                 class="img-thumbnail me-3 order-item-img"
+                                                 onerror="this.onerror=null;this.src='@Url.Content("~/images/default-product.png")';">
+                                            <div>
+                                                <h6 class="mb-0">@item.Product.Name</h6>
+                                                <small class="text-muted">SKU: @item.Product.Id</small>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <img src="@Url.Content("~/images/default-product.png")"
+                                                 alt="Product not available"
+                                                 class="img-thumbnail me-3 order-item-img">
+                                            <div>
+                                                <h6 class="mb-0">Product not available</h6>
+                                            </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td class="text-end">@item.UnitPrice.ToString("C")</td>
+                                <td class="text-center">@item.Quantity</td>
+                                <td class="text-end fw-bold">@((item.UnitPrice * item.Quantity).ToString("C"))</td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Subtotal:</td>
+                            <td class="text-end fw-bold">@Model.OrderItems.Sum(oi => oi.UnitPrice * oi.Quantity).ToString("C")</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Shipping:</td>
+                            <td class="text-end fw-bold">$0.00</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Total:</td>
+                            <td class="text-end fw-bold text-success">@Model.TotalAmount.ToString("C")</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Payment != null)
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-header text-white" style="background-color: #3b5d50;">
+                <h5 class="mb-0"><i class="bi bi-credit-card me-2"></i> Payment Information</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3 text-muted">Payment Method:</dt>
+                    <dd class="col-sm-9">@Model.Payment.PaymentMethod</dd>
+
+                    <dt class="col-sm-3 text-muted">Transaction ID:</dt>
+                    <dd class="col-sm-9">@Model.Payment.TransactionId</dd>
+                </dl>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .order-item-img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 0.35rem;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+    .card-header {
+        border-radius: 0 !important;
+    }
+
+    .table th {
+        font-weight: 600;
+        color: #3b5d50;
+    }
+
+    .badge {
+        font-size: 0.85em;
+        padding: 0.5em 0.75em;
+        border-radius: 0.25rem;
+    }
+
+    body {
+        background-color: #f8f9fa;
+        padding-bottom: 50px; 
+    }
+
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+</style>

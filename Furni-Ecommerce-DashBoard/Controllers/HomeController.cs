@@ -1,9 +1,11 @@
 using Furni_Ecommerce_DashBoard.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace Furni_Ecommerce_DashBoard.Controllers
 {
+    [Authorize(Roles = "Owner,Admin")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

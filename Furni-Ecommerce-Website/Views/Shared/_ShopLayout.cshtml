@@ -40,6 +40,24 @@
 	<script src="js/bootstrap.bundle.min.js"></script>
 	<script src="js/tiny-slider.js"></script>
 	<script src="js/custom.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+	<script>
+		function UpdateCartCount() {
+			$.ajax({
+				url: '/Cart/GetCartItemsCount',
+				method: 'GET',
+				success: function (response) {
+					$("#cart-count").text(response.count);
+				}
+			});
+		}
+
+		$(document).ready(function () {
+			UpdateCartCount();
+		});
+	</script>
+
 </body>
 
 </html>

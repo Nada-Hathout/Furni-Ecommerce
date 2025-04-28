@@ -46,7 +46,11 @@
 						    <span class="icon-cross">
 								<img src="~/images/cross.svg" class="img-fluid">
 							</span>
-						<a class="nav-link"><i class="fa-regular fa-heart heart me-2 fs-5 heart-iconn" data-id="@Model[i].Id"></i></a>
+						<a class="nav-link">
+							<i class="@(Model[i].IsFavorite ? "fa-solid" : "fa-regular") fa-heart heart me-2 fs-5 heart-iconn"
+							   style="color:@(Model[i].IsFavorite ? "red" : "black")"
+							   data-id="@Model[i].Id"></i>
+						</a>
 						</a>
 					
 					</div>
@@ -276,24 +280,15 @@
 		position: absolute;
 		top: 0px;
 		right: 13px;
+		
+		transition: transform 0.3s, color 0.3s;
 	}
-	</style>
-<script>
-	$('.heart').click(function () {
-	  const heart = $(this);
-	  const productId = heart.data('id');
 
-	  $.ajax({
-		url: '/Home/Toggle',
-		type: 'POST',
-		data: { productId },
-		success: function (res) {
-		  if (res.isFavourite) {
-			heart.removeClass('fa-regular').addClass('fa-solid').css('color', 'red');
-		  } else {
-			heart.removeClass('fa-solid').addClass('fa-regular').css('color', '#aaa');
-		  }
-		}
-	  });
-	});
-</script>
+	.heart-iconn:hover {
+		transform: scale(1.2);
+		color: red !important;
+		cursor: pointer;
+	}
+
+
+	</style>

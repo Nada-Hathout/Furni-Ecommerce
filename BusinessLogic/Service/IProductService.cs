@@ -15,7 +15,7 @@ namespace BusinessLogic.Service
         public IEnumerable<ShopProductViewModel> SearchProduct(string keyword);
         public IEnumerable<ShopProductViewModel> GetProducts();
 
-        List<ProductsAndCommentsViewModel> GetProductsInfo();
+        List<ProductsAndCommentsViewModel> GetProductsInfo(string userId);
         ProductsAndCommentsViewModel getDetails(int id);
     }
 }

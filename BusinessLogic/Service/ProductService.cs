@@ -26,13 +26,15 @@ namespace BusinessLogic.Service
 
        public IProductRepository productRepository;
         public IReviewRepository reviewRepository;
+        public IFavoriteRepository favoriteRepository;
       
-        public ProductService(IProductRepository productRepository, IReviewRepository reviewRepository,FurniDbContext context)
+        public ProductService(IProductRepository productRepository, IReviewRepository reviewRepository,FurniDbContext context, IFavoriteRepository favoriteRepository)
         {
             this.productRepository = productRepository;
 
             this.reviewRepository = reviewRepository;
-           this. _context = context;
+       
+            this.favoriteRepository = favoriteRepository;
            
 
         }
@@ -60,10 +62,12 @@ namespace BusinessLogic.Service
             }
         }
 
-        public List<ProductsAndCommentsViewModel> GetProductsInfo()
+        public List<ProductsAndCommentsViewModel> GetProductsInfo(string userId)
         {
             List<Product> prds = productRepository.GetAll();
             List<Review> reviews = reviewRepository.GetAll();
+            var favouritePrd = favoriteRepository.GetAllUserFav(userId);
+            var countOfFavItems = favoriteRepository.FavCounter(userId);
             List<ProductsAndCommentsViewModel> prdViewModel = prds.Select(p => new ProductsAndCommentsViewModel
             {
                 Id = p.Id,
@@ -71,6 +75,8 @@ namespace BusinessLogic.Service
                 Description = p.Description,
                 Price = p.Price,
                 ImagePath = p.ImagePath,
+                IsFavorite=favouritePrd.Any(f=>f.ProductId==p.Id),
+                qty= countOfFavItems,
                 Comments = reviews.Where(r => r.ProductId == p.Id).Select(r => new CommentViewModel
                 {
                     Text = r.Comment,

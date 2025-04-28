@@ -12,6 +12,9 @@ namespace BusinessLogic.Repository
         public bool Exists(string userId, int productId);
         public void Add(string userId, int productId);
         public void Remove(string userId, int productId);
+        public List<Favorite> GetAllUserFav(string userId);
+        public int FavCounter(string userId);
+
     }
 
  }

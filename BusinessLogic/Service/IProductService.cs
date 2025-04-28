@@ -16,7 +16,7 @@ namespace BusinessLogic.Service
         public IQueryable<ShopProductViewModel> SearchProduct(string keyword);
         public IQueryable<ShopProductViewModel> GetProducts();
 
-        List<ProductsAndCommentsViewModel> GetProductsInfo();
+        List<ProductsAndCommentsViewModel> GetProductsInfo(string userId);
         ProductsAndCommentsViewModel getDetails(int id);
         public bool AddCart(int productId, HttpContext httpContext,string userID);
     }

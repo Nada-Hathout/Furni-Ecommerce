@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="~/css/login.css" />
 
 <section class="main-container">
-    <form asp-action="Login" method="post">
+    <form asp-action="Login" method="post" style=" box-shadow: 0 4px 15px rgba(0, 0, 0, 1);border:.1rem solid rgb(28, 85, 49);">
         @if (TempData["SuccessMessage"] != null)
         {
             <div class="alert alert-success alert-dismissible fade show success-message" role="alert">

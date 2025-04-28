@@ -8,6 +8,8 @@ using Furni_Ecommerce_Shared.UserViewModel;
 using BusinessLogic.Repository;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
@@ -29,13 +31,21 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public IActionResult Index()
         {
-            List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo();
+            var userId= User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo(userId);
+            var favCount = favoriteService.GetFavoriteCount(userId);
+
+            ViewBag.FavoriteCount = favCount;
             return View(products);
         }
 
         public IActionResult PrdDetails(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var prd = productService.getDetails(id);
+            var favCount = favoriteService.GetFavoriteCount(userId);
+
+            ViewBag.FavoriteCount = favCount;
             if (prd == null)
             {
                 return NotFound();
@@ -44,6 +54,7 @@ namespace Furni_Ecommerce_Website.Controllers
             {
                 ViewBag.prd_Id = prd.Id;
                 return View("PrdDetails", prd);
+
             }
 
 
@@ -54,8 +65,12 @@ namespace Furni_Ecommerce_Website.Controllers
         }
         public ActionResult Favorite()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List< FavouriteViewModel> FavouritePrd = favoriteService.GetFavProducts(userId);
+            var favCount = favoriteService.GetFavoriteCount(userId);
 
-            return View("Favorite");
+            ViewBag.FavoriteCount = favCount;
+            return View("Favorite",FavouritePrd);
         }
 
 
@@ -67,11 +82,23 @@ namespace Furni_Ecommerce_Website.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public JsonResult Toggle(int productId)
         {
-            var userId =User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { isFavourite = false, error = "User not authenticated" });
+            }
+
             var isFavourite = favoriteService.ToggleFavourite(userId, productId);
-            return Json(new { isFavourite });
+            var updatedCount = favoriteService.GetFavoriteCount(userId); // ???? ??? ????? ??????
+
+            return Json(new
+            {
+                isFavourite,
+                updatedFavCount = updatedCount
+            });
         }
 
     }

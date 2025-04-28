@@ -33,6 +33,10 @@ namespace Furni_Ecommerce_Shared.UserViewModel
         public List<CommentViewModel> Comments { get; set; }
        
         public String CategoryName { get; set; }
+        public bool IsFavorite { get; set; }
+
+        public int qty { get; set; }
+
 
     }
     public class CommentViewModel

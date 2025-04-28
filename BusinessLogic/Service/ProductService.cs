@@ -19,22 +19,28 @@ namespace BusinessLogic.Service
         private readonly IReviewRepository reviewRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ProductService(
-            IProductRepository productRepository,
-            IReviewRepository reviewRepository,
-            FurniDbContext context,
-            IHttpContextAccessor httpContextAccessor)
-        {
-            this.productRepository = productRepository;
-            this.reviewRepository = reviewRepository;
-            this._context = context;
-            this._httpContextAccessor = httpContextAccessor;
-        }
+       
 
         public Product? GetProductById(int id)
         {
             return _context.Products.FirstOrDefault(p => p.Id == id);
         }
+
+
+       public IProductRepository productRepository;
+        public IReviewRepository reviewRepository;
+        public IFavoriteRepository favoriteRepository;
+      
+        public ProductService(IProductRepository productRepository, IReviewRepository reviewRepository,FurniDbContext context, IFavoriteRepository favoriteRepository, FurniDbContext context,
+            IHttpContextAccessor httpContextAccessor)
+        {
+            this.productRepository = productRepository;
+
+            this.reviewRepository = reviewRepository;
+       
+            this.favoriteRepository = favoriteRepository;
+            this._context = context;
+            this._httpContextAccessor = httpContextAccessor;
 
 
         public bool AddCart(int productId, HttpContext httpContext, string userID)
@@ -157,18 +163,22 @@ namespace BusinessLogic.Service
             };
         }
 
-        public List<ProductsAndCommentsViewModel> GetProductsInfo()
+        public List<ProductsAndCommentsViewModel> GetProductsInfo(string userId)
         {
-            var prds = productRepository.GetAll();
-            var reviews = reviewRepository.GetAll();
+            List<Product> prds = productRepository.GetAll();
+            List<Review> reviews = reviewRepository.GetAll();
+            var favouritePrd = favoriteRepository.GetAllUserFav(userId);
+            var countOfFavItems = favoriteRepository.FavCounter(userId);
+            List<ProductsAndCommentsViewModel> prdViewModel = prds.Select(p => new ProductsAndCommentsViewModel
 
-            return prds.Select(p => new ProductsAndCommentsViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
                 ImagePath = p.ImagePath,
+                IsFavorite=favouritePrd.Any(f=>f.ProductId==p.Id),
+                qty= countOfFavItems,
                 Comments = reviews.Where(r => r.ProductId == p.Id).Select(r => new CommentViewModel
                 {
                     Text = r.Comment,

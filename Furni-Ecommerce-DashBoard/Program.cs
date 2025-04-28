@@ -1,6 +1,7 @@
 using DataAccess.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using BusinessLogic.Repository;
+using BusinessLogic.Service;
 
 namespace Furni_Ecommerce_DashBoard
 {
@@ -12,24 +13,19 @@ namespace Furni_Ecommerce_DashBoard
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            // Database Context
             builder.Services.AddDbContext<FurniDbContext>(options =>
             {
                 options.UseLazyLoadingProxies().UseSqlServer(
                     builder.Configuration.GetConnectionString("cs"),
                     sql => sql.MigrationsAssembly("DataAccess")
-
-                    );
-
+                );
             });
-            builder.Services.Configure<IdentityOptions>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
-            });
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
-            {
-                op.Password.RequireNonAlphanumeric = false;
-                op.Password.RequireUppercase = false;
-            }).AddEntityFrameworkStores<FurniDbContext>();
+
+            // Add Category Services (without authentication for now)
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             var app = builder.Build();
 
@@ -37,16 +33,17 @@ namespace Furni_Ecommerce_DashBoard
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseRouting();
 
-            app.UseAuthorization();
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
         }

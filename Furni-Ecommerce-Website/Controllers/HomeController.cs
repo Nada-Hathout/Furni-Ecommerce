@@ -1,9 +1,8 @@
 using System.Diagnostics;
 using BusinessLogic.Service;
 using DataAccess.Models;
-using Furni_Ecommerce_Website.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Furni_Ecommerce_Website.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
 using BusinessLogic.Repository;
 using System.Collections.Generic;
@@ -42,7 +41,7 @@ namespace Furni_Ecommerce_Website.Controllers
         public IActionResult PrdDetails(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var prd = productService.getDetails(id);
+            var prd = productService.GetDetails(id);
             var favCount = favoriteService.GetFavoriteCount(userId);
 
             ViewBag.FavoriteCount = favCount;

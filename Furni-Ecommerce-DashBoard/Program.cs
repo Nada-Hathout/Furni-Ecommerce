@@ -1,13 +1,9 @@
 using BusinessLogic.Repository;
 using BusinessLogic.Service;
 using DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
-using BusinessLogic.Repository;
-using BusinessLogic.Service;
 using Furni_Ecommerce_DashBoard.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Furni_Ecommerce_DashBoard
 {
@@ -29,13 +25,19 @@ namespace Furni_Ecommerce_DashBoard
                 );
             });
 
-            // Add Category Services (without authentication for now)
+            // Register repositories
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IUsersRepository, UserRepository>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>(); // Add this line
+
+            // Register services
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IProductService, ProductService>();
 
-                    );
-            });
-
+            // Identity Configuration
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
             {
                 op.User.RequireUniqueEmail = true;
@@ -48,11 +50,6 @@ namespace Furni_Ecommerce_DashBoard
                 options.LoginPath = "/Auth/Login";
                 options.AccessDeniedPath = "/Auth/Login";
             });
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IUsersRepository,UserRepository>();
-            builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IProductRepository, ProductRepository>();
-            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
             // Session & HttpContext
             builder.Services.AddHttpContextAccessor();
@@ -69,26 +66,15 @@ namespace Furni_Ecommerce_DashBoard
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-
-            app.UseStaticFiles(); // Add this before MapStaticAssets()
-            app.UseRouting();
-
-            app.UseAuthentication(); // This must come before Authorization
+            app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseSession(); // Add session middleware
+            app.UseSession();
 
             // Seed admin user
             using (var scope = app.Services.CreateScope())
@@ -97,11 +83,9 @@ namespace Furni_Ecommerce_DashBoard
                 await IdentitySeedData.SeedAdminAsync(services);
             }
 
-            app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Auth}/{action=Login}/{id?}")
-                .WithStaticAssets();
+                pattern: "{controller=Auth}/{action=Login}/{id?}");
 
             await app.RunAsync();
         }

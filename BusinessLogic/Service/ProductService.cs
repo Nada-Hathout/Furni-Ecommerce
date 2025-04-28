@@ -5,57 +5,46 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Text.Json;
-using DataAccess;
 
 namespace BusinessLogic.Service
 {
-
     public class ProductService : IProductService
     {
         private readonly FurniDbContext _context;
-        private readonly IProductRepository productRepository;
-        private readonly IReviewRepository reviewRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IProductRepository _productRepository;
+        private readonly IReviewRepository _reviewRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
 
-       
-
-        public Product? GetProductById(int id)
-        {
-            return _context.Products.FirstOrDefault(p => p.Id == id);
-        }
-
-
-       public IProductRepository productRepository;
-        public IReviewRepository reviewRepository;
-        public IFavoriteRepository favoriteRepository;
-      
-        public ProductService(IProductRepository productRepository, IReviewRepository reviewRepository,FurniDbContext context, IFavoriteRepository favoriteRepository, FurniDbContext context,
+        public ProductService(
+            IProductRepository productRepository,
+            IReviewRepository reviewRepository,
+            IFavoriteRepository favoriteRepository,
+            FurniDbContext context,
             IHttpContextAccessor httpContextAccessor)
         {
-            this.productRepository = productRepository;
+            _productRepository = productRepository;
+            _reviewRepository = reviewRepository;
+            _favoriteRepository = favoriteRepository;
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
 
-            this.reviewRepository = reviewRepository;
-       
-            this.favoriteRepository = favoriteRepository;
-            this._context = context;
-            this._httpContextAccessor = httpContextAccessor;
-
+        public Product? GetProductById(int id) => _productRepository.GetByID(id);
 
         public bool AddCart(int productId, HttpContext httpContext, string userID)
         {
-            var product = productRepository.GetByID(productId);
+            var product = _productRepository.GetByID(productId);
             if (product == null) return false;
 
-            // ========== SESSION CART (NORMAL SESSION) ========== //
+            // ========== SESSION CART ========== //
             var session = httpContext.Session;
             string? cartString = session.GetString("Cart");
             List<CartItemViewModel>? sessionCart = string.IsNullOrEmpty(cartString)
                 ? new List<CartItemViewModel>()
                 : JsonSerializer.Deserialize<List<CartItemViewModel>>(cartString);
 
-            // Add/update the item in the session cart (for non-logged-in users)
             var existingSessionItem = sessionCart.FirstOrDefault(i => i.ProductId == productId);
             if (existingSessionItem != null)
             {
@@ -74,56 +63,28 @@ namespace BusinessLogic.Service
                 });
             }
 
-            // Save updated session cart as string
             session.SetString("Cart", JsonSerializer.Serialize(sessionCart));
 
-            // ========== DATABASE CART (LOGGED-IN USER) ========== //
+            // ========== DATABASE CART ========== //
             int? cartId = session.GetInt32("CartId");
             Cart cart;
 
-            // If user is logged in, handle the cart in the database
             if (!string.IsNullOrEmpty(userID))
             {
-                // Try to fetch the user's cart from the database
                 cart = _context.Carts.Include(c => c.CartItems)
-                                     .FirstOrDefault(c => c.UserId == userID);
-
-                if (cart == null)
-                {
-                    // Create a new cart for the user if not found
-                    cart = new Cart
-                    {
-                        UserId = userID,
-                        CartItems = new List<CartItem>()
-                    };
-                    _context.Carts.Add(cart);
-                    _context.SaveChanges();
-                }
+                                     .FirstOrDefault(c => c.UserId == userID)
+                        ?? CreateNewCart(userID);
             }
             else
             {
-                // If the user is not logged in, use session-based cart
-                if (cartId == null)
-                {
-                    // No cart found in the session, so create a new one
-                    cart = new Cart
-                    {
-                        UserId = userID,
-                        CartItems = new List<CartItem>()
-                    };
-                    _context.Carts.Add(cart);
-                    _context.SaveChanges();
-                    session.SetInt32("CartId", cart.Id);
-                }
-                else
-                {
-                    // Use the session cart ID to find the cart from the database
-                    cart = _context.Carts.Include(c => c.CartItems).FirstOrDefault(c => c.Id == cartId.Value);
-                    if (cart == null) return false;
-                }
+                cart = cartId == null
+                    ? CreateNewCart(userID)
+                    : _context.Carts.Include(c => c.CartItems).FirstOrDefault(c => c.Id == cartId.Value);
+
+                if (cart == null) return false;
+                session.SetInt32("CartId", cart.Id);
             }
 
-            // Update the cart item in the database
             var existingDbItem = cart.CartItems.FirstOrDefault(i => i.ProductId == productId);
             if (existingDbItem != null)
             {
@@ -138,109 +99,78 @@ namespace BusinessLogic.Service
                 });
             }
 
-            // Save the changes to the database cart
             _context.SaveChanges();
             return true;
         }
 
-
-
-
-        public ProductsAndCommentsViewModel? GetDetails(int id)
+        private Cart CreateNewCart(string userId)
         {
-            var product = productRepository.GetByID(id);
-            if (product == null) return null;
-
-            return new ProductsAndCommentsViewModel
+            var cart = new Cart
             {
-                Id = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                ImagePath = product.ImagePath,
-                Stock = product.Stock,
-                Price = product.Price,
-                CategoryName = product.Category?.Name
+                UserId = userId,
+                CartItems = new List<CartItem>()
             };
+            _context.Carts.Add(cart);
+            _context.SaveChanges();
+            return cart;
+        }
+
+        public ProductsAndCommentsViewModel GetDetails(int id)
+        {
+            var product = _productRepository.GetByID(id);
+            return product == null ? null : MapToViewModel(product);
         }
 
         public List<ProductsAndCommentsViewModel> GetProductsInfo(string userId)
         {
-            List<Product> prds = productRepository.GetAll();
-            List<Review> reviews = reviewRepository.GetAll();
-            var favouritePrd = favoriteRepository.GetAllUserFav(userId);
-            var countOfFavItems = favoriteRepository.FavCounter(userId);
-            List<ProductsAndCommentsViewModel> prdViewModel = prds.Select(p => new ProductsAndCommentsViewModel
+            var products = _productRepository.GetAll();
+            var reviews = _reviewRepository.GetAll();
+            var favouritePrd = _favoriteRepository.GetAllUserFav(userId);
+            var countOfFavItems = _favoriteRepository.FavCounter(userId);
 
+            return products.Select(p => new ProductsAndCommentsViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Description = p.Description,
                 Price = p.Price,
                 ImagePath = p.ImagePath,
-                IsFavorite=favouritePrd.Any(f=>f.ProductId==p.Id),
-                qty= countOfFavItems,
-                Comments = reviews.Where(r => r.ProductId == p.Id).Select(r => new CommentViewModel
-                {
-                    Text = r.Comment,
-                    UserName = $"{r.User.FirstName} {r.User.LastName}"
-                }).ToList()
+                IsFavorite = favouritePrd.Any(f => f.ProductId == p.Id),
+                qty = countOfFavItems,
+                Comments = reviews.Where(r => r.ProductId == p.Id)
+                                .Select(r => new CommentViewModel
+                                {
+                                    Text = r.Comment,
+                                    UserName = $"{r.User.FirstName} {r.User.LastName}"
+                                }).ToList()
             }).ToList();
         }
 
-        public List<Product> GetAllProducts()
-        {
-            return productRepository.GetAll();
-        }
+        public List<Product> GetAllProducts() => _productRepository.GetAll();
 
-        public IQueryable <ShopProductViewModel> SearchProduct(string keyword)
-        {
-            return (IQueryable<ShopProductViewModel>)productRepository.SearchProduct(keyword);
-        }
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword) =>
+            _productRepository.SearchProduct(keyword);
 
-        IQueryable<ShopProductViewModel> IProductService.GetProducts()
-        {
-            return (IQueryable<ShopProductViewModel>)productRepository.GetAllProducts();
-        }
+        public IQueryable<ShopProductViewModel> GetProducts() =>
+            _productRepository.GetAllProducts();
 
-        public ProductsAndCommentsViewModel getDetails(int id)
-        {
-            Product product = productRepository.GetByID(id);
+        public void AddProduct(Product product) => _productRepository.Add(product);
 
-            if (product == null)
-            {
-                return null;
-            }
-            else
-            {
-                ProductsAndCommentsViewModel productVM = new ProductsAndCommentsViewModel
-                {
-                    Id = product.Id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    ImagePath = product.ImagePath,
-                    Stock = product.Stock,
-                    Price = product.Price,
-                    CategoryName = product.Category?.Name,
-                };
-                return productVM;
-            }
-        }
-        public void AddProduct(Product product)
-        {
-            productRepository.Add(product);
-        }
-        public void EditProduct(Product product)
-        {
-            productRepository.Update(product);
-        }
-        public void DeleteProduct(int id)
-        {
-          productRepository.Delete(id);
-        }
+        public void EditProduct(Product product) => _productRepository.Update(product);
 
-        public Product GetProdById(int id)
+        public void DeleteProduct(int id) => _productRepository.Delete(id);
+
+        public Product GetProdById(int id) => _productRepository.GetProdById(id);
+
+        private ProductsAndCommentsViewModel MapToViewModel(Product product) => new()
         {
-            return productRepository.GetProdById(id);
-        }
+            Id = product.Id,
+            Name = product.Name,
+            Description = product.Description,
+            ImagePath = product.ImagePath,
+            Stock = product.Stock,
+            Price = product.Price,
+            CategoryName = product.Category?.Name
+        };
     }
 }

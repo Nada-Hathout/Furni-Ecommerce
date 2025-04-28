@@ -204,7 +204,26 @@ namespace BusinessLogic.Service
 
         public ProductsAndCommentsViewModel getDetails(int id)
         {
-            throw new NotImplementedException();
+            Product product = productRepository.GetByID(id);
+
+            if (product == null)
+            {
+                return null;
+            }
+            else
+            {
+                ProductsAndCommentsViewModel productVM = new ProductsAndCommentsViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    ImagePath = product.ImagePath,
+                    Stock = product.Stock,
+                    Price = product.Price,
+                    CategoryName = product.Category?.Name,
+                };
+                return productVM;
+            }
         }
     }
 }

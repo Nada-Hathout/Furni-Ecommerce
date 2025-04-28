@@ -225,5 +225,22 @@ namespace BusinessLogic.Service
                 return productVM;
             }
         }
+        public void AddProduct(Product product)
+        {
+            productRepository.Add(product);
+        }
+        public void EditProduct(Product product)
+        {
+            productRepository.Update(product);
+        }
+        public void DeleteProduct(int id)
+        {
+          productRepository.Delete(id);
+        }
+
+        public Product GetProdById(int id)
+        {
+            return productRepository.GetProdById(id);
+        }
     }
 }

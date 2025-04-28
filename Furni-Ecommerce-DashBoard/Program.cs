@@ -50,6 +50,9 @@ namespace Furni_Ecommerce_DashBoard
             });
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUsersRepository,UserRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
             // Session & HttpContext
             builder.Services.AddHttpContextAccessor();

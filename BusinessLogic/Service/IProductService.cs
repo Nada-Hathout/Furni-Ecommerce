@@ -19,5 +19,11 @@ namespace BusinessLogic.Service
         List<ProductsAndCommentsViewModel> GetProductsInfo(string userId);
         ProductsAndCommentsViewModel getDetails(int id);
         public bool AddCart(int productId, HttpContext httpContext,string userID);
+        public void AddProduct(Product product);
+        public void EditProduct(Product product);
+
+        public void DeleteProduct(int id);
+        public Product GetProdById(int id);
+
     }
 }

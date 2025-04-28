@@ -9,26 +9,34 @@ using System.Threading.Tasks;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
-    [Authorize(Roles ="User")]
+    [Authorize(Roles = "User")]
     public class ProfileController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly FurniDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public ProfileController(UserManager<ApplicationUser> userManager, FurniDbContext context)
+        public ProfileController(
+            UserManager<ApplicationUser> userManager,
+            FurniDbContext context,
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _context = context;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> Index()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
+            //var userId = HttpContext.Session.GetString("UserId");
+
+            if (!_signInManager.IsSignedIn(User))  // التحقق من حالة تسجيل الدخول باستخدام SignInManager بدلاً من الجلسة فقط
+
             {
                 return RedirectToAction("Login", "Auth");
             }
 
+            var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -40,12 +48,12 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public async Task<IActionResult> PurchaseHistory()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
+            if (!_signInManager.IsSignedIn(User))
             {
                 return RedirectToAction("Login", "Auth");
             }
 
+            var userId = _userManager.GetUserId(User);
             var orders = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
@@ -59,12 +67,12 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public async Task<IActionResult> OrderDetails(int id)
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
+            if (!_signInManager.IsSignedIn(User))
             {
                 return RedirectToAction("Login", "Auth");
             }
 
+            var userId = _userManager.GetUserId(User);
             var order = await _context.Orders
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
@@ -80,16 +88,15 @@ namespace Furni_Ecommerce_Website.Controllers
             return View(order);
         }
 
-        //------------------
         [HttpGet]
         public async Task<IActionResult> EditProfile()
         {
-            var userId = HttpContext.Session.GetString("UserId");
-            if (string.IsNullOrEmpty(userId))
+            if (!_signInManager.IsSignedIn(User))
             {
                 return RedirectToAction("Login", "Auth");
             }
 
+            var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -117,7 +124,7 @@ namespace Furni_Ecommerce_Website.Controllers
                 return View(model);
             }
 
-            var userId = HttpContext.Session.GetString("UserId");
+            var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
@@ -125,7 +132,6 @@ namespace Furni_Ecommerce_Website.Controllers
                 return NotFound();
             }
 
-            
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
             user.Email = model.Email;
@@ -136,6 +142,8 @@ namespace Furni_Ecommerce_Website.Controllers
 
             if (result.Succeeded)
             {
+
+                await _signInManager.RefreshSignInAsync(user); 
                 TempData["SuccessMessage"] = "Profile updated successfully!";
                 return RedirectToAction("Index");
             }
@@ -163,7 +171,7 @@ namespace Furni_Ecommerce_Website.Controllers
                 return View(model);
             }
 
-            var userId = HttpContext.Session.GetString("UserId");
+            var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
 
             if (user == null)
@@ -178,6 +186,8 @@ namespace Furni_Ecommerce_Website.Controllers
 
             if (result.Succeeded)
             {
+                await _signInManager.RefreshSignInAsync(user);   
+
                 TempData["SuccessMessage"] = "Password changed successfully!";
                 return RedirectToAction("Index");
             }
@@ -190,6 +200,4 @@ namespace Furni_Ecommerce_Website.Controllers
             return View(model);
         }
     }
-
-
 }

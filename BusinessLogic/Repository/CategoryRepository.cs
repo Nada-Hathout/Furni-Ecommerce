@@ -9,25 +9,30 @@ namespace BusinessLogic.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public FurniDbContext context;
+        private readonly FurniDbContext context;
+
         public CategoryRepository(FurniDbContext furniDbContext)
         {
             context = furniDbContext;
-            
         }
+
         public void Add(Category entity)
         {
-            throw new NotImplementedException();
+            context.Categories.Add(entity);
         }
 
         public void Delete(int id)
         {
-            throw new NotImplementedException();
+            var category = GetByID(id);
+            if (category != null)
+            {
+                context.Categories.Remove(category);
+            }
         }
 
         public List<Category> GetAll()
         {
-            throw new NotImplementedException();
+            return context.Categories.ToList();
         }
 
         public Category GetByID(int id)
@@ -37,12 +42,12 @@ namespace BusinessLogic.Repository
 
         public int Save()
         {
-            throw new NotImplementedException();
+            return context.SaveChanges();
         }
 
         public void Update(Category entity)
         {
-            throw new NotImplementedException();
+            context.Categories.Update(entity);
         }
     }
 }

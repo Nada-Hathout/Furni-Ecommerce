@@ -42,10 +42,7 @@ namespace Furni_Ecommerce_Website.Controllers
 
             try
             {
-                // Create user through the service
                 var user = userService.Register(model);
-
-                // Attempt to create the user
                 var creationResult = await userManager.CreateAsync(user, model.Password);
 
                 if (!creationResult.Succeeded)
@@ -54,7 +51,6 @@ namespace Furni_Ecommerce_Website.Controllers
                     return View(model);
                 }
 
-                // Assign default "User" role
                 var roleResult = await userManager.AddToRoleAsync(user, "User");
                 if (!roleResult.Succeeded)
                 {
@@ -62,13 +58,12 @@ namespace Furni_Ecommerce_Website.Controllers
                     return View(model);
                 }
 
-                // Add standard claims
                 var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.UserName),
-            new Claim("UserId", user.Id),
-            new Claim(ClaimTypes.Email, user.Email)
-        };
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim("UserId", user.Id),
+                    new Claim(ClaimTypes.Email, user.Email)
+                };
 
                 var claimsResult = await userManager.AddClaimsAsync(user, claims);
                 if (!claimsResult.Succeeded)
@@ -77,9 +72,13 @@ namespace Furni_Ecommerce_Website.Controllers
                     return View(model);
                 }
 
-                // Sign in and set session
-                await signInManager.SignInAsync(user, isPersistent: false);
+                // Sign in and set session and make session permanent
+                await signInManager.SignInAsync(user, isPersistent: true);
+
+                // Storing User data in session ------
                 HttpContext.Session.SetString("UserId", user.Id);
+                HttpContext.Session.SetString("UserName", user.UserName);
+                HttpContext.Session.SetString("UserEmail", user.Email);
 
                 TempData["SuccessMessage"] = "Registration successful! Welcome!";
                 return RedirectToAction("Index", "Home");
@@ -92,7 +91,6 @@ namespace Furni_Ecommerce_Website.Controllers
             {
                 ModelState.AddModelError(string.Empty,
                     "An unexpected error occurred during registration. Please try again.");
-                // Log the exception here
             }
 
             return View(model);
@@ -110,14 +108,12 @@ namespace Furni_Ecommerce_Website.Controllers
         private async Task HandleFailedRoleAssignment(ApplicationUser user, IdentityResult roleResult)
         {
             AddErrorsToModelState(roleResult.Errors);
-            // Clean up by deleting the user if role assignment fails
             await userManager.DeleteAsync(user);
         }
 
         private async Task HandleFailedClaimsAssignment(ApplicationUser user, IdentityResult claimsResult)
         {
             AddErrorsToModelState(claimsResult.Errors);
-            // Clean up by deleting the user if claims assignment fails
             await userManager.DeleteAsync(user);
         }
 
@@ -152,10 +148,11 @@ namespace Furni_Ecommerce_Website.Controllers
                     "A database error occurred during registration.");
             }
         }
+
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
-            HttpContext.Session.Remove("UserId");
+            HttpContext.Session.Clear();
             return RedirectToAction("Index", "Home");
         }
 
@@ -192,24 +189,26 @@ namespace Furni_Ecommerce_Website.Controllers
                 return View(model);
             }
 
-            // Add custom claims if needed
             var claims = new List<Claim>
-    {
-        new Claim("UserId", user.Id),
-        new Claim(ClaimTypes.NameIdentifier, user.Id),
-        new Claim(ClaimTypes.Name, user.UserName)
-    };
+            {
+                new Claim("UserId", user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName)
+            };
 
-            // Add any existing user claims
             var userClaims = await userManager.GetClaimsAsync(user);
             claims.AddRange(userClaims);
 
+            // Add any existing user claims
             await signInManager.SignInWithClaimsAsync(
                 user,
                 model.RememberMe,
                 claims);
 
+            // Storing User data in session ------
             HttpContext.Session.SetString("UserId", user.Id);
+            HttpContext.Session.SetString("UserName", user.UserName);
+            HttpContext.Session.SetString("UserEmail", user.Email);
 
             // Handle return URL for redirect after login
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -218,6 +217,14 @@ namespace Furni_Ecommerce_Website.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult KeepSessionAlive()
+        {
+            // Renew session lifetime ------
+            HttpContext.Session.SetString("LastActivity", DateTime.UtcNow.ToString());
+            return Ok();
         }
     }
 }

@@ -12,7 +12,9 @@ namespace BusinessLogic.Repository
     {
         IQueryable<ShopProductViewModel> SearchProduct(string keyword);
         IQueryable<ShopProductViewModel> GetAllProducts();
+       Product GetProdById(int id);
 
-       
+
+
     }
 }

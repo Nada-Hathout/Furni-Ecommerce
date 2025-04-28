@@ -22,17 +22,17 @@ namespace BusinessLogic.Repository
      
         public void Add(Product entity)
         {
-            throw new NotImplementedException();
+            context.Products.Add(entity);
+            context.SaveChanges();
         }
         public void Update(Product entity)
         {
-            throw new NotImplementedException();
+            context.Products.Update(entity);
+            context.SaveChanges();
+
         }
 
-        public void Delete(int id)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public List<Product> GetAll()
         {
@@ -85,6 +85,21 @@ namespace BusinessLogic.Repository
         {
             return context.Products.Select(p => new ShopProductViewModel { Id = p.Id, Name = p.Name, Price = p.Price, Stock = p.Stock, imgUrl = p.ImagePath });
 
+        }
+
+        public void Delete(int id)
+        {
+           var prod = context.Products.FirstOrDefault(p=>p.Id == id);
+            if(prod != null)
+            {
+                context.Products.Remove(prod);
+            }
+            context.SaveChanges();
+
+        }
+        public Product GetProdById(int id)
+        {
+            return context.Products.FirstOrDefault(p => p.Id == id);
         }
     }
 }

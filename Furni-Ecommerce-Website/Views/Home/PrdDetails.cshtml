@@ -9,9 +9,17 @@
     <div class="card mb-3" style="width: 100%;">
       <div class="row g-0 h-100"  style="height:800px;padding-top:50px;">
         <!-- Image Column -->
-        <div class="col-md-7 text-center mt-5" style="padding" >
-          <img src="~/images/@Model.ImagePath" class="img-fluid rounded-start shadow" alt="..." style="max-height: 80%; max-width: 90%; ">
-        </div>
+
+                <div class="col-md-7 text-center mt-5">
+                    <div class="image-container">
+                        <i class="@(Model.IsFavorite ? "fa-solid" : "fa-regular") fa-heart heart heart-icon "
+                           style="color:@(Model.IsFavorite ? "red" : "black")"
+                           data-id="@Model.Id"></i>
+                        <img src="~/images/@Model.ImagePath" class="img-fluid rounded-start shadow" alt="..." />
+                    </div>
+                </div>
+
+
 
       <!-- Text Column -->
         <div class="col-md-5 mt-5 " style="margin: 0 auto;padding-bottom:200px;">
@@ -43,8 +51,20 @@
  
 
                 .imges{
-                    width:300px;
-                    height:300px
+                    width:500px;
+                    height:500px
+                }
+
+            .image-container {
+                position: relative;
+                display: inline-block;
+                /* width: 900px; */
+                /*  max-height: 600px; */
+            }
+
+                .image-container img {
+                 width: 500px;
+                 height: 500px display: block;
                 }
                 .card-text{
                     padding-bottom:20px
@@ -57,4 +77,22 @@
                 background-color:#3b8d50;
 
                 }
+
+    .favorite-card {
+        width: 85%;
+    }
+
+    .heart-icon {
+        cursor: pointer;
+        position:absolute;
+        top: 30px;
+        right: 40px;
+        font-size:30px;
+        transition: transform 0.3s, color 0.3s;
+    }
+
+        .heart-icon:hover {
+            transform: scale(1.2);
+            color: red !important;
+        }
             </style>

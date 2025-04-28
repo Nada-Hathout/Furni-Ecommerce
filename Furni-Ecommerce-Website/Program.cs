@@ -4,6 +4,8 @@ using DataAccess.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.DataProtection;
+using System.IO;
 
 namespace Furni_Ecommerce_Website
 {
@@ -31,9 +33,14 @@ namespace Furni_Ecommerce_Website
             .AddEntityFrameworkStores<FurniDbContext>()
             .AddDefaultTokenProviders();
 
-            // 3) Configure login path
+            // 3) Configure Application Cookie settings
             builder.Services.ConfigureApplicationCookie(options =>
             {
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                options.SlidingExpiration = true;
                 options.LoginPath = "/Auth/Login";
                 options.AccessDeniedPath = "/Auth/Login";
             });
@@ -45,9 +52,16 @@ namespace Furni_Ecommerce_Website
                 options.IdleTimeout = TimeSpan.FromMinutes(30);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
             });
 
-            // 5) Repositories & Services
+            // 5) Data Protection for persistent session 
+            builder.Services.AddDataProtection()
+                .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, "session-keys")))
+                .SetApplicationName("FurniEcommerce")
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
+
+            // 6) Repositories & Services
             builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
@@ -72,10 +86,13 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<ICartService, CartService>();
 
-            // 6) MVC
+            // 7) MVC
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            // Create session-keys directory if not exists ---
+            Directory.CreateDirectory(Path.Combine(app.Environment.ContentRootPath, "session-keys"));
 
             // Seed roles and admin user
             using (var scope = app.Services.CreateScope())
@@ -96,13 +113,17 @@ namespace Furni_Ecommerce_Website
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+
+            // Important: UseSession must come before UseAuthentication and UseAuthorization
+            app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseSession();
 
             app.MapControllerRoute(
                 name: "default",
@@ -114,7 +135,6 @@ namespace Furni_Ecommerce_Website
 
         private static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            // Create roles if they don't exist
             if (!await roleManager.RoleExistsAsync("Admin"))
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));

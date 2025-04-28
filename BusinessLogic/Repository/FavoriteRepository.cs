@@ -25,6 +25,8 @@ namespace BusinessLogic.Repository
             var fav = new Favorite { UserId = userId, ProductId = productId };
             context.Favorites.Add(fav);
             context.SaveChanges();
+
+           
         }
         public void Remove(string userId, int productId)
         {
@@ -41,9 +43,16 @@ namespace BusinessLogic.Repository
             throw new NotImplementedException();
         }
 
-        public List<Favorite> GetAll()
+        public List<Favorite> GetAllUserFav(string userId)
         {
-            throw new NotImplementedException();
+            return context.Favorites.Include(f => f.Product)
+        .Where(f => f.UserId == userId)
+        .ToList();
+
+        }
+        public int FavCounter(string userId)
+        {
+            return context.Favorites.Count(f => f.UserId == userId);
         }
 
         public Favorite GetByID(int id)
@@ -63,7 +72,14 @@ namespace BusinessLogic.Repository
 
         public void Add(Favorite entity)
         {
+             context.Favorites.Add(entity);
+        }
+
+        public List<Favorite> GetAll()
+        {
             throw new NotImplementedException();
         }
+
+       
     }
 }

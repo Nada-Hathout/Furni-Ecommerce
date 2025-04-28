@@ -38,7 +38,9 @@ namespace Furni_Ecommerce_DashBoard.Controllers
             }
 
             var user = await userManager.FindByNameAsync(model.UserName);
-            if (user == null || !(await userManager.IsInRoleAsync(user, "Owner")))
+            if (user == null ||
+                !(await userManager.IsInRoleAsync(user, "Owner")) &&
+                !(await userManager.IsInRoleAsync(user, "Admin")))
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
@@ -60,9 +62,9 @@ namespace Furni_Ecommerce_DashBoard.Controllers
             var claims = new List<Claim>
     {
         new Claim("UserId", user.Id),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
+        new Claim(ClaimTypes.NameIdentifier, user.Id),
         new Claim(ClaimTypes.Name, user.UserName)
-            };
+    };
 
             var userClaims = await userManager.GetClaimsAsync(user);
             claims.AddRange(userClaims);
@@ -81,6 +83,7 @@ namespace Furni_Ecommerce_DashBoard.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();

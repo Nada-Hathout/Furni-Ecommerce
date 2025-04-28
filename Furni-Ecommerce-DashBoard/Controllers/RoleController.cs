@@ -1,6 +1,7 @@
 ﻿using Furni_Ecommerce_Shared.AdminViewModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Furni_Ecommerce_DashBoard.Controllers
@@ -41,5 +42,12 @@ namespace Furni_Ecommerce_DashBoard.Controllers
             }
             return View(roleViewModel);
         }
+        public async Task<IActionResult> Roles()
+        {
+            // Get all roles in the system
+            var roles = await roleManager.Roles.ToListAsync(); // Get all roles from the RoleManager
+            return View(roles);
+        }
+
     }
 }

@@ -6,16 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
+using Microsoft.AspNetCore.Http;
 
 namespace BusinessLogic.Service
 {
     public interface IProductService
     {
         public List<Product> GetAllProducts();
-        public IEnumerable<ShopProductViewModel> SearchProduct(string keyword);
-        public IEnumerable<ShopProductViewModel> GetProducts();
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword);
+        public IQueryable<ShopProductViewModel> GetProducts();
 
         List<ProductsAndCommentsViewModel> GetProductsInfo(string userId);
         ProductsAndCommentsViewModel getDetails(int id);
+        public bool AddCart(int productId, HttpContext httpContext,string userID);
     }
 }

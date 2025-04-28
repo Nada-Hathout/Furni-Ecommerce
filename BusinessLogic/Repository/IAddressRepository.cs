@@ -9,5 +9,7 @@ namespace BusinessLogic.Repository
 {
     public interface IAddressRepository:IRepository<Address>
     {
+        public  Task<Address> SaveAddressAsync(Address address);
+        public Task<Address> GetAddressByIdAsc(int id);
     }
 }

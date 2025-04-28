@@ -11,7 +11,7 @@ namespace BusinessLogic.Service
 {
     public class UserService:IUserService
     {
-        IUsersRepository usersRepository;
+      public  IUsersRepository usersRepository;
         public UserService(IUsersRepository usersRepository)
         {
             this.usersRepository = usersRepository;

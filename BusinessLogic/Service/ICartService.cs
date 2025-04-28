@@ -8,5 +8,7 @@ namespace BusinessLogic.Service
 {
     public interface ICartService
     {
+        void AddItemToCart(string userId, int productId);
+        int GetCartItemsCountByUserId(string userId);
     }
 }

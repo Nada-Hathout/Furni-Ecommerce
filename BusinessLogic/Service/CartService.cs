@@ -44,5 +44,15 @@ namespace BusinessLogic.Service
         {
             return _cartRepository.GetAll();
         }
+
+        public void AddItemToCart(string userId, int productId)
+        {
+            _cartRepository.AddItemToCart(userId, productId);
+        }
+
+        public int GetCartItemsCountByUserId(string userId)
+        {
+            return _cartRepository.GetCartItemsCountByUserId(userId);
+        }
     }
 }

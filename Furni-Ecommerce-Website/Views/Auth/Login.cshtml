@@ -39,8 +39,8 @@
             <input asp-for="Password" type="password" class="form-control " id="exampleInputPassword1" />
 
             <!-- Eye Icon Positioned Absolutely Inside Input -->
-           <i class="fa-solid fa-eye" onclick="togglePassword()" id="toggleIcon"
-            style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+            <i class="fa-solid fa-eye" onclick="togglePassword()" id="toggleIcon"
+               style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
 
             <span asp-validation-for="Password" class="text-danger"></span>
 
@@ -78,7 +78,7 @@
         }
     }, 4000);
     //hash password
-    
+
     function togglePassword() {
         const input = document.getElementById('exampleInputPassword1');
         const icon = document.getElementById('toggleIcon');
@@ -99,14 +99,14 @@
 
 <style>
     /* Style for success message to appear on top without taking space */
-.success-message {
-    position: absolute;
-    top: -60px;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    width: 100%;
-    margin: 0 auto;
-}
+    .success-message {
+        position: absolute;
+        top: -60px;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        width: 100%;
+        margin: 0 auto;
+    }
 
 </style>

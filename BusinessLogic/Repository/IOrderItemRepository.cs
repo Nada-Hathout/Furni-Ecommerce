@@ -9,5 +9,7 @@ namespace BusinessLogic.Repository
 {
     public interface IOrderItemRepository:IRepository<OrderItem>
     {
+        public Task<int> SaveOrderItemAsc(OrderItem OrderItem);
+        public Task<List<OrderItem>> GetOrderItemsByOrderIdAsc(int OrderID);
     }
 }

@@ -1,0 +1,77 @@
+﻿@model Furni_Ecommerce_Shared.UserViewModel.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+    bool isPaymentStep = (ViewBag.Step as string) == "Payment";
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Checkout Process</h2>
+
+    <form asp-action="@(isPaymentStep ? "SubmitOrder" : "ValidateAddress")" method="post">
+        @Html.AntiForgeryToken()
+
+        <!-- Address Form Step -->
+        <div style="display:@(isPaymentStep ? "none" : "block")">
+            <h4>Shipping Address</h4>
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.Street"></label>
+                <input asp-for="ShippingAddress.Street" class="form-control" />
+                <span asp-validation-for="ShippingAddress.Street" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.City"></label>
+                <input asp-for="ShippingAddress.City" class="form-control" />
+                <span asp-validation-for="ShippingAddress.City" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.State"></label>
+                <input asp-for="ShippingAddress.State" class="form-control" />
+                <span asp-validation-for="ShippingAddress.State" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.ZipCode"></label>
+                <input asp-for="ShippingAddress.ZipCode" class="form-control" />
+                <span asp-validation-for="ShippingAddress.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="ShippingAddress.Country"></label>
+                <input asp-for="ShippingAddress.Country" class="form-control" />
+                <span asp-validation-for="ShippingAddress.Country" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Next</button>
+        </div>
+
+        <!-- Payment Form Step -->
+        <div style="display:@(isPaymentStep ? "block" : "none")">
+            <h4>Payment Details</h4>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="PaymentDetails.PaymentMethod"></label>
+                <input asp-for="PaymentDetails.PaymentMethod" class="form-control" />
+                <span asp-validation-for="PaymentDetails.PaymentMethod" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="PaymentDetails.PaymentStatus"></label>
+                <input asp-for="PaymentDetails.PaymentStatus" class="form-control" />
+                <span asp-validation-for="PaymentDetails.PaymentStatus" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="PaymentDetails.TransactionId"></label>
+                <input asp-for="PaymentDetails.TransactionId" class="form-control" />
+                <span asp-validation-for="PaymentDetails.TransactionId" class="text-danger"></span>
+            </div>
+
+            <a asp-action="GoBackToAddress" class="btn btn-secondary">Back</a>
+            <button type="submit" class="btn btn-primary">Submit Order</button>
+        </div>
+    </form>
+</div>

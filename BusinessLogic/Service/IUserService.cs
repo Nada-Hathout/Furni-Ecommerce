@@ -19,5 +19,8 @@ namespace BusinessLogic.Service
         public Task<EditAdminViewModel> GetSpecificAdmin(string adminId);
         public Task<List<RoleSelectionViewModel>> GetAvailableRoles();
         public Task<IdentityResult> EditAdmin(EditAdminViewModel model);
+        public Task<List<AllUserViewModel>> GetAllUsers();
+        public Task<AllUserViewModel> GetSpecificUser(string id);
+        public Task<IdentityResult>DeleteUser(string id);
     }
 }

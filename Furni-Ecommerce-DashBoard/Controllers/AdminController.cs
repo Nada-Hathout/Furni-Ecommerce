@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Furni_Ecommerce_DashBoard.Controllers
 {
-    [Authorize(Roles = "Owner,Admin")]
+    [Authorize(Roles = "Owner")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

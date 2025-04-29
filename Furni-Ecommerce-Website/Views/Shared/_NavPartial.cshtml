@@ -81,17 +81,28 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsFurni">
-            <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
-                <li class="nav-item active">
-                    <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li><a class="nav-link" asp-action="index" asp-controller="shop">Shop</a></li>
-                <li><a class="nav-link" href="about.html">About us</a></li>
-                <li><a class="nav-link" href="services.html">Services</a></li>
-                <li><a class="nav-link" href="blog.html">Blog</a></li>
-                <li><a class="nav-link" href="contact.html">Contact us</a></li>
-                
-            </ul>
+            
+<ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
+    <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Index" ? "active" : "")">
+        <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Shop" ? "active" : "")">
+        <a class="nav-link" asp-controller="Shop" asp-action="Index">Shop</a>
+    </li>
+    <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "About" ? "active" : "")">
+        <a class="nav-link" asp-controller="Home" asp-action="About">About us</a>
+    </li>
+    <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Services" ? "active" : "")">
+        <a class="nav-link" asp-controller="Home" asp-action="Services">Services</a>
+    </li>
+    <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Blog" ? "active" : "")">
+        <a class="nav-link" asp-controller="Home" asp-action="Blog">Blog</a>
+    </li>
+    <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Contact" ? "active" : "")">
+        <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact us</a>
+    </li>
+</ul>
+
 
             <ul class="custom-navbar-cta navbar-nav mb-2 mb-md-0 ms-5">
                 <li>
@@ -147,14 +158,18 @@
                         </div>
                     }
                 </li>
-                <li><a class="nav-link" href="/CartItem"><img src="~/images/cart.svg"></a>
-              					<span id="cart-count" class="badge bg-danger position-absolute top-0 left-0">0</span></li>
+                
+                      <li><a class="nav-link" href="/CartItem">
+    <img src="~/images/cart.svg" class="cart-icon">
+    <span id="cart-count" class="badge bg-danger position-absolute top-0 left-100%">0</span>
+</a></li>
+
 
               						<li>
                     <a class="nav-link" asp-action="Favorite" asp-controller="Home" style="position: relative;">
-					<i class="bi bi-heart me-2 fs-5 heart"style="position:relative;"></i>
+                    <i class="bi bi-heart  me-2 fs-5 heart"style="position:relative;"></i>
 						
-									<span class="fav-counter">@ViewBag.FavoriteCount</span>
+                                    <span class="fav-counter bg-danger">@ViewBag.FavoriteCount</span>
 								
 					</a>
 					 </li>
@@ -225,4 +240,24 @@
 		
 		color: red;
 	}
+    .nav-link {
+    position: relative;
+}
+
+.cart-icon {
+    position: relative;
+}
+
+#cart-count {
+    position: absolute;
+    top: -5px; 
+    right: -10px; 
+    font-size: 0.8rem;
+    padding: 0.2rem 0.5rem; 
+    border-radius: 50%;
+}
+.dropdown-item:hover {
+    width: 100%;
+    /* display: block; */
+}
   </style>

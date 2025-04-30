@@ -62,5 +62,10 @@ namespace BusinessLogic.Service
             })
             .ToList();
         }
+
+        public int GetFavItemsCountByUserId(string userId)
+        {
+            return FavoriteRepository.GetFavItemsCountByUserId(userId);
+        }
     }
 }

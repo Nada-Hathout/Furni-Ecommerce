@@ -8,9 +8,12 @@ namespace Furni_Ecommerce_Website.Controllers
     public class CartController : Controller
     {
       private readonly  ICartService cartService;
-        public CartController(ICartService cartService)
+        private readonly IFavoriteService favoriteService;
+
+        public CartController(ICartService cartService, IFavoriteService favoriteService)
         { 
             this.cartService = cartService;
+            this.favoriteService = favoriteService;
 
         }
         public IActionResult Index()
@@ -45,7 +48,15 @@ namespace Furni_Ecommerce_Website.Controllers
             var count = cartService.GetCartItemsCountByUserId(userId);
             return Json(new {count = count});
         }
-    
-    
+
+        [HttpGet]
+        public IActionResult GetFavCount()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var count = favoriteService.GetFavItemsCountByUserId(userId);
+            return Json(new { count = count });
+        }
+
+
     }
 }

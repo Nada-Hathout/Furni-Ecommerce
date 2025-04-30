@@ -1,54 +1,92 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// Global favorite counter management
+let favoriteCount = 0;
 
-// Write your JavaScript code.
+// Update favorite counter display
+function updateFavoriteDisplay(count) {
+    const $counter = $('#fav-count');
+    favoriteCount = count;
 
-function updateFavoriteCounter(count) {
-    const counter = $('.fav-counter');
-    counter.text(count);
+    $counter.text(count);
 
+    
     if (count > 0) {
-        counter.addClass('visible').removeClass('hidden');
+        $counter.addClass('visible').removeClass('hidden')
+            .fadeIn(100);
     } else {
-        counter.addClass('hidden').removeClass('visible');
+        $counter.addClass('hidden').removeClass('visible')
+            .fadeOut(100);
     }
 }
 
+
 function toggleFavorite(productId, heartElement) {
+    const $heart = $(heartElement);
+
+    // Show loading state
+    $heart.addClass('fa-spin');
+
     $.ajax({
         url: '/Home/Toggle',
         type: 'POST',
         data: { productId },
         success: function (res) {
-            //const toastTrigger = document.getElementById('liveToast');
-            //const toast = new bootstrap.Toast(toastTrigger);
+            // Update heart icon
             if (res.isFavourite) {
-                $(heartElement).removeClass('fa-regular').addClass('fa-solid').css('color', 'red');
-               
-                //toast.show();
+                $heart.removeClass('fa-regular fa-spin')
+                    .addClass('fa-solid')
+                    .css('color', 'red');
+                // Show error toast
+                const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+                toast.show();
             } else {
-                $(heartElement).removeClass('fa-solid').addClass('fa-regular').css('color', 'black');
+                $heart.removeClass('fa-solid fa-spin')
+                    .addClass('fa-regular')
+                    .css('color', 'black');
             }
 
-            
-            $('.fav-counter').text(res.updatedFavCount).toggle(res.updatedFavCount > 0);
+            // Update counter
+            updateFavoriteDisplay(res.updatedFavCount);
 
+            // Remove from favorites page if needed
             if (window.location.pathname.includes('Favorite') && !res.isFavourite) {
-                $(heartElement).closest('.col').fadeOut(300, function () {
+                $heart.closest('.col').fadeOut(300, function () {
                     $(this).remove();
                 });
             }
         },
-        error: function (xhr, status, error) {
-            console.log("AJAX error:", error);
+        error: function (xhr) {
+            console.error("Favorite toggle failed:", xhr.responseText);
+            $heart.removeClass('fa-spin');
+
+            // Show error toast
+            const toast = new bootstrap.Toast(document.getElementById('errorToast'));
+            toast.show();
         }
     });
 }
 
+// Fetch current favorite count from server
+function fetchFavoriteCount() {
+    $.get('/Cart/GetFavCount', { _: new Date().getTime() })
+        .done(function (response) {
+            updateFavoriteDisplay(response.count);
+        })
+        .fail(function (xhr) {
+            console.error("Failed to fetch favorite count:", xhr.responseText);
+        });
+}
+
+// Initialize on page load
 $(document).ready(function () {
-   
+    // Initial fetch
+    fetchFavoriteCount();
+
+    // Set up click handler
     $(document).on('click', '.heart', function () {
         const productId = $(this).data('id');
         toggleFavorite(productId, this);
     });
+
+    // Optional: Refresh count periodically (every 30 seconds)
+    setInterval(fetchFavoriteCount, 30000);
 });

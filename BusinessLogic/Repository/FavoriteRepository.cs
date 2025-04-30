@@ -80,6 +80,10 @@ namespace BusinessLogic.Repository
             throw new NotImplementedException();
         }
 
-       
+        public int GetFavItemsCountByUserId(string userId)
+        {
+            
+            return context.Favorites.Count(f => f.UserId == userId);
+        }
     }
 }

@@ -186,23 +186,27 @@
 
 						for (let item of products) {
 							let card =
-						`<div class="col-12 col-md-4 col-lg-3 mb-5" >
-								<div class="product-item">
-								 <a href="/Home/PrdDetails?id=${item.id}">
-									<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail">
-								  </a>
-								  <h3 class="product-title">
-									<a href="/Home/prodDetails?id=${item.id}" class="text-decoration-none h4">${item.name}</a>
-								  </h3>
-								  <p class="product-price"><strong>${item.price} EG</strong></p>
-								  <p class="product-price"><strong>Stock: ${item.stock}</strong></p>
-
-								  <button class="btn btn-outline-primary btn-sm mt-2" onclick="event.stopPropagation(); AddToCart(${item.id})">
-									<img src="/images/cross.svg" class="img-fluid" style="width:15px">
-								  </button>
-								</div>
-
-							</div>`
+							`<div class="col-12 col-md-4 col-lg-3 mb-5">
+									<div class="product-item">
+										<a href="/Home/PrdDetails?id=${item.id}">
+										<img src="/images/${item.imgUrl}" class="img-fluid product-thumbnail"style="max-width: 100%;  height: 40vh;">
+										</a>
+										<div class="d-flex justify-content-between align-items-center">
+											<h3 class="product-title">
+												<a href="/Home/prodDetails?id=${item.id}" class="text-decoration-none h4">${item.name}</a>
+											</h3>
+				
+												<i class="${item.isFavorite ? 'fa-solid' : 'fa-regular'} fa-heart heart heart-icon position-absolute"
+												   style="color: ${item.isFavorite ? 'red' : 'black'}; font-size: 1.5rem;" data-id="${item.id}"></i>
+				
+										</div>
+										<p class="product-price"><strong>${item.price} EG</strong></p>
+										<p class="product-price"><strong>Stock: ${item.stock}</strong></p>
+										<button class="btn btn-outline-primary btn-sm mt-2" onclick="event.stopPropagation(); AddToCart(${item.id})">
+											<img src="/images/cross.svg" class="img-fluid" style="width:15px">
+										</button>
+									</div>
+								</div>`
 							$("#products-container").append(card)
 						}
 
@@ -363,3 +367,21 @@
 
 
 
+
+<style>
+	.heart-icon {
+		cursor: pointer;
+		top: 0px;
+		right: 3px;
+		transition: transform 0.3s, color 0.3s;
+	}
+
+		.heart-icon:hover {
+			transform: scale(1.2);
+			color: red !important;
+		}
+
+	.card-body .d-flex {
+		flex-wrap: wrap;
+	}
+</style>

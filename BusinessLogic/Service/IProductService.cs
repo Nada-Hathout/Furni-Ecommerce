@@ -13,11 +13,11 @@ namespace BusinessLogic.Service
     public interface IProductService
     {
         public List<Product> GetAllProducts();
-        public IQueryable<ShopProductViewModel> SearchProduct(string keyword);
-        public IQueryable<ShopProductViewModel> GetProducts();
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword,string userId);
+        public IQueryable<ShopProductViewModel> GetProducts(string userId);
 
         List<ProductsAndCommentsViewModel> GetProductsInfo(string userId);
-        ProductsAndCommentsViewModel GetDetails(int id);
+        ProductsAndCommentsViewModel GetDetails(string userId,int id);
         public bool AddCart(int productId, HttpContext httpContext,string userID);
         public void AddProduct(Product product);
         public void EditProduct(Product product);

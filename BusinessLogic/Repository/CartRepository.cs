@@ -85,5 +85,6 @@ namespace BusinessLogic.Repository
             if (cart == null) return 0;
             return _context.CartItems.Where(ci=>ci.CartId == cart.Id).Sum(ci=>ci.Quantity);
         }
+        
     }
 }

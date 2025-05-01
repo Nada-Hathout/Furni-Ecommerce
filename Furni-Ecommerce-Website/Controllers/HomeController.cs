@@ -41,7 +41,7 @@ namespace Furni_Ecommerce_Website.Controllers
         public IActionResult PrdDetails(int id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var prd = productService.GetDetails(id);
+            var prd = productService.GetDetails(userId,id);
             var favCount = favoriteService.GetFavoriteCount(userId);
 
             ViewBag.FavoriteCount = favCount;

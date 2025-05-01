@@ -11,5 +11,7 @@ namespace BusinessLogic.Repository
     {
         public void AddItemToCart(string userId, int productId);
         public int GetCartItemsCountByUserId(string userId);
+       
+        
     }
 }

@@ -10,5 +10,6 @@ namespace BusinessLogic.Service
     {
         void AddItemToCart(string userId, int productId);
         int GetCartItemsCountByUserId(string userId);
+       
     }
 }

@@ -13,5 +13,8 @@ namespace Furni_Ecommerce_Shared.UserViewModel
         public decimal Price { get; set; }
         public int Stock{ get; set; }
         public string imgUrl{ get; set; }
+        public bool IsFavorite { get; set; }
+
+        public int qty { get; set; }
     }
 }

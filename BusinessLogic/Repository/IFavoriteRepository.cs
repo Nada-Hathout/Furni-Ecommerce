@@ -14,7 +14,7 @@ namespace BusinessLogic.Repository
         public void Remove(string userId, int productId);
         public List<Favorite> GetAllUserFav(string userId);
         public int FavCounter(string userId);
-
+        public int GetFavItemsCountByUserId(string userId);
     }
 
  }

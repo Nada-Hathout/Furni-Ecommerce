@@ -13,10 +13,13 @@ namespace BusinessLogic.Repository
     public class ProductRepository : IProductRepository
     {
         public FurniDbContext context;
-        public ProductRepository(FurniDbContext furniDbContext)
+        private readonly IFavoriteRepository _favoriteRepository;
+
+        public ProductRepository(FurniDbContext furniDbContext, IFavoriteRepository favoriteRepository)
         {
             context = furniDbContext;
-            
+            _favoriteRepository = favoriteRepository;
+
         }
         
      
@@ -51,12 +54,12 @@ namespace BusinessLogic.Repository
             throw new NotImplementedException();
         }
 
-        public IQueryable<ShopProductViewModel> SearchProduct(string keyword)
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword, string userId)
         {
 
             if(string.IsNullOrEmpty(keyword))
             {
-                GetAllProducts();
+                GetAllProducts(userId);
             }
 
             keyword = keyword.ToLower();
@@ -70,20 +73,37 @@ namespace BusinessLogic.Repository
             {
                 productQuery = context.Products.Where(p=>p.Name.ToLower().Contains(keyword));
             }
+            var countOfFavItems = _favoriteRepository.FavCounter(userId);
+            var favoriteProductIds = _favoriteRepository.GetAllUserFav(userId).Select(f => f.ProductId).ToList();
             return productQuery.Select(p => new ShopProductViewModel
             {
                 Id = p.Id,
                 Name = p.Name,
                 Price = p.Price,
                 Stock = p.Stock,
-                imgUrl = p.ImagePath
+                imgUrl = p.ImagePath,
+                qty = countOfFavItems,
+                IsFavorite = favoriteProductIds.Contains(p.Id)
             });
 
         }
 
-        public IQueryable<ShopProductViewModel> GetAllProducts()
+        public IQueryable<ShopProductViewModel> GetAllProducts(string userId)
         {
-            return context.Products.Select(p => new ShopProductViewModel { Id = p.Id, Name = p.Name, Price = p.Price, Stock = p.Stock, imgUrl = p.ImagePath });
+            
+            var countOfFavItems = _favoriteRepository.FavCounter(userId);
+            var favoriteProductIds = _favoriteRepository.GetAllUserFav(userId).Select(f => f.ProductId).ToList();
+            return context.Products.Select(p => new ShopProductViewModel {  
+            Id = p.Id,
+            Name = p.Name,
+            Price = p.Price,
+            Stock = p.Stock,
+            imgUrl = p.ImagePath ,
+            qty=countOfFavItems, 
+            IsFavorite = favoriteProductIds.Contains(p.Id)
+
+
+            });
 
         }
 

@@ -12,6 +12,7 @@ namespace BusinessLogic.Service
     {
         bool ToggleFavourite(string userId, int productId);
         public List<FavouriteViewModel> GetFavProducts(string id);
+        int GetFavItemsCountByUserId(string userId);
         public int GetFavoriteCount(string id);
     }
 }

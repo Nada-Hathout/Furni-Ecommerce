@@ -36,27 +36,64 @@
 	<partial name="_FooterPartial"/>
 	<!-- End Footer Section -->
 
-
-	<script src="js/bootstrap.bundle.min.js"></script>
-	<script src="js/tiny-slider.js"></script>
-	<script src="js/custom.js"></script>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/tiny-slider.js"></script>
+	<script src="~/js/custom.js"></script>
+	<script src="~/js/site.js"></script>
 
-	<script>
-		function UpdateCartCount() {
-			$.ajax({
-				url: '/Cart/GetCartItemsCount',
-				method: 'GET',
-				success: function (response) {
-					$("#cart-count").text(response.count);
-				}
-			});
-		}
+    <!-- Bootstrap JS Bundle -->
+    <div class="position-fixed bottom-0 end-0 p-3 " style="z-index: 11; background-color:#a8c19a">
+        <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-dark">Notification</strong>
+                <small>Now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-success">
+                Successflly Added To Favourite
+            </div>
+        </div>
+    </div>
+    //fail error in adding to favorite
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11;background-color:#dd9692">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-dark">Notification</strong>
+                <small>Now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-danger">
+                Faild To Add In Favourite
+            </div>
+        </div>
+    </div>
+    <script>
+        function UpdateCartCount() {
+            try {
+                $.get('/Cart/GetCartItemsCount', function(response) {
+                    console.log('Cart count:', response.count);
+                    const $cartCount = $("#cart-count");
+                    if ($cartCount.length) {
+                        $cartCount.text(response.count);
+                    }
+                });
+            } catch (e) {
+                console.error('Cart count error:', e);
+            }
+        }
 
-		$(document).ready(function () {
-			UpdateCartCount();
-		});
-	</script>
+        
+
+        $(function() {
+            // Initial update
+            UpdateCartCount();
+            
+
+            // Update every 30 seconds
+            setInterval(UpdateFavCount, 30000);
+        });
+    </script>
 
 </body>
 

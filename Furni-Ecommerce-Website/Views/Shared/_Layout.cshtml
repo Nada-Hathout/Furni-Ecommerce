@@ -15,10 +15,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="~/css/tiny-slider.css" rel="stylesheet">
     <link href="~/css/style.css" rel="stylesheet">
-    <title>Furni Free Bootstrap 5 Template for Furniture and Interior Design Websites by Untree.co </title>
+    <title>Furni Ecommerce Website </title>
 
-    @* <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" /> *@
-
+    
  
 </head>
 <body>
@@ -30,12 +29,15 @@
 
     <partial name="_FooterPartial"></partial>
 
-    <script src="js/bootstrap.bundle.min.js"></script>
-    <script src="js/tiny-slider.js"></script>
-    <script src="js/custom.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" ></script>
 
+
+
+    <!-- Correct script loading order -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/bootstrap.bundle.min.js"></script> <!-- This includes Popper.js which dropdowns need -->
+    <script src="~/js/tiny-slider.js"></script>
+    <script src="~/js/custom.js"></script>
+    <script src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 
@@ -86,20 +88,31 @@
 
     
 <!-- Bootstrap JS Bundle -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div class="position-fixed bottom-0 end-0 p-3 " style="z-index: 11; background-color:#a8c19a">
         <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
             <div class="toast-header">
-                <strong class="me-auto">إشعار</strong>
-                <small>الآن</small>
+                <strong class="me-auto text-dark">Notification</strong>
+                <small>Now</small>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-            <div class="toast-body">
-                تم تنفيذ العملية بنجاح!
+            <div class="toast-body text-success">
+                Successflly Added To Favourite
             </div>
         </div>
     </div>
-
-
+//fail error in adding to favorite
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11;background-color:#dd9692">
+        <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto text-dark">Notification</strong>
+                <small>Now</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body text-danger">
+                Faild To Add In Favourite
+            </div>
+        </div>
+    </div>
 
 
     

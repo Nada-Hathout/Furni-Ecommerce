@@ -81,7 +81,7 @@ namespace Furni_Ecommerce_Website.Controllers
                 HttpContext.Session.SetString("UserEmail", user.Email);
 
                 TempData["SuccessMessage"] = "Registration successful! Welcome!";
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login", "Auth");
             }
             catch (DbUpdateException dbEx) when (dbEx.InnerException is SqlException sqlEx)
             {

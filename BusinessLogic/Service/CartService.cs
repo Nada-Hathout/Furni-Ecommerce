@@ -11,10 +11,12 @@ namespace BusinessLogic.Service
     public class CartService:ICartService
     {
         private readonly ICartRepository _cartRepository;
+        private readonly IFavoriteRepository _favoriteRepository;
 
-        public CartService(ICartRepository cartRepository)
+        public CartService(ICartRepository cartRepository, IFavoriteRepository favoriteRepository)
         {
             _cartRepository = cartRepository;
+            _favoriteRepository = favoriteRepository;
         }
 
         public void AddCart(Cart cart)
@@ -54,5 +56,6 @@ namespace BusinessLogic.Service
         {
             return _cartRepository.GetCartItemsCountByUserId(userId);
         }
+       
     }
 }

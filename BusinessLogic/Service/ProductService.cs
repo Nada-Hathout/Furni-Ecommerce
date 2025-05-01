@@ -115,10 +115,31 @@ namespace BusinessLogic.Service
             return cart;
         }
 
-        public ProductsAndCommentsViewModel GetDetails(int id)
+        public ProductsAndCommentsViewModel GetDetails(string UserId,int id)
         {
+            
             var product = _productRepository.GetByID(id);
-            return product == null ? null : MapToViewModel(product);
+            var favouritePrd = _favoriteRepository.GetAllUserFav(UserId);
+            if (product == null)
+            {
+                return null;
+            }
+            else
+            {
+                ProductsAndCommentsViewModel prdDetails = new ProductsAndCommentsViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    ImagePath = product.ImagePath,
+                    Stock = product.Stock,
+                    Price = product.Price,
+                    IsFavorite = favouritePrd.Any(f => f.ProductId == product.Id),
+                    CategoryName = product.Category?.Name
+                };
+                return prdDetails;
+            }
+            //return product == null ? null : MapToViewModel(product );
         }
 
         public List<ProductsAndCommentsViewModel> GetProductsInfo(string userId)
@@ -148,11 +169,11 @@ namespace BusinessLogic.Service
 
         public List<Product> GetAllProducts() => _productRepository.GetAll();
 
-        public IQueryable<ShopProductViewModel> SearchProduct(string keyword) =>
-            _productRepository.SearchProduct(keyword);
+        public IQueryable<ShopProductViewModel> SearchProduct(string keyword,string userId) =>
+            _productRepository.SearchProduct(keyword,userId);
 
-        public IQueryable<ShopProductViewModel> GetProducts() =>
-            _productRepository.GetAllProducts();
+        public IQueryable<ShopProductViewModel> GetProducts(string userId) =>
+            _productRepository.GetAllProducts(userId);
 
         public void AddProduct(Product product) => _productRepository.Add(product);
 
@@ -162,15 +183,17 @@ namespace BusinessLogic.Service
 
         public Product GetProdById(int id) => _productRepository.GetProdById(id);
 
-        private ProductsAndCommentsViewModel MapToViewModel(Product product) => new()
-        {
-            Id = product.Id,
-            Name = product.Name,
-            Description = product.Description,
-            ImagePath = product.ImagePath,
-            Stock = product.Stock,
-            Price = product.Price,
-            CategoryName = product.Category?.Name
-        };
+        //private ProductsAndCommentsViewModel MapToViewModel(Product product) => new()
+        //{
+        //    Id = product.Id,
+        //    Name = product.Name,
+        //    Description = product.Description,
+        //    ImagePath = product.ImagePath,
+        //    Stock = product.Stock,
+        //    Price = product.Price,
+        //    IsFavorite = favouritePrd.Any(f => f.ProductId == p.Id),
+        //    CategoryName = product.Category?.Name
+
+        //};
     }
 }

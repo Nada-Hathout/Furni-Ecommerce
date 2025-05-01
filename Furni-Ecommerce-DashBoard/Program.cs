@@ -37,6 +37,7 @@ namespace Furni_Ecommerce_DashBoard
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IProductService, ProductService>();
 
+
             // Identity Configuration
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
             {

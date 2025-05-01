@@ -7,7 +7,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 namespace Furni_Ecommerce_Website.Controllers
 {
-    [Authorize(Roles ="User")]
+    
     public class ShopController : Controller
     {
         private readonly IProductService _productService;
@@ -51,16 +51,7 @@ namespace Furni_Ecommerce_Website.Controllers
 
             return Json(new { data = pagedProducts, total = totalCount });
         }
-        //[HttpPost]
-        //public IActionResult AddToCart(int productId)
-        //{
-        //    string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //    bool added = _productService.AddCart(productId,HttpContext, userId);
-        //    if (!added) return NotFound();
-
-        //    return Ok(new { message = "Product added to cart" });
-            
-        //}
+      
 
     }
 }

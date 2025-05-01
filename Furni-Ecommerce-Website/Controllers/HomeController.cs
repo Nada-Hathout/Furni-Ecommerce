@@ -100,5 +100,36 @@ namespace Furni_Ecommerce_Website.Controllers
             });
         }
 
+
+
+        public IActionResult About()
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo(userId);
+            return View(products);
+        }
+
+        public IActionResult Blog()
+        {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo(userId);
+            return View(products);
+        }
+        public IActionResult Services()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo(userId);
+            return View(products);
+        }
+        public IActionResult Contact()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo(userId);
+            return View(products);
+        }
+
+
     }
 }

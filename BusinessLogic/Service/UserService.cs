@@ -141,6 +141,65 @@ namespace BusinessLogic.Service
             return await _userManager.UpdateAsync(user);
         }
 
+        public async Task<List<AllUserViewModel>> GetAllUsers()
+        {
+            var usersInRole = await _userManager.GetUsersInRoleAsync("User");
 
+            var userViewModels = new List<AllUserViewModel>();
+
+            foreach (var user in usersInRole)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
+
+                userViewModels.Add(new AllUserViewModel
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,   
+                    LastName = user.LastName,     
+                    PhoneNumber = user.PhoneNumber,
+                    Roles = roles.ToList()
+                });
+            }
+
+            return userViewModels;
+        }
+
+        public async Task<AllUserViewModel> GetSpecificUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return null;
+
+            var roles = await _userManager.GetRolesAsync(user);
+
+            var model = new AllUserViewModel
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                Roles = roles.ToList()
+            };
+            return model;
+        }
+
+        public async Task<IdentityResult> DeleteUser(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+                return IdentityResult.Failed(new IdentityError { Description = $"User with ID '{id}' not found." });
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Any())
+            {
+                await _userManager.RemoveFromRolesAsync(user, roles);
+            }
+            var result = await _userManager.DeleteAsync(user);
+            return result;
+
+        }
     }
 }

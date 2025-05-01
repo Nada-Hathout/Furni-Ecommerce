@@ -1,14 +1,24 @@
 ﻿<nav class="sidebar sidebar-offcanvas" id="sidebar">
     <ul class="nav">
         <li class="nav-item nav-profile">
-            <a href="#" class="nav-link">
+            <a asp-action="Index" asp-controller="Profile" class="nav-link">
                 <div class="nav-profile-image">
-                    <img src="../assets/images/faces/face1.jpg" alt="profile" class="rounded-circle" />
+                    <img src="~/assets/images/faces/face1.jpg" alt="profile" class="rounded-circle" />
                     <span class="login-status online"></span>
                 </div>
                 <div class="nav-profile-text d-flex flex-column">
-                    <span class="font-weight-bold mb-2">David Grey. H</span>
-                    <span class="text-secondary text-small">Project Manager</span>
+                    <span class="font-weight-bold mb-2">@User.Identity?.Name</span>
+                    <span class="text-secondary text-small">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <text>Administrator</text>
+                        }
+                        else if (User.IsInRole("Owner"))
+                        {
+                            <text>Owner</text>
+                        }
+
+                    </span>
                 </div>
                 <i class="mdi mdi-shield-check text-success nav-profile-badge"></i>
             </a>

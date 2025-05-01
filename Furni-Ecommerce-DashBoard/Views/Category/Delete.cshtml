@@ -34,10 +34,12 @@
 
                                     <form asp-action="Delete">
                                         <input type="hidden" asp-for="Id" />
-                                        <button type="submit" class="btn btn-gradient-danger me-2">
-                                            <i class="mdi mdi-delete"></i> Confirm Delete
-                                        </button>
-                                        <a asp-action="Index" class="btn btn-light">Cancel</a>
+                                        <div class="d-flex gap-4">
+                                            <button type="submit" class="btn btn-gradient-danger text-nowrap">
+                                                <i class="mdi mdi-delete"></i> Confirm Delete
+                                            </button>
+                                            <a asp-action="Index" class="btn btn-light">Cancel</a>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

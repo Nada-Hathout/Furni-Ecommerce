@@ -7,12 +7,12 @@ namespace Furni_Ecommerce_DashBoard.SeedData
     public static class IdentitySeedData
     {
         private const string ADMIN_ROLE = "Owner";
-        private const string ADMIN_EMAIL = "Owner@iti.com";
+        private const string ADMIN_EMAIL = "Owner@example.com";
         private const string ADMIN_PASSWORD = "Owner@123";
         private const string ADMIN_USERNAME = "Owner";
         private const string ADMIN_FIRSTNAME = "Mahmoud";
         private const string ADMIN_LASTNAME = "Ahmed";
-        private const string ADMIN_PHONENUMBER = "1234567891";
+        private const string ADMIN_PHONENUMBER = "01116721576";
 
         public static async Task SeedAdminAsync(IServiceProvider serviceProvider)
         {

@@ -24,6 +24,7 @@
             <div class="row mb-5">
                 <!-- Form starts here, sending data to /Checkout -->
                 <form class="col-md-12" method="get" asp-controller="checkout" asp-action="Index">
+                @Html.AntiForgeryToken()
                     <div class="site-blocks-table">
                         <table class="table">
                             <thead>
@@ -137,8 +138,8 @@
             total = subtotal;
             document.getElementById("subtotal").textContent = `$${subtotal.toFixed(2)}`;
             document.getElementById("total").textContent = `$${total.toFixed(2)}`;
-            toggleCouponButton(total);
-            checkCouponEligibility(total);
+            // toggleCouponButton(total);
+            // checkCouponEligibility(total);
         }
 
         // Checks if the coupon button should be enabled based on the cart total
@@ -215,34 +216,93 @@
             }
         });
 
-        // Increase the quantity for an item
-        document.querySelectorAll(".increase").forEach((button) => {
-            button.addEventListener("click", function () {
-                const quantityInput = this.closest("tr").querySelector(".quantity");
-                const currentQuantity = parseInt(quantityInput.value);
-                const stock = parseInt(this.closest("tr").dataset.stock);  // Fetch stock from data attribute
+            // Increase the quantity for an item
+    document.querySelectorAll(".increase").forEach((button) => {
+        button.addEventListener("click", function () {
+            const row = this.closest("tr");
+            const quantityInput = row.querySelector(".quantity");
+            const currentQuantity = parseInt(quantityInput.value);
+            const stock = parseInt(row.dataset.stock);
+            const cartItemId = row.querySelector(".remove").getAttribute("href").split('/').pop();
+            console.log(cartItemId);
 
-                if (currentQuantity < stock) {
-                    quantityInput.value = currentQuantity + 1;
-                    updateTotals();  // Recalculate totals after increasing quantity
-                } else {
-                    alert("Cannot increase quantity beyond available stock.");
-                }
-            });
+            if (currentQuantity < stock) {
+                quantityInput.value = currentQuantity + 1;
+                updateQuantityInDatabase(cartItemId, currentQuantity + 1);
+                updateTotals();
+            } else {
+                alert("Cannot increase quantity beyond available stock.");
+            }
         });
+    });
 
-        // Decrease the quantity for an item
-        document.querySelectorAll(".decrease").forEach((button) => {
-            button.addEventListener("click", function () {
-                const quantityInput = this.closest("tr").querySelector(".quantity");
-                const currentQuantity = parseInt(quantityInput.value);
+    // Decrease the quantity for an item
+    document.querySelectorAll(".decrease").forEach((button) => {
+        button.addEventListener("click", function () {
+            const row = this.closest("tr");
+            const quantityInput = row.querySelector(".quantity");
+            const currentQuantity = parseInt(quantityInput.value);
+            const cartItemId = row.querySelector(".remove").getAttribute("href").split('/').pop();
 
-                if (currentQuantity > 1) {
-                    quantityInput.value = currentQuantity - 1;
-                    updateTotals();  // Recalculate totals after decreasing quantity
-                }
-            });
+            if (currentQuantity > 1) {
+                quantityInput.value = currentQuantity - 1;
+                updateQuantityInDatabase(cartItemId, currentQuantity - 1);
+                updateTotals();
+            }
         });
+    });
+
+       // Function to update quantity in database via AJAX
+     // Function to update quantity in database via AJAX
+        function updateQuantityInDatabase(cartItemId, newQuantity) {
+        const tokenElement = document.querySelector('input[name="__RequestVerificationToken"]');
+        const token = tokenElement ? tokenElement.value : '';
+
+        const row = document.querySelector(`tr a[href="/CartItem/Delete/${cartItemId}"]`)?.closest('tr');
+        if (!row) {
+            console.error('Could not find cart item row');
+            alert('Could not find item in cart');
+            return;
+        }
+
+        const quantityInput = row.querySelector('.quantity');
+        quantityInput.disabled = true;
+
+        // Make sure the fetch URL matches the route defined in your controller
+        fetch(`/CartItem/UpdateQuantity/${cartItemId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'RequestVerificationToken': token
+            },
+            body: JSON.stringify({
+                Quantity: newQuantity
+            })
+        })
+        .then(async response => {
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                const errorMsg = errorData.message ||
+                                (response.status === 404 ? 'Cart item not found' :
+                                 response.status === 400 ? 'Invalid request' :
+                                 'Failed to update quantity');
+                throw new Error(errorMsg);
+            }
+            return response.json();
+        })
+        .then(data => {
+            row.querySelector('.product-total').textContent = data.itemTotal;
+            updateTotals();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message);
+            quantityInput.value = parseInt(quantityInput.value); // Revert to original value
+        })
+        .finally(() => {
+            quantityInput.disabled = false;
+        });
+    }
 
         // Listen for quantity input changes and update totals
         document.querySelectorAll(".quantity").forEach((input) => {

@@ -5,59 +5,140 @@
 }
 <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+    /* Custom styling */
+    .dataTables_wrapper {
+        padding: 0 !important;
+    }
 
-<!-- Success Message -->
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success">
-        @TempData["SuccessMessage"]
-    </div>
-}
-
-<h1 class="mb-4">All Users</h1>
-
-<table class="table table-striped table-bordered table-hover" id="usersTable">
-    <thead class="table-light">
-        <tr>
-            <th>#</th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Phone</th>
-            <th>Roles</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{int id = 1;}
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@id</td>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-                <td>@user.FirstName</td>
-                <td>@user.LastName</td>
-                <td>@user.PhoneNumber</td>
-                <td>
-                    @foreach (var role in user.Roles)
-                    {
-                        <span class="badge bg-primary">@role</span>
-                    }
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-warning btn-sm">Details</a>
-                    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="@user.Id">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            {id++;}
+        .dataTables_wrapper .dataTables_filter input {
+            border: 1px solid #e3e3e3;
+            border-radius: 4px;
+            padding: 6px 12px;
+            margin-left: 10px;
+            background-color: #fff;
+            transition: all 0.3s;
+            width: 200px;
         }
-    </tbody>
-</table>
+
+            .dataTables_wrapper .dataTables_filter input:focus {
+                border-color: #4b49ac;
+                box-shadow: 0 0 0 0.2rem rgba(75, 73, 172, 0.25);
+            }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 1px solid #e3e3e3;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            padding: 5px 10px;
+            margin: 0 2px;
+            border-radius: 4px;
+        }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+                background: #4b49ac !important;
+                color: white !important;
+            }
+
+    .badge-primary {
+        background-color: #4b49ac;
+        margin-right: 5px;
+    }
+
+    /* Compact table styling */
+    .compact-table {
+        width: 100% !important;
+    }
+
+        .compact-table th,
+        .compact-table td {
+            padding: 8px 12px !important;
+            white-space: nowrap;
+        }
+
+    .action-buttons {
+        display: flex;
+        gap: 5px;
+    }
+</style>
+
+<div class="container-fluid page-body-wrapper">
+    <div class="main-panel">
+        <div class="content-wrapper" style="padding: 1.5rem 1.5rem 2rem;">
+            <div class="page-header">
+                <h3 class="page-title">
+                    <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-account-multiple"></i>
+                    </span> Users
+                </h3>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card" style="min-height: auto; margin-bottom: 0;">
+                        <div class="card-body" style="padding: 1.5rem;">
+                            @if (TempData["SuccessMessage"] != null)
+                            {
+                                <div class="alert alert-info mb-3">@TempData["SuccessMessage"]</div>
+                            }
+
+                            <div class="table-responsive" style="max-height: none; overflow: visible;">
+                                <table class="table table-hover compact-table" id="usersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Phone</th>
+                                            <th>Roles</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            int id = 1;
+                                        }
+                                        @foreach (var user in Model)
+                                        {
+                                            <tr>
+                                                <td>@id</td>
+                                                <td>@user.UserName</td>
+                                                <td>@user.Email</td>
+                                                <td>@user.FirstName</td>
+                                                <td>@user.LastName</td>
+                                                <td>@user.PhoneNumber</td>
+                                                <td>
+                                                    @foreach (var role in user.Roles)
+                                                    {
+                                                        <span class="badge badge-primary">@role</span>
+                                                    }
+                                                </td>
+                                                <td class="action-buttons">
+                                                    <a asp-action="Details" asp-route-id="@user.Id" class="btn btn-sm btn-gradient-info">
+                                                        <i class="mdi mdi-eye"></i>
+                                                    </a>
+                                                    <button type="button" class="btn btn-sm btn-gradient-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-user-id="@user.Id">
+                                                        <i class="mdi mdi-delete"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            { id++; }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -82,9 +163,6 @@
 
 @section Scripts {
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var deleteModal = document.getElementById('deleteModal');
@@ -95,24 +173,35 @@
                 form.action = '/User/Delete/' + userId;
             });
 
-            // Initialize DataTables
             $('#usersTable').DataTable({
                 paging: true,
                 searching: true,
                 ordering: true,
                 responsive: true,
+                scrollX: true,
                 lengthMenu: [5, 10, 15, 20],
                 language: {
-                    search: "Search:",
+                    search: "",
+                    searchPlaceholder: "Search users...",
                     lengthMenu: "Show _MENU_ entries",
                     info: "Showing _START_ to _END_ of _TOTAL_ users",
+                    infoEmpty: "No users found",
                     paginate: {
-                        previous: "Previous",
-                        next: "Next"
+                        previous: "<i class='mdi mdi-chevron-left'></i>",
+                        next: "<i class='mdi mdi-chevron-right'></i>"
                     }
                 },
+                initComplete: function() {
+                    $('.dataTables_filter input').addClass('form-control');
+                    $('.dataTables_filter label').contents().filter(function() {
+                        return this.nodeType === 3;
+                    }).remove();
+                    $('.dataTables_filter label').prepend('<i class="mdi mdi-magnify me-2"></i>');
+
+                    $('.dataTables_length select').addClass('form-control form-control-sm');
+                },
                 columnDefs: [
-                    { orderable: false, targets: 7 } // Disables sorting on actions column
+                    { orderable: false, targets: 7 }
                 ]
             });
         });

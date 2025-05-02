@@ -2,10 +2,63 @@
 
 @{
     ViewData["Title"] = "Category";
-
 }
-<div class="container-fluid page-body-wrapper">
 
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+<style>
+    /* Custom styling to match your theme */
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+        padding: 6px 12px;
+        margin-left: 10px;
+        background-color: #fff;
+        transition: all 0.3s;
+    }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: #4b49ac;
+            box-shadow: 0 0 0 0.2rem rgba(75, 73, 172, 0.25);
+        }
+
+    .dataTables_wrapper .dataTables_length select {
+        border: 1px solid #e3e3e3;
+        border-radius: 4px;
+        padding: 5px;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 5px 10px;
+        margin: 0 2px;
+        border-radius: 4px;
+    }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #4b49ac !important;
+            color: white !important;
+        }
+
+    .dataTables_wrapper .dataTables_info {
+        color: #6c757d;
+    }
+
+    /* Enlarged card styling */
+    .enlarged-card {
+        min-height: 650px; /* Increased minimum height */
+        padding-bottom: 30px; /* Added bottom padding */
+    }
+
+        .enlarged-card .card-body {
+            padding: 25px; /* Increased padding inside card */
+        }
+
+        .enlarged-card .table-responsive {
+            margin-top: 15px; /* Added margin above table */
+        }
+</style>
+
+<div class="container-fluid page-body-wrapper">
     <div class="main-panel">
         <div class="content-wrapper">
             <div class="page-header">
@@ -18,7 +71,8 @@
 
             <div class="row">
                 <div class="col-12 grid-margin">
-                    <div class="card">
+                    <div class="card enlarged-card">
+                        <!-- Added enlarged-card class -->
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-4">
                                 <h4 class="card-title">Categories List</h4>
@@ -33,7 +87,7 @@
                             }
 
                             <div class="table-responsive">
-                                <table class="table table-hover">
+                                <table class="table table-hover" id="categoriesTable">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -67,3 +121,43 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            $('#categoriesTable').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                responsive: true,
+                lengthMenu: [5, 10, 15, 20],
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search categories...",
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ categories",
+                    infoEmpty: "No categories found",
+                    paginate: {
+                        previous: "<i class='mdi mdi-chevron-left'></i>",
+                        next: "<i class='mdi mdi-chevron-right'></i>"
+                    }
+                },
+                initComplete: function() {
+                    // Style the search box
+                    $('.dataTables_filter input').addClass('form-control');
+                    $('.dataTables_filter label').contents().filter(function() {
+                        return this.nodeType === 3;
+                    }).remove();
+                    $('.dataTables_filter label').prepend('<i class="mdi mdi-magnify me-2"></i>');
+
+                    // Style the length menu
+                    $('.dataTables_length select').addClass('form-control form-control-sm');
+                },
+                columnDefs: [
+                    { orderable: false, targets: 2 } // Disables sorting on actions column
+                ]
+            });
+        });
+    </script>
+}

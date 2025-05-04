@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /Furni-Ecommerce-Website/wwwroot/secrets/credentials.json
 
 appsettings.Development.json
+credentials.json

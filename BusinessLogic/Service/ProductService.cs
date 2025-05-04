@@ -1,7 +1,9 @@
 ﻿using BusinessLogic.Repository;
 using DataAccess.Models;
+using Furni_Ecommerce_Shared.AdminViewModel;
 using Furni_Ecommerce_Shared.UserViewModel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -195,5 +197,40 @@ namespace BusinessLogic.Service
         //    CategoryName = product.Category?.Name
 
         //};
+
+        public IEnumerable<SelectListItem> GetAllCategories() => _productRepository.GetAllCategories();
+        public List<ProductViewModel> GetAllProductsAsViewModel()
+        {
+            var products = GetAllProducts(); 
+
+            return products.Select(p => new ProductViewModel
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Stock = p.Stock,
+                Description = p.Description,
+                ImgPath = p.ImagePath,
+                CatId = p.CategoryId,
+                CategoryName = p.Category != null ? p.Category.Name : ""
+            }).ToList();
+        }
+        public ProductViewModel GetProductViewModelById(int id)
+        {
+            var product = GetProdById(id);
+            if (product == null) return null;
+
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Stock = product.Stock,
+                Description = product.Description,
+                ImgPath = product.ImagePath,
+                CatId = product.CategoryId,
+                CategoryName = product.Category?.Name ?? ""
+            };
+        }
     }
 }

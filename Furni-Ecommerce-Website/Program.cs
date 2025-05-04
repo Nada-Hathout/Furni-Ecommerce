@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
+using BusinessLogic.External_Service;
 
 namespace Furni_Ecommerce_Website
 {
@@ -72,7 +73,8 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<IOrderRepository, OrderRepository>();
             builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
             builder.Services.AddScoped<ICartRepository, CartRepository>();
-
+            builder.Services.AddScoped<GmailService>();
+            builder.Services.AddScoped<IPurchaseConfirmationService,PurchaseConfirmationService>();
             builder.Services.AddScoped<CartItemService>();
             builder.Services.AddScoped<ProductService>();
             builder.Services.AddScoped<IProductService, ProductService>();

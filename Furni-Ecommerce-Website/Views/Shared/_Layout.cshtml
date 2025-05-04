@@ -33,11 +33,11 @@
 
 
     <!-- Correct script loading order -->
+    <script src="~/js/site.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/bootstrap.bundle.min.js"></script> <!-- This includes Popper.js which dropdowns need -->
     <script src="~/js/tiny-slider.js"></script>
     <script src="~/js/custom.js"></script>
-    <script src="~/js/site.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 

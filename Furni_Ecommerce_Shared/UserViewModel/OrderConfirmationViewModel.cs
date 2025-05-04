@@ -16,6 +16,7 @@ namespace Furni_Ecommerce_Shared.UserViewModel
         public string? TransactionId { get; set; }
         public IList<OrderItemViewModel> Items { get; set; }
         public decimal TotalAmount { get; set; }
+        public string Email {  get; set; }
     }
     public class OrderItemsViewModel
     {

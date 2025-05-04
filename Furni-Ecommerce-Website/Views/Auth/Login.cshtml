@@ -40,7 +40,7 @@
 
             <!-- Eye Icon Positioned Absolutely Inside Input -->
             <i class="fa-solid fa-eye" onclick="togglePassword()" id="toggleIcon"
-               style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+            style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
 
             <span asp-validation-for="Password" class="text-danger"></span>
 
@@ -63,6 +63,31 @@
         <p style="display: inline;">Don't have an account?</p>
         <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
     </form>
+
+    <div class="row pt-2">
+        <h5>External Login</h5>
+        @if (Model.schemes.Count() == 0)
+        {
+            <div>No External Login Providers have configured</div>
+        }
+        else
+        {
+            <form asp-action="ExternalLogin">
+                <div>
+                    @foreach (var provider in Model.schemes)
+                    {
+                        <button type="submit"
+                                class="btn btn-primary"
+                                name="provider"
+                                value="@provider.Name"
+                                title="Login using your @provider.Name account">
+                            @provider.DisplayName
+                        </button>
+                    }
+                </div>
+            </form>
+        }
+    </div>
 </section>
 
 @section Scripts {

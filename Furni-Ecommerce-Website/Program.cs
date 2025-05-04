@@ -85,7 +85,11 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<IOrderItemService, OrderItemService>();
             builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<ICartService, CartService>();
-
+            builder.Services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Auth:Google:ClientID"];
+                options.ClientSecret = builder.Configuration["Auth:Google:ClientSecret"];
+            });
             // 7) MVC
             builder.Services.AddControllersWithViews();
 
@@ -124,6 +128,7 @@ namespace Furni_Ecommerce_Website
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseHttpsRedirection();
 
             app.MapControllerRoute(
                 name: "default",

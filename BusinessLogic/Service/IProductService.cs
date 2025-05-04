@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Furni_Ecommerce_Shared.AdminViewModel;
 
 namespace BusinessLogic.Service
 {
@@ -24,6 +26,10 @@ namespace BusinessLogic.Service
 
         public void DeleteProduct(int id);
         public Product GetProdById(int id);
+
+        public IEnumerable<SelectListItem> GetAllCategories();
+        public List<ProductViewModel> GetAllProductsAsViewModel();
+        public ProductViewModel GetProductViewModelById(int id);
 
     }
 }

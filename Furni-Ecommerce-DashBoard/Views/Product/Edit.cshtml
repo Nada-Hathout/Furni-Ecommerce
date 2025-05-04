@@ -10,17 +10,29 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Id" class="control-label"></label>
-                <input asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
-            </div>
+            @* <div class="form-group"> *@
+            @*     <label asp-for="Id" class="control-label"></label> *@
+            @*     <input asp-for="Id" class="form-control" /> *@
+            @*     <span asp-validation-for="Id" class="text-danger"></span> *@
+            @* </div> *@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CatId" class="control-label">Category Name</label>
+                <select asp-for="CatId" class="form-control" asp-items="Model.Categories">
+                    <option value=""> -- Select Category --</option>
+                </select>
+                <span asp-validation-for="CatId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
@@ -31,6 +43,20 @@
                 <label asp-for="Stock" class="control-label"></label>
                 <input asp-for="Stock" class="form-control" />
                 <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.ImgPath))
+            {
+                <div class="form-group">
+                    <label>Current Image:</label><br />
+                    @* <img src="@Url.Content("~/images/" + Model.ImgPath)" width="100" height="100" /> *@
+                    <img src="~/images/@Model.ImgPath" width="100" height="100" />
+
+                </div>
+            }
+            <div class="form-group">
+                <label asp-for="Img" class="control-label"></label>
+                <input asp-for="Img" type="file" class="form-control" />
+                <span asp-validation-for="Img" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-success" />

@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Data;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
@@ -28,9 +30,10 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public IActionResult Register()
         {
+           
             return View();
         }
-
+            
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
@@ -156,9 +159,13 @@ namespace Furni_Ecommerce_Website.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Login()
+        public async Task< IActionResult> Login()
         {
-            return View("Login");
+            var loginVM = new LoginViewModel()
+            {
+                schemes = await signInManager.GetExternalAuthenticationSchemesAsync()
+            };
+            return View(loginVM);
         }
 
         [HttpPost]
@@ -225,6 +232,72 @@ namespace Furni_Ecommerce_Website.Controllers
             // Renew session lifetime ------
             HttpContext.Session.SetString("LastActivity", DateTime.UtcNow.ToString());
             return Ok();
+        }
+        public IActionResult ExternalLogin(string provider, string returnUrl = "")
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Auth", new { ReturnUrl = returnUrl });
+
+            var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+            return new ChallengeResult(provider, properties);
+        }
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "", string remoteError = "")
+        {
+
+            var loginVM = new LoginViewModel()
+            {
+                schemes = await signInManager.GetExternalAuthenticationSchemesAsync()
+            };
+
+            if (!string.IsNullOrEmpty(remoteError))
+            {
+                ModelState.AddModelError("", $"Error from extranal login provide: {remoteError}");
+                return View("Login", loginVM);
+            }
+
+            //Get login info
+            var info = await signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError("", $"Error from extranal login provide: {remoteError}");
+                return View("Login", loginVM);
+            }
+
+            var signInResult = await signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signInResult.Succeeded)
+                return RedirectToAction("Index", "Home");
+            else
+            {
+                var userEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (!string.IsNullOrEmpty(userEmail))
+                {
+                    var user = await userManager.FindByEmailAsync(userEmail);
+
+                    if (user == null)
+                    {
+                        user = new ApplicationUser()
+                        {
+                            FirstName=userEmail,
+                            UserName = userEmail,
+                            Email = userEmail,
+                            LastName= userEmail,
+                            EmailConfirmed = true
+                        };
+
+                        await userManager.CreateAsync(user);
+                        await userManager.AddToRoleAsync(user, "user");
+                    }
+
+                    await signInManager.SignInAsync(user, isPersistent: false);
+
+                    return RedirectToAction("EditProfile", "Profile");
+                }
+
+            }
+
+            ModelState.AddModelError("", $"Something went wrong");
+            return View("Login", loginVM);
         }
     }
 }

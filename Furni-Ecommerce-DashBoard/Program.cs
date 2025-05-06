@@ -30,13 +30,16 @@ namespace Furni_Ecommerce_DashBoard
             builder.Services.AddScoped<IUsersRepository, UserRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
-            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>(); // Add this line
+            builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderItemRepository, OrderItemRepository>();
 
             // Register services
             builder.Services.AddScoped<ICategoryService, CategoryService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IProductService, ProductService>();
-
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IOrderItemService, OrderItemService>();
 
             // Identity Configuration
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
@@ -61,6 +64,9 @@ namespace Furni_Ecommerce_DashBoard
                 options.Cookie.IsEssential = true;
             });
 
+            // Add AutoMapper if you're using it
+            //builder.Services.AddAutoMapper(typeof(Program));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -77,16 +83,25 @@ namespace Furni_Ecommerce_DashBoard
             app.UseAuthorization();
             app.UseSession();
 
-            // Seed admin user
+            // Seed admin user and any initial data
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 await IdentitySeedData.SeedAdminAsync(services);
+
+                // Add any additional data seeding here if needed
+                // await SeedData.Initialize(services);
             }
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Auth}/{action=Login}/{id?}");
+
+            // Add a route for the dashboard
+            app.MapControllerRoute(
+                name: "dashboard",
+                pattern: "Dashboard/{action=Index}/{id?}",
+                defaults: new { controller = "Home" });
 
             await app.RunAsync();
         }

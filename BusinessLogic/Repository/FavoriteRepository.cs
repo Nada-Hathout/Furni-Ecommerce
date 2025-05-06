@@ -27,7 +27,6 @@ namespace BusinessLogic.Repository
                 var fav = new Favorite { UserId = userId, ProductId = productId };
                 context.Favorites.Add(fav);
                 context.SaveChanges();
-
             }
         }
         public void Remove(string userId, int productId)

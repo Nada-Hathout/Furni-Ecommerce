@@ -25,7 +25,7 @@
 		border: 7px solid #e0e0e0;
 		border: 7px dashed #3B5D50;
 		border-radius: 50%;
-		animation: spin 5s linear infinite;
+		animation: spin 10s linear infinite;
 	}
 
 	keyframes spin {
@@ -148,7 +148,10 @@
 		function hideAnimation(){
 			let container = document.getElementById("animation-container");
 			if(container != null & container != undefined){
+				setTimeout(() =>{
+
 				container.classList.add("d-none");
+				},300)
 			}
 		}
 		let currentPage =1;

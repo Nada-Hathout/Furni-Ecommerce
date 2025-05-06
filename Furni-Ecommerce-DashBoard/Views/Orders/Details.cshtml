@@ -1,0 +1,128 @@
+﻿@model Furni_Ecommerce_Shared.AdminViewModel.OrderDetailViewModel
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+<div class="container-fluid page-body-wrapper">
+    <div class="main-panel">
+        <div class="content-wrapper">
+            <div class="page-header">
+                <h3 class="page-title">
+                    <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-cart"></i>
+                    </span> Order Details
+                </h3>
+                <nav aria-label="breadcrumb">
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a asp-action="Index" asp-controller="Orders">Orders</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <span></span>Details <i class="mdi mdi-alert-circle-outline icon-sm text-primary align-middle"></i>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="row">
+                <div class="col-12 grid-margin">
+                    <div class="card enlarged-card">
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h4 class="card-title">Order Information</h4>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Order ID</th>
+                                                    <td>@Model.OrderId</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Customer</th>
+                                                    <td>@Model.CustomerName</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Order Date</th>
+                                                    <td>@Model.OrderDate.ToString("g")</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Status</th>
+                                                    <td>
+                                                        <label class="badge @GetStatusBadgeClass(Model.Status)">
+                                                            @Model.Status
+                                                        </label>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4 class="card-title">Order Summary</h4>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <th>Subtotal</th>
+                                                    <td>@Model.TotalAmount.ToString("C")</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total</th>
+                                                    <td class="font-weight-bold">@Model.TotalAmount.ToString("C")</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4 class="card-title">Order Items</h4>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.Items)
+                                        {
+                                            <tr>
+                                                <td>@item.ProductName</td>
+                                                <td>@item.Quantity</td>
+                                                <td>@item.Price.ToString("C")</td>
+                                                <td>@((item.Quantity * item.Price).ToString("C"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="mt-4">
+                                <a asp-action="Index" class="btn btn-gradient-light">Back to Orders</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(string status)
+    {
+        return status switch
+        {
+            "success" => "badge-gradient-success",
+            "pending" => "badge-gradient-warning",
+            "failed" => "badge-gradient-danger",
+            _ => "badge-gradient-info"
+        };
+    }
+}

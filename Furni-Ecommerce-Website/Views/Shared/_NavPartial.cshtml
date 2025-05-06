@@ -168,8 +168,8 @@
               						<li>
                     <a class="nav-link" asp-action="Favorite" asp-controller="Home" style="position: relative;">
                     <i class="bi bi-heart  me-2 fs-5 heart"style="position:relative;"></i>
-						
-                                    <span class="fav-counter bg-danger">@ViewBag.FavoriteCount</span>
+
+                        <span id="fav-count" class="fav-counter bg-danger" style="display:block;">0</span>
 								
 					</a>
 					 </li>
@@ -206,7 +206,9 @@
 		font-size: 12px;
 		display: flex;
 		align-items: center;
-		justify-content: center
+		justify-content: center;
+        
+
 	}
 .transition:hover {
   transform: scale(1.05);

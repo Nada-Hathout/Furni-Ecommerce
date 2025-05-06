@@ -32,9 +32,9 @@ namespace BusinessLogic.Service
 
         public bool ToggleFavourite(string userId, int productId)
         {
-            var exists=FavoriteRepository.Exists(userId, productId);
-            if (exists) { 
-            FavoriteRepository.Remove(userId, productId);
+            var exists= FavoriteRepository.Exists(userId, productId);
+            if (exists) {
+                 FavoriteRepository.Remove(userId, productId);
                
                 return false;
 
@@ -46,21 +46,41 @@ namespace BusinessLogic.Service
             }
         }
 
-        List<FavouriteViewModel> IFavoriteService.GetFavProducts(string userId)
+        //public List<FavouriteViewModel> GetFavProducts(string userId)
+        // {
+        //     var favouritePrd = FavoriteRepository.GetAllUserFav(userId);
+        //     var countOfFavItems = FavoriteRepository.FavCounter(userId);
+        //     return FavoriteRepository.GetAllUserFav(userId)
+        //     .Select(f => new FavouriteViewModel
+        //     {
+        //         PrdId = f.Product.Id,
+        //         Name = f.Product.Name,
+        //         Price = f.Product.Price,
+        //         ImgUrl = f.Product.ImagePath,
+        //         IsFavorite = favouritePrd.Any(p => p.ProductId == f.ProductId),
+        //         qty=countOfFavItems
+        //     })
+        //     .ToList();
+        // }
+        public List<FavouriteViewModel> GetFavProducts(string userId)
         {
-            var favouritePrd = FavoriteRepository.GetAllUserFav(userId);
-            var countOfFavItems = FavoriteRepository.FavCounter(userId);
-            return FavoriteRepository.GetAllUserFav(userId)
-            .Select(f => new FavouriteViewModel
-            {
-                PrdId = f.Product.Id,
-                Name = f.Product.Name,
-                Price = f.Product.Price,
-                ImgUrl = f.Product.ImagePath,
-                IsFavorite = favouritePrd.Any(p => p.ProductId == f.ProductId),
-                qty=countOfFavItems
-            })
-            .ToList();
+            var favouritePrd = FavoriteRepository.GetAllUserFav(userId)
+                                .Where(f => f.Product != null) // ✅ تأكد من وجود المنتج
+                                .ToList();
+
+            var countOfFavItems = favouritePrd.Count;
+
+            return favouritePrd
+                .Select(f => new FavouriteViewModel
+                {
+                    PrdId = f.Product.Id,
+                    Name = f.Product.Name,
+                    Price = f.Product.Price,
+                    ImgUrl = f.Product.ImagePath,
+                    IsFavorite = true, // طالما جاي من الفيفوريت
+                    qty = countOfFavItems
+                })
+                .ToList();
         }
 
         public int GetFavItemsCountByUserId(string userId)

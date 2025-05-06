@@ -65,7 +65,7 @@ namespace Furni_Ecommerce_Website.Controllers
         public ActionResult Favorite()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            List< FavouriteViewModel> FavouritePrd = favoriteService.GetFavProducts(userId);
+            List<FavouriteViewModel> FavouritePrd = favoriteService.GetFavProducts(userId);
             var favCount = favoriteService.GetFavoriteCount(userId);
 
             ViewBag.FavoriteCount = favCount;
@@ -129,7 +129,22 @@ namespace Furni_Ecommerce_Website.Controllers
             List<ProductsAndCommentsViewModel> products = productService.GetProductsInfo(userId);
             return View(products);
         }
+        //[HttpGet]
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public JsonResult GetFavCount()
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        //    var count = userId != null ? favoriteService.GetFavoriteCount(userId) : 0;
+        //    return Json(new { count= count });
+        //}
 
+        [HttpGet]
+        public IActionResult GetFavCount()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var count = favoriteService.GetFavItemsCountByUserId(userId);
+            return Json(new { count = count });
+        }
 
     }
 }

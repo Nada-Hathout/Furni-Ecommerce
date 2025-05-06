@@ -22,11 +22,13 @@ namespace BusinessLogic.Repository
         }
         public void Add(string userId, int productId)
         {
-            var fav = new Favorite { UserId = userId, ProductId = productId };
-            context.Favorites.Add(fav);
-            context.SaveChanges();
+            if (!Exists(userId, productId))
+            {
+                var fav = new Favorite { UserId = userId, ProductId = productId };
+                context.Favorites.Add(fav);
+                context.SaveChanges();
 
-           
+            }
         }
         public void Remove(string userId, int productId)
         {

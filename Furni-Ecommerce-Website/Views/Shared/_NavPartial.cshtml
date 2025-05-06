@@ -79,7 +79,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsFurni" aria-controls="navbarsFurni" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
+        
         <div class="collapse navbar-collapse" id="navbarsFurni">
             
 <ul class="custom-navbar-nav navbar-nav ms-auto mb-2 mb-md-0">
@@ -99,7 +99,7 @@
         <a class="nav-link" asp-controller="Home" asp-action="Blog">Blog</a>
     </li>
     <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Contact" ? "active" : "")">
-        <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact us</a>
+        <a class="nav-link" asp-controller="Contact" asp-action="Contact">Contact us</a>
     </li>
 </ul>
 
@@ -167,9 +167,9 @@
 
               						<li>
                     <a class="nav-link" asp-action="Favorite" asp-controller="Home" style="position: relative;">
-					<i class="bi bi-heart me-2 fs-5 heart"></i>
+                    <i class="bi bi-heart  me-2 fs-5 heart"style="position:relative;"></i>
 						
-									<span id="fav-count" class="fav-counter">@ViewBag.FavoriteCount</span>
+                                    <span class="fav-counter bg-danger">@ViewBag.FavoriteCount</span>
 								
 					</a>
 					 </li>

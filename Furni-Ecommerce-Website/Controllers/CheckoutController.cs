@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Service;
+using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,19 +18,22 @@ namespace YourNamespace.Controllers
         private readonly ICartItemService _cartItemService;
         private readonly IOrderService _orderService;
         private readonly IOrderItemService _orderItemService;
+        private readonly IPurchaseConfirmationService _purchaseConfirmationService;
 
         public CheckoutController(
             IAddressService addressService,
             IPaymentService paymentService,
             ICartItemService cartItemService,
             IOrderService orderService,
-            IOrderItemService orderItemService)
+            IOrderItemService orderItemService,
+            IPurchaseConfirmationService purchaseConfirmationService)
         {
             _addressService = addressService;
             _paymentService = paymentService;
             _cartItemService = cartItemService;
             _orderService = orderService;
             _orderItemService = orderItemService;
+            _purchaseConfirmationService = purchaseConfirmationService;
         }
 
         // Step 1: show address form
@@ -120,10 +124,19 @@ namespace YourNamespace.Controllers
             await _orderItemService.SaveOrderASC(cartItems, order.Id);
             await _cartItemService.RemoveRangeCartItemAsc(cartItems);
 
+            DeleteCartItems();
             return RedirectToAction("Confirmation");
         }
 
-       
+        public async void DeleteCartItems()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var cartItems = await _cartItemService.GetAllCartItemsAsc(userId);
+
+
+
+        }
+
         //// Step 5: confirmation page
         public async Task<IActionResult> Confirmation()
         {
@@ -132,49 +145,36 @@ namespace YourNamespace.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
+                // Get the order based on the userId
                 var order = await _orderService.GetOrderByUserId(userId);
                 if (order == null) return NotFound("Order not found");
 
-                // Add logging here to verify data at each step
-                Console.WriteLine($"Order found: {order.Id}");
+                // Log order details for debugging purposes
 
+                // Retrieve shipping address
                 var shippingAddress = await _addressService.GetAddressById(order.AddressId);
                 if (shippingAddress == null)
                     return BadRequest("Shipping address not found");
 
+                // Retrieve payment details
                 var payment = await _paymentService.GetPaymentById((int)order.PaymentId);
                 if (payment == null)
                     return BadRequest("Payment details not found");
 
+                // Retrieve the items associated with the order
                 var cartItems = await _orderItemService.GetOrderItemsByOrderId(order.Id);
                 if (cartItems == null || !cartItems.Any())
                     return BadRequest("No items found in order");
 
-                // Get the user ID from the logged-in user
-                 userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(userId))
-                {
-                    return Unauthorized(); // Ensure the user is authenticated
-                }
-
-                // Retrieve the order from the order service (you can replace this with your service call)
-                 order = await _orderService.GetOrderByUserId(userId); // Ensure you get the order based on the user
-                if (order == null)
-                {
-                    return NotFound(); // Handle the case where the order does not exist
-                }
-
-                // Get the shipping address that was saved during the checkout process
-                 shippingAddress = await _addressService.GetAddressById(order.AddressId);
-
-                // Get payment details using the payment service
-                 payment = await _paymentService.GetPaymentById((int)order.PaymentId);
-
-                // Get the items in the cart or related to the order
-                 cartItems = await _orderItemService.GetOrderItemsByOrderId(order.Id);
-
-                // Calculate the total amount of the order
+                // Calculate total amount
                 decimal totalAmount = cartItems.Sum(ci => ci.Quantity * ci.Product.Price);
+
+                // Get the user's email address
+                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(userEmail))
+                {
+                    return Unauthorized(); // Ensure the user has an email
+                }
 
                 // Prepare the OrderConfirmationViewModel
                 var vm = new OrderConfirmationViewModel
@@ -192,18 +192,24 @@ namespace YourNamespace.Controllers
                         Quantity = ci.Quantity,
                         UnitPrice = ci.Product.Price
                     }).ToList(),
-                    TotalAmount = totalAmount
+                    TotalAmount = totalAmount,
+                    Email = userEmail // Assign the user's email
                 };
 
+                // Send confirmation email (if required)
+                _purchaseConfirmationService.PurchaseConfirmationEmail(vm);
                 // Return the view with the model
                 return View("OrderConfirmation", vm);
             }
             catch (Exception ex)
             {
-                // Log the error
-                return StatusCode(500, "An error occurred");
+                // Log the error details for better debugging
+                return StatusCode(500,
+       $"An error occurred while processing your request. Error: {ex.Message} {(ex.InnerException != null ? "Inner: " + ex.InnerException.Message : "")}");
+
             }
         }
+
 
     }
 }

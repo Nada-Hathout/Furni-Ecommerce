@@ -1,6 +1,6 @@
 ﻿using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,7 +39,7 @@ namespace BusinessLogic.Repository
 
         public List<Product> GetAll()
         {
-            return context.Products.ToList();
+            return context.Products.Include(p=>p.Category).ToList();    
         }
 
         public Product GetByID(int id)
@@ -120,6 +120,18 @@ namespace BusinessLogic.Repository
         public Product GetProdById(int id)
         {
             return context.Products.FirstOrDefault(p => p.Id == id);
+        }
+
+        
+
+        IEnumerable<SelectListItem> IProductRepository.GetAllCategories()
+        {
+            return (IEnumerable<SelectListItem>)context.Categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            })
+                  .ToList();
         }
     }
 }

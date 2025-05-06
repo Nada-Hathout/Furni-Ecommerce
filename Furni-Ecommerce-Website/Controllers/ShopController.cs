@@ -41,16 +41,16 @@ namespace Furni_Ecommerce_Website.Controllers
             // return Json(result);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var allProducts = string.IsNullOrEmpty(keyword)
-             ? _productService.GetProducts(userId)
-             : _productService.SearchProduct(keyword,userId);
+             ? _productService.GetProducts(userId).Where(p=>p.Stock>0)
+             : _productService.SearchProduct(keyword,userId).Where(p=>p.Stock>0);
             if (minPrice.HasValue)
             {
-               allProducts = allProducts.Where(p => p.Price >= minPrice.Value);
+               allProducts = allProducts.Where(p => p.Price >= minPrice.Value &&p.Stock>0 );
             }
 
             if (maxPrice.HasValue)
             {
-                 allProducts = allProducts.Where(p => p.Price <= maxPrice.Value);
+                 allProducts = allProducts.Where(p => p.Price <= maxPrice.Value &&p.Stock>0);
             }
 
             var totalCount = allProducts.Count();

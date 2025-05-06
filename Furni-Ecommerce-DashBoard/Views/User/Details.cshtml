@@ -1,53 +1,86 @@
 ﻿@model Furni_Ecommerce_Shared.AdminViewModel.AllUserViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "User Details";
 }
 
-<h1>Details</h1>
+<div class="container-fluid page-body-wrapper">
+    <div class="main-panel">
+        <div class="content-wrapper" style="padding: 1.5rem 1.5rem 2rem;">
+            <div class="page-header">
+                <h3 class="page-title">
+                    <span class="page-title-icon bg-gradient-primary text-white me-2">
+                        <i class="mdi mdi-account-details"></i>
+                    </span> User Details
+                </h3>
+            </div>
 
-<div>
-    <h4>AllUserViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Id)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-    </dl>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card" style="min-height: auto;">
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <div class="d-flex justify-content-between mb-4">
+                                <h4 class="card-title">User Information</h4>
+                                <a asp-action="Index" class="btn btn-gradient-primary">
+                                    <i class="mdi mdi-arrow-left"></i> Back to List
+                                </a>
+                            </div>
+
+                            <div class="user-details">
+                                @* <div class="detail-row"> *@
+                                @*     <span class="detail-label">ID:</span> *@
+                                @*     <span class="detail-value">@Model.Id</span> *@
+                                @* </div> *@
+                                <div class="detail-row">
+                                    <span class="detail-label">Username:</span>
+                                    <span class="detail-value">@Model.UserName</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Email:</span>
+                                    <span class="detail-value">@Model.Email</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">First Name:</span>
+                                    <span class="detail-value">@Model.FirstName</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Last Name:</span>
+                                    <span class="detail-value">@Model.LastName</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Phone:</span>
+                                    <span class="detail-value">@Model.PhoneNumber</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+
+<style>
+    .user-details {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .detail-row {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-label {
+        font-weight: 500;
+        min-width: 120px;
+        color: #4b49ac;
+    }
+
+    .detail-value {
+        flex: 1;
+    }
+</style>

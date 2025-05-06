@@ -1,5 +1,6 @@
 ﻿using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace BusinessLogic.Repository
         IQueryable<ShopProductViewModel> SearchProduct(string keyword,string userId);
         IQueryable<ShopProductViewModel> GetAllProducts(string userId);
        Product GetProdById(int id);
+        IEnumerable<SelectListItem> GetAllCategories();
 
 
 

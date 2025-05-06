@@ -23,6 +23,6 @@ namespace Furni_Ecommerce_Shared.UserViewModel
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
-        public IEnumerable<AuthenticationScheme> schemes { get; set; }
+        public IEnumerable<AuthenticationScheme>? schemes { get; set; }
     }
 }

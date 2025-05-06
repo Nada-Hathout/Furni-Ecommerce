@@ -1,21 +1,24 @@
 ﻿// Global favorite counter management
-let favoriteCount = 0;
+//let favoriteCount = 0;
 
 // Update favorite counter display
-function updateFavoriteDisplay(count) {
-    const $counter = $('#fav-count');
-    favoriteCount = count;
+//function updateFavoriteDisplay(count) {
+//    const $counter = $('#fav-count');
+//    favoriteCount = count;
 
-    $counter.text(count);
+//    $counter.text(count);
 
     
-    if (count > 0) {
-        $counter.addClass('visible').removeClass('hidden')
-            .fadeIn(100);
-    } else {
-        $counter.addClass('hidden').removeClass('visible')
-            .fadeOut(100);
-    }
+//    if (count > 0) {
+//        $counter.addClass('visible').removeClass('invisible').fadeIn(100);
+//    } else {
+//        $counter.addClass('invisible').removeClass('visible').fadeOut(100);
+//    }
+//}
+function updateFavoriteDisplay(count) {
+    const $counter = $('#fav-count');
+    $counter.text(count);
+    count > 0 ? $counter.removeClass('d-none') : $counter.addClass('d-none');
 }
 
 
@@ -66,16 +69,28 @@ function toggleFavorite(productId, heartElement) {
 }
 
 // Fetch current favorite count from server
+//function fetchFavoriteCount() {
+//    $.get('/Cart/GetFavCount', { _: new Date().getTime() })
+//        .done(function (response) {
+//            updateFavoriteDisplay(response.count);
+//        })
+//        .fail(function (xhr) {
+//            console.error("Failed to fetch favorite count:", xhr.responseText);
+//            // Fallback: Set counter to 0
+//            updateFavoriteDisplay(0);
+//        });
+//}
 function fetchFavoriteCount() {
-    $.get('/Cart/GetFavCount', { _: new Date().getTime() })
-        .done(function (response) {
+    $.get('/Home/GetFavCount')
+        .done(response => {
+            console.log("Count:", response.count);
             updateFavoriteDisplay(response.count);
         })
-        .fail(function (xhr) {
-            console.error("Failed to fetch favorite count:", xhr.responseText);
+        .fail(xhr => {
+            console.error("Fetch failed:", xhr.statusText);
+            updateFavoriteDisplay(0);
         });
 }
-
 // Initialize on page load
 $(document).ready(function () {
     // Initial fetch

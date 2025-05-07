@@ -117,9 +117,9 @@
 			function ShowToast(message)
 			{
 				const toastHtml =`
-						<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+						<div class="toast toast1" role="alert" aria-live="assertive" aria-atomic="true">
 							  <div class="toast-header">
-								<img src="images/true.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
+								<img src="/images/true.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
 								<strong class="me-auto">Success!</strong>
 								<small>Now</small>
 								<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -130,8 +130,8 @@
 						</div>
 				`;
 				$('#toast-container').html(toastHtml);
-				$('.toast').toast({delay:3000});
-				$('.toast').toast('show');
+				$('.toast1').toast({delay:3000});
+				$('.toast1').toast('show');
 
 			}
 
@@ -141,9 +141,9 @@
 			function ShowErrorToast(message)
 			{
 			const toastHtml =`
-					<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast toast1" role="alert" aria-live="assertive" aria-atomic="true">
 						  <div class="toast-header">
-							<img src="images/error.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
+							<img src="/images/error.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
 							<strong class="me-auto">Error!</strong>
 							<small>Now</small>
 							<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -154,8 +154,8 @@
 					</div>
 			`;
 			$('#toast-container').html(toastHtml);
-			$('.toast').toast({delay:3000});
-			$('.toast').toast('show');
+			$('.toast1').toast({delay:3000});
+			$('.toast1').toast('show');
 
 		}
 

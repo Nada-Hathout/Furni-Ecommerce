@@ -101,7 +101,14 @@
                         }
                     });
                 });
+                // var colorPalette = ['#C489C3', '#878FC0', '#674B7C', '#C9C0DF'];
+                var colorPalette = ['#F788B0', '#6C6BC9', '#88C5F7', '#FFD34C'];
 
+                // var colorPalette = ['#E6A7FF', '#FEA2AB', '#4CC5D3', '#4CB7C6', '#F7C143', '#9AD0F5', '#F59E9E' ,#F788B0];
+                var productColorMap ={};
+                allProducts.forEach((product,index)=> {
+                    productColorMap[product.productName] = colorPalette[index % colorPalette.length];
+                });
                 // Prepare datasets for each product
                 var datasets = allProducts.map(product => {
                     var productData = months.map((month, index) => {
@@ -109,12 +116,13 @@
                         var foundProduct = monthProducts.find(p => p.productId === product.productId);
                         return foundProduct ? foundProduct.salesCount : 0;
                     });
+                    var color = productColorMap[product.productName]
 
                     return {
                         label: product.productName,
                         data: productData,
-                        backgroundColor: getRandomColor(),
-                        borderColor: getRandomColor(),
+                        backgroundColor: color,
+                        borderColor:color,
                         borderWidth: 1
                     };
                 });
@@ -225,14 +233,15 @@
                 });
             }
 
-            function getRandomColor() {
-                var letters = '0123456789ABCDEF';
-                var color = '#';
-                for (var i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
-            }
+            // function getRandomColor() {
+            //     var letters = '0123456789ABCDEF';
+            //     var color = '#';
+            //     for (var i = 0; i < 6; i++) {
+            //         color += letters[Math.floor(Math.random() * 16)];
+            //     }
+            //     return color;
+            // }
+        
         });
     </script>
 }

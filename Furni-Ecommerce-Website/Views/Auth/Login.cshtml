@@ -62,10 +62,9 @@
         <!-- Register link -->
         <p style="display: inline;">Don't have an account?</p>
         <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
-    </form>
+        <hr />
 
-    <div class="row pt-2">
-        <h5>External Login</h5>
+    
         @if (Model.schemes?.Count() == 0|| Model.schemes==null)
         {
             <div>No External Login Providers have configured</div>
@@ -76,18 +75,22 @@
                 <div>
                     @foreach (var provider in Model.schemes)
                     {
-                        <button type="submit"
-                                class="btn btn-primary"
+                        <button type="submit" style=" color:antiquewhite;font-size: 16px;"
+                                class="btn btn-login"
                                 name="provider"
                                 value="@provider.Name"
                                 title="Login using your @provider.Name account">
-                            @provider.DisplayName
+                               <img src="~/images/google.webp" style="width:20px;height:20px;" class="me-1"/>
+                                Continue With your
+                                @provider.DisplayName
+
                         </button>
                     }
                 </div>
             </form>
         }
-    </div>
+    </form>
+   
 </section>
 
 @section Scripts {

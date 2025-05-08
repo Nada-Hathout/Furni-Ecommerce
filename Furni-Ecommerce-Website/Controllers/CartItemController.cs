@@ -4,10 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using BusinessLogic.Service;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
-
+    [Authorize(Roles ="User")]
     public class CartItemController : Controller
     {
         private readonly ICartItemService _cartItemService;

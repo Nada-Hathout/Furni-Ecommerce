@@ -61,48 +61,48 @@
 </style>
 <!-- Start Hero Section -->
 <div class="hero">
-	<input name="__RequestVerificationToken" value="@Html.AntiForgeryToken()"/>
+
+	<input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()"
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
 				<div class="intro-excerpt">
 					<h1>Shop</h1>
-					<div class="row">
-						<form>
-							<div class="row">
-								<div class="col-md-6">
-									<input type="search" class="form form-control" id="keyword" placeholder="Search Products..." />
-								</div>
-								<div class="col-md-3">
-									<input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
-									<datalist id="price-options">
-										<option value="1000" />
-										<option value="2000" />
-										<option value="3000" />
-										<option value="5000" />
-										<option value="7000" />
-										<option value="10000" />
-									</datalist>
-								</div>
-								<div class="col-md-3">
-									<input type="text" class="form-control" id="maxPrice" placeholder="Max Price" list="price-max">
-									<datalist id="price-max">
-										<option value="10000" />
-										<option value="15000" />
-										<option value="20000" />
-										<option value="25000" />
-										<option value="30000" />
-										<option value="50000" />
-										<option value="75000" />
-										<option value="100000" />
-									</datalist>
-								</div>
-								<div class="col-md-6">
-									<input type="button" value="Search" class="btn btn-primary m-2" onclick="GetProducts(1)" />
-								</div>
+				=	<div class="row">
+						<form class="row g-2">
+							<div class="col-12 col-sm-6 col-md-6">
+								<input type="search" class="form-control" id="keyword" placeholder="Search Products..." />
+							</div>
+							<div class="col-6 col-sm-3 col-md-3">
+								<input type="text" class="form-control" id="minPrice" placeholder="Min Price" list="price-options">
+								<datalist id="price-options">
+									<option value="1000" />
+									<option value="2000" />
+									<option value="3000" />
+									<option value="5000" />
+									<option value="7000" />
+									<option value="10000" />
+								</datalist>
+							</div>
+							<div class="col-6 col-sm-3 col-md-3">
+								<input type="text" class="form-control" id="maxPrice" placeholder="Max Price" list="price-max">
+								<datalist id="price-max">
+									<option value="10000" />
+									<option value="15000" />
+									<option value="20000" />
+									<option value="25000" />
+									<option value="30000" />
+									<option value="50000" />
+									<option value="75000" />
+									<option value="100000" />
+								</datalist>
+							</div>
+							<div class="col-12 col-sm-6 col-md-4">
+								<input type="button" value="Search" class="btn btn-primary w-100" onclick="GetProducts(1)" />
 							</div>
 						</form>
 					</div>
+
 				</div>
 			</div>
 			<div class="col-lg-7"></div>
@@ -315,7 +315,8 @@
 				function ShowToast(message)
 				{
 					const toastHtml =`
-					<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+							<div class="toast toast1" role="alert" aria-live="assertive" aria-atomic="true">
 								  <div class="toast-header">
 									<img src="images/true.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
 									<strong class="me-auto">Success!</strong>
@@ -327,9 +328,10 @@
 								  </div>
 							</div>
 					`;
-				$('#toast-container').html(toastHtml);
-				$('.toast').toast({delay:2000});
-				$('.toast').toast('show');
+
+					$('#toast-container').html(toastHtml);
+					$('.toast1').toast({delay:3000});
+					$('.toast1').toast('show');
 
 				}
 
@@ -344,7 +346,8 @@
 				function ShowErrorToast(message)
 			{
 				const toastHtml =`
-					<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+
+						<div class="toast toast1" role="alert" aria-live="assertive" aria-atomic="true">
 							  <div class="toast-header">
 								<img src="images/error.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
 								<strong class="me-auto">Error!</strong>
@@ -356,9 +359,10 @@
 							  </div>
 						</div>
 				`;
-			$('#toast-container').html(toastHtml);
-			$('.toast').toast({delay:2000});
-			$('.toast').toast('show');
+
+				$('#toast-container').html(toastHtml);
+				$('.toast1').toast({delay:3000});
+				$('.toast1').toast('show');
 
 			}
 

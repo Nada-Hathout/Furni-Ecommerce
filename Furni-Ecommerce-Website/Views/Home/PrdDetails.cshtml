@@ -1,10 +1,13 @@
 ﻿@model Furni_Ecommerce_Shared.UserViewModel.ProductsAndCommentsViewModel
+@Html.AntiForgeryToken()
 
 @{
     ViewData["Title"] = "PrdDetails";
 }
 
 <div class="container-fluid px-0">
+
+
   <div class="row" style:"margin:0px auto;height: 250vh; padding-top:60px;">
     <div class="card mb-3" style="width: 100%;">
       <div class="row g-0 h-100"  style="height:800px;padding-top:50px;">
@@ -29,12 +32,12 @@
             <h4 class="card-text">💰 <strong>Price:</strong> $@Model.Price</h4>
             <h4 class="card-text">📦 <strong>Stock:</strong> @Model.Stock Item</h4>
             <h4 class="card-text">🏷️ <strong>Category:</strong> @Model.CategoryName</h4><br>
-            <p ><a href="#" class=" btn btn-buy shadow" >Add To Cart</a></p>
+						<p><a class=" btn btn-buy shadow" onclick="AddToCart(@Model.Id)">Add To Cart</a></p>
 
           </div>
         </div>
-
-      </div>
+				<div id="toast-container" class=" position-fixed top-50 start-50 translate-middle" style="z-index:999; width:fit-content; max-width:100%;">
+				</div>
     </div>
   </div>
 </div>
@@ -97,3 +100,112 @@
             color: red !important;
         }
             </style>
+
+                @section Scripts{
+
+                    <script>
+						function AddToCart(productId)
+						{
+							let token = $('input[name="__RequestVerificationToken"]').val();
+							$.ajax
+							({
+								url:'/Cart/AddItemToCart',
+								type:'post',
+								data: {productId:productId},
+								withCredentials: true,
+								headers: {
+								'RequestVerificationToken':token
+								},
+								success : function(response)
+								{
+									console.log(response);
+								if(response.success	)
+								{
+										//alert("Add To Cart Successfully");
+										ShowToast("Add To Cart Successfully!");
+										UpdateCartCount();
+
+
+								} else if (response.redirectUrl)
+									{
+										window.location.href = response.redirectUrl;
+									}
+									else {
+									ShowErrorToast("Error!,Failed To Add To Cart");
+									}
+								},
+								error : function(err)
+								{
+									ShowErrorToast("Error!,Failed To Add To Cart");
+								}
+							});
+						}
+
+
+						function ShowToast(message)
+						{
+							const toastHtml =`
+									<div class="toast toast1" role="alert" aria-live="assertive" aria-atomic="true">
+										  <div class="toast-header">
+											<img src="/images/true.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
+											<strong class="me-auto">Success!</strong>
+											<small>Now</small>
+											<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+										  </div>
+										  <div class="toast-body text-dark">
+											${message}
+										  </div>
+									</div>
+							`;
+							$('#toast-container').html(toastHtml);
+							$('.toast1').toast({delay:3000});
+							$('.toast1').toast('show');
+
+						}
+
+					
+						
+
+						function ShowErrorToast(message)
+						{
+						const toastHtml =`
+								<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+									  <div class="toast-header">
+										<img src="/images/error.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
+										<strong class="me-auto">Error!</strong>
+										<small>Now</small>
+										<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+									  </div>
+									  <div class="toast-body text-dark">
+										${message}
+									  </div>
+								</div>
+						`;
+						$('#toast-container').html(toastHtml);
+						$('.toast1').toast({delay:3000});
+						$('.toast1').toast('show');
+
+					}
+
+					function UpdateCartCount()
+					{
+						$.ajax({
+					url:'/Cart/GetCartItemsCount',
+						method:'Get',
+						success: function (response){
+							$("#cart-count").text(response.count)
+						}
+						});
+					}
+
+						$(document).ready( function(){
+						
+							UpdateCartCount();
+						});
+
+					</script>
+
+
+
+
+                }

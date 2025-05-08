@@ -31,27 +31,30 @@
         </li>
 
         <!-- Admin Section -->
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#admin-section" aria-expanded="false" aria-controls="admin-section">
-                <span class="menu-title">Admin Management</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-account-cog menu-icon"></i>
-            </a>
-            <div class="collapse" id="admin-section">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-action="Index" asp-controller="Admin">
-                            <i class="mdi mdi-account-multiple me-2"></i> All Admins
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-action="Create" asp-controller="Admin">
-                            <i class="mdi mdi-account-plus me-2"></i> Create Admin
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @if (User.IsInRole("Owner"))
+        {
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="collapse" href="#admin-section" aria-expanded="false" aria-controls="admin-section">
+                    <span class="menu-title">Admin Management</span>
+                    <i class="menu-arrow"></i>
+                    <i class="mdi mdi-account-cog menu-icon"></i>
+                </a>
+                <div class="collapse" id="admin-section">
+                    <ul class="nav flex-column sub-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="Admin">
+                                <i class="mdi mdi-account-multiple me-2"></i> All Admins
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Create" asp-controller="Admin">
+                                <i class="mdi mdi-account-plus me-2"></i> Create Admin
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        }
 
         <!-- User Section -->
         <li class="nav-item">
@@ -141,50 +144,50 @@
         </li>
 
         <!-- User Pages Section -->
-        <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" href="#user-pages" aria-expanded="false" aria-controls="user-pages">
-                <span class="menu-title">User Pages</span>
-                <i class="menu-arrow"></i>
-                <i class="mdi mdi-account-circle menu-icon"></i>
-            </a>
-            <div class="collapse" id="user-pages">
-                <ul class="nav flex-column sub-menu">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/samples/blank-page.html">
-                            <i class="mdi mdi-file-outline me-2"></i> Blank Page
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/samples/login.html">
-                            <i class="mdi mdi-login me-2"></i> Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/samples/register.html">
-                            <i class="mdi mdi-account-plus me-2"></i> Register
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/samples/error-404.html">
-                            <i class="mdi mdi-alert-circle me-2"></i> 404 Error
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="../pages/samples/error-500.html">
-                            <i class="mdi mdi-alert-octagon me-2"></i> 500 Error
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </li>
+        @* <li class="nav-item"> *@
+        @*     <a class="nav-link" data-bs-toggle="collapse" href="#user-pages" aria-expanded="false" aria-controls="user-pages"> *@
+        @*         <span class="menu-title">User Pages</span> *@
+        @*         <i class="menu-arrow"></i> *@
+        @*         <i class="mdi mdi-account-circle menu-icon"></i> *@
+        @*     </a> *@
+        @*     <div class="collapse" id="user-pages"> *@
+        @*         <ul class="nav flex-column sub-menu"> *@
+        @*             <li class="nav-item"> *@
+        @*                 <a class="nav-link" href="../pages/samples/blank-page.html"> *@
+        @*                     <i class="mdi mdi-file-outline me-2"></i> Blank Page *@
+        @*                 </a> *@
+        @*             </li> *@
+        @*             <li class="nav-item"> *@
+        @*                 <a class="nav-link" href="../pages/samples/login.html"> *@
+        @*                     <i class="mdi mdi-login me-2"></i> Login *@
+        @*                 </a> *@
+        @*             </li> *@
+        @*             <li class="nav-item"> *@
+        @*                 <a class="nav-link" href="../pages/samples/register.html"> *@
+        @*                     <i class="mdi mdi-account-plus me-2"></i> Register *@
+        @*                 </a> *@
+        @*             </li> *@
+        @*             <li class="nav-item"> *@
+        @*                 <a class="nav-link" href="../pages/samples/error-404.html"> *@
+        @*                     <i class="mdi mdi-alert-circle me-2"></i> 404 Error *@
+        @*                 </a> *@
+        @*             </li> *@
+        @*             <li class="nav-item"> *@
+        @*                 <a class="nav-link" href="../pages/samples/error-500.html"> *@
+        @*                     <i class="mdi mdi-alert-octagon me-2"></i> 500 Error *@
+        @*                 </a> *@
+        @*             </li> *@
+        @*         </ul> *@
+        @*     </div> *@
+        @* </li> *@
 
-        <!-- Documentation -->
-        <li class="nav-item">
-            <a class="nav-link" href="../docs/documentation.html" target="_blank">
-                <span class="menu-title">Documentation</span>
-                <i class="mdi mdi-help-circle menu-icon"></i>
-            </a>
-        </li>
+        @* <!-- Documentation --> *@
+        @* <li class="nav-item"> *@
+        @*     <a class="nav-link" href="../docs/documentation.html" target="_blank"> *@
+        @*         <span class="menu-title">Documentation</span> *@
+        @*         <i class="mdi mdi-help-circle menu-icon"></i> *@
+        @*     </a> *@
+        @* </li> *@
     </ul>
 </nav>
 

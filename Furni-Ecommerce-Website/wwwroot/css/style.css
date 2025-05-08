@@ -92,8 +92,9 @@ a {
     .custom-navbar .custom-navbar-cta li {
       margin-left: 0px;
       margin-right: 0px; }
-      .custom-navbar .custom-navbar-cta {
-        margin-right: 20px; }
+.custom-navbar .custom-navbar-cta {
+            margin-right: 20px; }
+
 
 .hero {
   background: #3b5d50;
@@ -165,10 +166,12 @@ a {
   color: #ffffff;
   background: #2f2f2f;
   border-color: #2f2f2f; }
+
   .btn:hover {
     color: #ffffff;
     background: #222222;
     border-color: #222222; }
+
   .btn:active, .btn:focus {
     outline: none !important;
     -webkit-box-shadow: none;

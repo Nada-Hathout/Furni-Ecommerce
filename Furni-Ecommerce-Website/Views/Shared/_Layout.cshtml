@@ -70,21 +70,7 @@
 
     
 
-    <script>
-        function UpdateCartCount() {
-            $.ajax({
-                url: '/Cart/GetCartItemsCount',
-                method: 'GET',
-                success: function (response) {
-                    $("#cart-count").text(response.count);
-                }
-            });
-        }
-
-        $(document).ready(function () {
-            UpdateCartCount();
-        });
-    </script>
+   
 
     
 
@@ -116,6 +102,22 @@
         </div>
     </div>
     <!-- Favorite Counter (place this in your navigation) -->
+
+         <script>
+            function UpdateCartCount() {
+                $.ajax({
+                    url: '/Cart/GetCartItemsCount',
+                    method: 'GET',
+                    success: function (response) {
+                        $("#cart-count").text(response.count);
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                UpdateCartCount();
+            });
+    </script>
    
 </body>
 </html>

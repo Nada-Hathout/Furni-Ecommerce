@@ -1,10 +1,12 @@
 ﻿using System.Security.Claims;
 using BusinessLogic.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
+    [Authorize(Roles ="User")]
     public class CartController : Controller
     {
       private readonly  ICartService cartService;

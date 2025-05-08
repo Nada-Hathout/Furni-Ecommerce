@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 using BusinessLogic.External_Service;
+using BusinessLogic.Settings;
 
 namespace Furni_Ecommerce_Website
 {
@@ -15,6 +16,7 @@ namespace Furni_Ecommerce_Website
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
 
             // 1) DbContext
             builder.Services.AddDbContext<FurniDbContext>(options =>
@@ -63,6 +65,10 @@ namespace Furni_Ecommerce_Website
                 .SetDefaultKeyLifetime(TimeSpan.FromDays(90));
 
             // 6) Repositories & Services
+//            builder.Services.Configure<EmailService>(
+//    builder.Configuration.GetSection("EmailSettings")
+//);
+
             builder.Services.AddScoped<ICartItemRepository, CartItemRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
@@ -87,6 +93,8 @@ namespace Furni_Ecommerce_Website
             builder.Services.AddScoped<IOrderItemService, OrderItemService>();
             builder.Services.AddScoped<IFavoriteService, FavoriteService>();
             builder.Services.AddScoped<ICartService, CartService>();
+            builder.Services.AddTransient<IEmailService, EmailService>();
+            builder.Services.AddScoped<VerifyService>();
             builder.Services.AddAuthentication().AddGoogle(options =>
             {
                 options.ClientId = builder.Configuration["Auth:Google:ClientID"];

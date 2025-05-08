@@ -11,6 +11,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Data;
+using BusinessLogic.External_Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
@@ -19,13 +21,16 @@ namespace Furni_Ecommerce_Website.Controllers
         public UserManager<ApplicationUser> userManager;
         public SignInManager<ApplicationUser> signInManager;
         public IUserService userService;
+        private readonly IEmailService emailService;
+
         public AuthController(UserManager<ApplicationUser> userManager,
                            SignInManager<ApplicationUser> signInManager,
-                           IUserService userService)
+                           IUserService userService,IEmailService emailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.userService = userService;
+            this.emailService = emailService;
         }
 
         public IActionResult Register()
@@ -33,9 +38,34 @@ namespace Furni_Ecommerce_Website.Controllers
            
             return View();
         }
-            
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (userId == null || token == null)
+            {
+                return RedirectToAction("Register");
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"User not found.");
+            }
+
+            var result = await userManager.ConfirmEmailAsync(user, token);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Registration successful! and Email Confirmed Welcome!";
+                return RedirectToAction(nameof(Login));
+            }
+
+            return RedirectToAction(nameof(Login));
+        }
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -54,50 +84,54 @@ namespace Furni_Ecommerce_Website.Controllers
                     return View(model);
                 }
 
-                var roleResult = await userManager.AddToRoleAsync(user, "User");
+                // ✅ Assign default "user" role
+                var roleResult = await userManager.AddToRoleAsync(user, "user");
                 if (!roleResult.Succeeded)
                 {
                     await HandleFailedRoleAssignment(user, roleResult);
                     return View(model);
                 }
 
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim("UserId", user.Id),
-                    new Claim(ClaimTypes.Email, user.Email)
-                };
+                // Generate confirmation token and link
+                var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                var confirmationLink = Url.Action(
+                    "ConfirmEmail",
+                    "Auth",
+                    new { userId = user.Id, token },
+                    protocol: HttpContext.Request.Scheme
+                );
 
-                var claimsResult = await userManager.AddClaimsAsync(user, claims);
-                if (!claimsResult.Succeeded)
+                if (string.IsNullOrEmpty(confirmationLink))
                 {
-                    await HandleFailedClaimsAssignment(user, claimsResult);
+                    throw new InvalidOperationException("Failed to generate confirmation link");
+                }
+
+                try
+                {
+                    await emailService.SendEmailAsync(
+                        user.Email,
+                        "Confirm Your Email Address",
+                        confirmationLink
+                    );
+                }
+                catch (Exception emailEx)
+                {
+                    await userManager.DeleteAsync(user);
+                    ModelState.AddModelError(string.Empty, "Failed to send confirmation email.");
+                    ModelState.AddModelError(string.Empty, emailEx.Message);
                     return View(model);
                 }
 
-                // Sign in and set session and make session permanent
-                await signInManager.SignInAsync(user, isPersistent: true);
-
-                // Storing User data in session ------
-                HttpContext.Session.SetString("UserId", user.Id);
-                HttpContext.Session.SetString("UserName", user.UserName);
-                HttpContext.Session.SetString("UserEmail", user.Email);
-
-                TempData["SuccessMessage"] = "Registration successful! Welcome!";
+                TempData["SuccessMessage"] = "Registration successful! Please check your email to confirm your account.";
                 return RedirectToAction("Login", "Auth");
-            }
-            catch (DbUpdateException dbEx) when (dbEx.InnerException is SqlException sqlEx)
-            {
-                HandleDuplicateEntryErrors(sqlEx, model);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty,
-                    "An unexpected error occurred during registration. Please try again.");
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred during registration.");
+                return View(model);
             }
-
-            return View(model);
         }
+
 
         // Helper methods
         private void AddErrorsToModelState(IEnumerable<IdentityError> errors)
@@ -183,6 +217,16 @@ namespace Furni_Ecommerce_Website.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
+            if (user != null && !await userManager.IsEmailConfirmedAsync(user))
+            {
+                var loginVM = new LoginViewModel()
+                {
+                    schemes = await signInManager.GetExternalAuthenticationSchemesAsync()
+                };
+                ModelState.AddModelError(string.Empty, "Please confirm your email first.");
+                return View(loginVM);
+            }
+
 
             var result = await signInManager.PasswordSignInAsync(
                 user,

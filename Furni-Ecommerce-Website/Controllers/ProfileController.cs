@@ -30,11 +30,7 @@ namespace Furni_Ecommerce_Website.Controllers
         {
             //var userId = HttpContext.Session.GetString("UserId");
 
-            if (!_signInManager.IsSignedIn(User))  // التحقق من حالة تسجيل الدخول باستخدام SignInManager بدلاً من الجلسة فقط
-
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+         
 
             var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);
@@ -48,10 +44,7 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public async Task<IActionResult> PurchaseHistory()
         {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+          
 
             var userId = _userManager.GetUserId(User);
             var orders = await _context.Orders
@@ -67,10 +60,7 @@ namespace Furni_Ecommerce_Website.Controllers
 
         public async Task<IActionResult> OrderDetails(int id)
         {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+           
 
             var userId = _userManager.GetUserId(User);
             var order = await _context.Orders
@@ -91,10 +81,7 @@ namespace Furni_Ecommerce_Website.Controllers
         [HttpGet]
         public async Task<IActionResult> EditProfile()
         {
-            if (!_signInManager.IsSignedIn(User))
-            {
-                return RedirectToAction("Login", "Auth");
-            }
+           
 
             var userId = _userManager.GetUserId(User);
             var user = await _userManager.FindByIdAsync(userId);

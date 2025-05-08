@@ -61,7 +61,7 @@
 </style>
 <!-- Start Hero Section -->
 <div class="hero">
-	<input name="__RequestVerificationToken" value="@Html.AntiForgeryToken()" hidden />
+	<input name="__RequestVerificationToken" value="@Html.AntiForgeryToken()"/>
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
@@ -107,12 +107,13 @@
 			</div>
 			<div class="col-lg-7"></div>
 		</div>
-	<div id="toast-container" class=" position-fixed top-50 start-50 translate-middle" style="z-index:999; width:fit-content; max-width:100%;">
+		<div id="toast-container" class=" position-fixed top-50 start-50 translate-middle" style="z-index:999; width:fit-content; max-width:100%;">
 
 	</div>
 	</div>
 </div>
 <!-- End Hero Section -->
+
 <!-- Cart Toast Message -->
 <div id="cart-message" class="alert alert-success position-fixed top-0 end-0 m-3 d-none" role="alert">
 	Product added to cart!
@@ -314,7 +315,7 @@
 				function ShowToast(message)
 				{
 					const toastHtml =`
-							<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 								  <div class="toast-header">
 									<img src="images/true.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
 									<strong class="me-auto">Success!</strong>
@@ -326,9 +327,9 @@
 								  </div>
 							</div>
 					`;
-					$('#toast-container').html(toastHtml);
-					$('.toast').toast({delay:3000});
-					$('.toast').toast('show');
+				$('#toast-container').html(toastHtml);
+				$('.toast').toast({delay:2000});
+				$('.toast').toast('show');
 
 				}
 
@@ -343,7 +344,7 @@
 				function ShowErrorToast(message)
 			{
 				const toastHtml =`
-						<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+					<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
 							  <div class="toast-header">
 								<img src="images/error.jpeg" style="width:20px; height:20px;" class="rounded me-2" alt="...">
 								<strong class="me-auto">Error!</strong>
@@ -355,9 +356,9 @@
 							  </div>
 						</div>
 				`;
-				$('#toast-container').html(toastHtml);
-				$('.toast').toast({delay:3000});
-				$('.toast').toast('show');
+			$('#toast-container').html(toastHtml);
+			$('.toast').toast({delay:2000});
+			$('.toast').toast('show');
 
 			}
 
@@ -398,4 +399,5 @@
 	.card-body .d-flex {
 		flex-wrap: wrap;
 	}
+
 </style>

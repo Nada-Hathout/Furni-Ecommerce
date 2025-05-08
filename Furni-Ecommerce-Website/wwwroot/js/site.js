@@ -1,31 +1,26 @@
-﻿// Global favorite counter management
-//let favoriteCount = 0;
-
-// Update favorite counter display
-//function updateFavoriteDisplay(count) {
-//    const $counter = $('#fav-count');
-//    favoriteCount = count;
-
-//    $counter.text(count);
-
-    
-//    if (count > 0) {
-//        $counter.addClass('visible').removeClass('invisible').fadeIn(100);
-//    } else {
-//        $counter.addClass('invisible').removeClass('visible').fadeOut(100);
-//    }
-//}
+﻿// Favorite Functions
 function updateFavoriteDisplay(count) {
     const $counter = $('#fav-count');
     $counter.text(count);
     count > 0 ? $counter.removeClass('d-none') : $counter.addClass('d-none');
+    console.log('Favorites counter updated to:', count);
 }
 
+function showToast(toastId) {
+    const toastElement = document.getElementById(toastId);
+    if (toastElement) {
+        const toast = new bootstrap.Toast(toastElement, {
+            delay: 2000,
+            autohide: true
+        });
+        toast.show();
+    } else {
+        console.error('Toast element not found:', toastId);
+    }
+}
 
 function toggleFavorite(productId, heartElement) {
     const $heart = $(heartElement);
-
-    // Show loading state
     $heart.addClass('fa-spin');
 
     $.ajax({
@@ -33,75 +28,100 @@ function toggleFavorite(productId, heartElement) {
         type: 'POST',
         data: { productId },
         success: function (res) {
+            $heart.removeClass('fa-spin');
+
             // Update heart icon
             if (res.isFavourite) {
-                $heart.removeClass('fa-regular fa-spin')
-                    .addClass('fa-solid')
-                    .css('color', 'red');
-                // Show error toast
-                const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-                toast.show();
+                $heart.removeClass('fa-regular').addClass('fa-solid').css('color', 'red');
+                showToast('liveToast');
             } else {
-                $heart.removeClass('fa-solid fa-spin')
-                    .addClass('fa-regular')
-                    .css('color', 'black');
+                $heart.removeClass('fa-solid').addClass('fa-regular').css('color', 'black');
+                showToast('errorToast');
             }
 
             // Update counter
             updateFavoriteDisplay(res.updatedFavCount);
 
-            // Remove from favorites page if needed
+            // Handle removal from favorites page
             if (window.location.pathname.includes('Favorite') && !res.isFavourite) {
                 $heart.closest('.col').fadeOut(300, function () {
                     $(this).remove();
+                    fetchFavoriteCount();
                 });
             }
         },
         error: function (xhr) {
-            console.error("Favorite toggle failed:", xhr.responseText);
+            console.error("Error:", xhr.responseText);
             $heart.removeClass('fa-spin');
-
-            // Show error toast
-            const toast = new bootstrap.Toast(document.getElementById('errorToast'));
-            toast.show();
+            fetchFavoriteCount();
         }
     });
 }
 
-// Fetch current favorite count from server
-//function fetchFavoriteCount() {
-//    $.get('/Cart/GetFavCount', { _: new Date().getTime() })
-//        .done(function (response) {
-//            updateFavoriteDisplay(response.count);
-//        })
-//        .fail(function (xhr) {
-//            console.error("Failed to fetch favorite count:", xhr.responseText);
-//            // Fallback: Set counter to 0
-//            updateFavoriteDisplay(0);
-//        });
-//}
 function fetchFavoriteCount() {
     $.get('/Home/GetFavCount')
-        .done(response => {
-            console.log("Count:", response.count);
+        .done(function (response) {
             updateFavoriteDisplay(response.count);
         })
-        .fail(xhr => {
-            console.error("Fetch failed:", xhr.statusText);
+        .fail(function (xhr) {
+            console.error("Failed to fetch favorites count:", xhr.statusText);
             updateFavoriteDisplay(0);
         });
 }
-// Initialize on page load
-$(document).ready(function () {
-    // Initial fetch
-    fetchFavoriteCount();
 
-    // Set up click handler
+// Cart Functions
+//function UpdateCartCount() {
+//    try {
+//        $.get('/Cart/GetCartItemsCount', function (response) {
+//            console.log('Cart count:', response.count);
+//            const $cartCount = $("#cart-count");
+
+//            if ($cartCount.length) {
+//                $cartCount.text(response.count);
+//                response.count > 0 ? $cartCount.removeClass('d-none') : $cartCount.addClass('d-none');
+//            }
+//        });
+//    } catch (e) {
+//        console.error('Cart count error:', e);
+//    }
+//}
+
+//function AddToCart(productId) {
+//    let token = $('input[name="__RequestVerificationToken"]').val();
+//    $.ajax({
+//        url: '/Cart/AddItemToCart',
+//        type: 'post',
+//        data: { productId: productId },
+//        headers: { 'RequestVerificationToken': token },
+//        success: function (response) {
+//            if (response.success) {
+//                UpdateCartCount();
+//                showToast('liveToast');
+//            } else if (response.redirectUrl) {
+//                window.location.href = response.redirectUrl;
+//            } else {
+//                showToast('errorToast');
+//            }
+//        },
+//        error: function (err) {
+//            showToast('errorToast');
+//        }
+//    });
+//}
+
+// Initialize everything
+$(document).ready(function () {
+    // Initialize counters
+    fetchFavoriteCount();
+    //UpdateCartCount();
+
+    // Set up event handlers
     $(document).on('click', '.heart', function () {
         const productId = $(this).data('id');
         toggleFavorite(productId, this);
     });
 
-    // Optional: Refresh count periodically (every 30 seconds)
+    // Set up periodic refreshes
     setInterval(fetchFavoriteCount, 30000);
+    //setInterval(UpdateCartCount, 30000);
 });

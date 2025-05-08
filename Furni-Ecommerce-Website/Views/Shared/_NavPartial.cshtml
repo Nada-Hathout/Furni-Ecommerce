@@ -1,4 +1,4 @@
-
+﻿
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
@@ -109,7 +109,7 @@
                     @if (User.Identity.IsAuthenticated)
                     {
                         <!-- Person button for logged in users -->
-                        <div class="dropdown">
+                        <div class="dropdown me-4">
                             <button class="icon-button" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img class="image-person" src="~/images/user.svg">
                             </button>
@@ -160,16 +160,16 @@
                 </li>
                 
                       <li><a class="nav-link" href="/CartItem">
-    <img src="~/images/cart.svg" class="cart-icon">
-    <span id="cart-count" class="badge bg-danger position-absolute top-0 left-100%">0</span>
-</a></li>
+                            <img src="~/images/cart.svg" class="cart-icon">
+                        <span id="cart-count" class="notification-badge">0</span>
+                        </a></li>
 
 
-              						<li>
+              		<li>
                     <a class="nav-link" asp-action="Favorite" asp-controller="Home" style="position: relative;">
-                    <i class="bi bi-heart  me-2 fs-5 heart"style="position:relative;"></i>
+                    <i class="bi bi-heart  me-2 fs-5 "style="position:relative;"></i>
 
-                        <span id="fav-count" class="fav-counter bg-danger" style="display:block;">0</span>
+                        <span id="fav-count" class="fav-counter notification-badge">0</span>
 								
 					</a>
 					 </li>
@@ -193,23 +193,6 @@
        transition: all 0.3s ease-in-out;
 }
 
-.fav-counter{
-		position: absolute;
-		top: 10px;
-		right:7px ;
-		transform: translate(50%, -50%);
-		width: 20px;
-		height: 20px;
-		border-radius: 50%;
-		background-color: red;
-		color: white;
-		font-size: 12px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-        
-
-	}
 .transition:hover {
   transform: scale(1.05);
   background-color: #3b5d50 !important;
@@ -251,15 +234,42 @@
 }
 
 #cart-count {
-    position: absolute;
-    top: -5px; 
-    right: -10px; 
+    /* display: none; */
+    right: 6px; 
     font-size: 0.8rem;
     padding: 0.2rem 0.5rem; 
     border-radius: 50%;
 }
+
+        /* #cart-count.d-none {  */
+        /*      display: none;  */
+        /* } */
+
+        /* #cart-count:not(.d-none) {  */
+        /*     display: block;  */
+        /* } */
 .dropdown-item:hover {
     width: 100%;
-    /* display: block; */
+   
 }
+
+    /* تنسيق مشترك للعدادات */
+    .notification-badge {
+        position: absolute;
+        top: 10px;
+        right: 7px;
+        transform: translate(50%, -50%);
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #f74545;
+        color: white;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    }
+
   </style>

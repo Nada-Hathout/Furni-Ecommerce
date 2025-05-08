@@ -35,9 +35,13 @@
 
 			@for (int i = 0; i < 3 && i < Model.Count; i++)
 			{
-				<div class="col-12 col-md-4 col-lg-3 mb-5 mb-md-0" style="position:relative;">
-					
-						<a class="product-item" asp-controller="Home" asp-action="PrdDetails" asp-route-id="@Model[i].Id">
+				<div class=" col-12 col-md-4 col-lg-3 mb-5 mb-md-0" style="position:relative;">
+					<a class="nav-link">
+						<i class="@(Model[i].IsFavorite ? "fa-solid" : "fa-regular") fa-heart heart me-2  heart-iconn"
+						   style="color:@(Model[i].IsFavorite ? "red" : "black")"
+						   data-id="@Model[i].Id"></i>
+					</a>
+					<a class="product-item" asp-controller="Home" asp-action="PrdDetails" asp-route-id="@Model[i].Id" style="position: relative;">
 
 						<img src="~/images/@Model[i].ImagePath" class="img-fluid product-thumbnail" >
 							<h3 class="product-title">@Model[i].Name</h3>
@@ -45,11 +49,7 @@
 						    <span class="icon-cross">
 								<img src="~/images/cross.svg" class="img-fluid">
 							</span>
-						<a class="nav-link">
-							<i class="@(Model[i].IsFavorite ? "fa-solid" : "fa-regular") fa-heart heart me-2 fs-5 heart-iconn"
-							   style="color:@(Model[i].IsFavorite ? "red" : "black")"
-							   data-id="@Model[i].Id"></i>
-						</a>
+					
 						</a>
 					
 					</div>
@@ -278,9 +278,9 @@
 	.heart-iconn{
 		color:black;
 		position: absolute;
-		top: 0px;
-		right: 13px;
-		
+		top: -12px;
+		right: 7px;
+		font-size: 25px;
 		transition: transform 0.3s, color 0.3s;
 	}
 

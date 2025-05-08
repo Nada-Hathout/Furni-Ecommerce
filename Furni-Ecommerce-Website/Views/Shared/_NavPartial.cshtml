@@ -89,15 +89,16 @@
     <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Shop" ? "active" : "")">
         <a class="nav-link" asp-controller="Shop" asp-action="Index">Shop</a>
     </li>
-    <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "About" ? "active" : "")">
+    <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "About" ? "active" : "")">
         <a class="nav-link" asp-controller="Home" asp-action="About">About us</a>
     </li>
     <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Services" ? "active" : "")">
         <a class="nav-link" asp-controller="Home" asp-action="Services">Services</a>
     </li>
-    <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Blog" ? "active" : "")">
-        <a class="nav-link" asp-controller="Home" asp-action="Blog">Blog</a>
-    </li>
+                <li class="nav-item @(ViewContext.RouteData.Values["controller"].ToString() == "Home" && ViewContext.RouteData.Values["action"].ToString() == "Blog" ? "active" : "")">
+                    <a class="nav-link" asp-controller="Home" asp-action="Blog">Blog</a>
+                </li>
+
     <li class="nav-item @(ViewContext.RouteData.Values["action"].ToString() == "Contact" ? "active" : "")">
         <a class="nav-link" asp-controller="Contact" asp-action="Contact">Contact us</a>
     </li>

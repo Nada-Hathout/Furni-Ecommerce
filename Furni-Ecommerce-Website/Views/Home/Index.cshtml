@@ -10,9 +10,13 @@
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
 				<div class="intro-excerpt">
-					<h1>Modern Interior <span class="d-block">Design Studio</span></h1>
-					<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-					<p><a asp-controller="shop" asp-action="Index" class="btn btn-secondary me-2">Shop Now</a><a  asp-controller="Home" asp-action="About" class="btn btn-white-outline">Explore</a></p>
+					<h1 class="text-white">Stylish Furniture <span class="d-block h4 m-1 p-1">For Modern Living</span></h1>
+					<p class="mb-4">Discover high-quality, stylish furniture designed to elevate your space. From cozy sofas to elegant tables — Furni makes your home feel like you.</p>
+					<p>
+						<a asp-controller="shop" asp-action="Index" class="btn btn-secondary me-2">Shop Now</a>
+						<a asp-controller="Home" asp-action="About" class="btn btn-white-outline">Learn More</a>
+					</p>
+
 				</div>
 			</div>
 			<div class="col-lg-7">
@@ -29,9 +33,10 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
-				<h2 class="mb-4 section-title">Crafted with excellent material.</h2>
-				<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-				<p><a href="shop.html" class="btn">Explore</a></p>
+				<h2 class="mb-4 section-title">Beautifully Crafted Furniture</h2>
+				<p class="mb-4">Our pieces are built with care and attention to detail, offering comfort, quality, and timeless design for every room in your home.</p>
+				<p><a asp-controller="shop" asp-action="Index" class="btn">Browse Collection</a></p>
+
 			</div>
 
 			@for (int i = 0; i < 3 && i < Model.Count; i++)
@@ -66,7 +71,7 @@
 		<div class="row justify-content-between">
 			<div class="col-lg-6">
 				<h2 class="section-title">Why Choose Us</h2>
-				<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+				<p>Furni blends elegance and functionality in every piece, offering you lasting comfort and smart design — at prices you'll love.</p>
 
 				<div class="row my-5">
 					@* Features loop can be used here if dynamic *@
@@ -76,7 +81,7 @@
 								<img src="~/images/truck.svg" alt="Image" class="img-fluid">
 							</div>
 							<h3>Fast &amp; Free Shipping</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit.</p>
+							<p>Enjoy quick, reliable delivery on all your orders — no extra cost.</p>
 						</div>
 					</div>
 					<div class="col-6 col-md-6">
@@ -85,7 +90,7 @@
 								<img src="~/images/bag.svg" alt="Image" class="img-fluid">
 							</div>
 							<h3>Easy to Shop</h3>
-							<p>Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+							<p>Simple online experience, intuitive search, and secure checkout.</p>
 						</div>
 					</div>
 					<div class="col-6 col-md-6">
@@ -94,7 +99,7 @@
 								<img src="~/images/support.svg" alt="Image" class="img-fluid">
 							</div>
 							<h3>24/7 Support</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada.</p>
+							<p>Our customer support is here around the clock to assist you.</p>
 						</div>
 					</div>
 					<div class="col-6 col-md-6">
@@ -103,7 +108,7 @@
 								<img src="~/images/return.svg" alt="Image" class="img-fluid">
 							</div>
 							<h3>Hassle Free Returns</h3>
-							<p>Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
+							<p>Changed your mind? Return your items easily within 30 days.</p>
 						</div>
 					</div>
 				</div>
@@ -130,13 +135,13 @@
 				</div>
 			</div>
 			<div class="col-lg-5 ps-lg-5">
-				<h2 class="section-title mb-4">We Help You Make Modern Interior Design</h2>
-				<p>Donec facilisis quam ut purus rutrum lobortis. Pellentesque habitant morbi tristique senectus et netus.</p>
+				<h2 class="section-title mb-4">We Help You Create the Perfect Space</h2>
+				<p>Let Furni guide you in transforming any space with unique designs, premium materials, and a personal touch for every room.</p>
 				<ul class="list-unstyled custom-list my-4">
-					<li>Quality craftsmanship and design</li>
-					<li>Personalized interior services</li>
-					<li>Innovative ideas for every space</li>
-					<li>Support throughout the process</li>
+					<li>Premium materials and expert craftsmanship</li>
+					<li>Customizable solutions for your style</li>
+					<li>Smart, space-saving ideas</li>
+					<li>Friendly support every step of the way</li>
 				</ul>
 				<p><a href="#" class="btn">Explore</a></p>
 			</div>
@@ -194,6 +199,7 @@
 														<div class="col-lg-8 mx-auto">
 															<div class="testimonial-block text-center">
 																<blockquote class="mb-5">
+														<h2 class="section-title">What Our Customers Say</h2>
 																	<p>@comment.Text</p>
 																</blockquote>
 																<div class="author-info">
@@ -201,7 +207,8 @@
 																		<img src="~/images/person-1.png" alt="Author" class="img-fluid">
 																	</div>
 																	<h3 class="font-weight-bold">@comment.UserName</h3>
-																	<span class="position d-block mb-3">Customer</span>
+														<span class="position d-block mb-3">Verified Buyer</span>
+
 																</div>
 															</div>
 														</div>

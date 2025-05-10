@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "PrdDetails";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container-fluid px-0">
@@ -190,7 +191,7 @@
 					function UpdateCartCount()
 					{
 						$.ajax({
-					url:'/Cart/GetCartItemsCount',
+							url:'/Cart/GetCartItemsCount',
 						method:'Get',
 						success: function (response){
 							$("#cart-count").text(response.count)

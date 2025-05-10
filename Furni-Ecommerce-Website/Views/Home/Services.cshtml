@@ -184,10 +184,7 @@
 			</div>
 		</div>
 		<!-- End Product Section -->
-
-
-
-		<!-- Start Testimonial Slider -->
+<!-- Start Testimonial Slider -->
 
 <div class="testimonial-section">
     <div class="container">
@@ -210,24 +207,24 @@
                             {
                                 foreach (var comment in product.Comments)
                                 {
-                                                            <div class="testimonial-item">
-                                                                <div class="row justify-content-center">
-                                                                    <div class="col-lg-8 mx-auto">
-                                                                        <div class="testimonial-block text-center">
-                                                                            <blockquote class="mb-5">
-                                                                                <p>@comment.Text</p>
-                                                                            </blockquote>
-                                                                            <div class="author-info">
-                                                                                <div class="author-pic">
-                                                                                    <img src="~/images/person-1.png" alt="Author" class="img-fluid">
-                                                                                </div>
-                                                                                <h3 class="font-weight-bold">@comment.UserName</h3>
-                                                                                <span class="position d-block mb-3">Customer</span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                    <div class="testimonial-item">
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-8 mx-auto">
+                                                <div class="testimonial-block text-center">
+                                                    <blockquote class="mb-5">
+                                                        <p>@comment.Text</p>
+                                                    </blockquote>
+                                                    <div class="author-info">
+                                                        <div class="author-pic">
+                                                            <img src="~/images/person-1.png" alt="Author" class="img-fluid" style="	max-width: 80px;border-radius: 50%;">
+                                                        </div>
+                                                        <h3 class="font-weight-bold">@comment.UserName</h3>
+                                                        <span class="position d-block mb-3">Customer</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 }
                             }
                         }
@@ -238,175 +235,175 @@
     </div>
 </div>
 
-<style>
-    .testimonial-slider-wrap {
-        position: relative;
-    }
+@* <style> *@
+@*     .testimonial-slider-wrap { *@
+@*         position: relative; *@
+@*     } *@
 
-    .testimonial-slider {
-        position: relative;
-        overflow: hidden;
-        margin: 0 auto;
-        height: 400px; 
-    }
+@*     .testimonial-slider { *@
+@*         position: relative; *@
+@*         overflow: hidden; *@
+@*         margin: 0 auto; *@
+@*         height: 400px;  *@
+@*     } *@
 
-    .testimonial-item {
-        position: absolute;
-        width: 100%;
-        padding: 20px;
-        transition: all 0.6s ease-in-out;
-        opacity: 0;
-        transform: translateX(100%);
-    }
+@*     .testimonial-item { *@
+@*         position: absolute; *@
+@*         width: 100%; *@
+@*         padding: 20px; *@
+@*         transition: all 0.6s ease-in-out; *@
+@*         opacity: 0; *@
+@*         transform: translateX(100%); *@
+@*     } *@
 
-    .testimonial-item.active {
-        opacity: 1;
-        transform: translateX(0);
-    }
+@*     .testimonial-item.active { *@
+@*         opacity: 1; *@
+@*         transform: translateX(0); *@
+@*     } *@
 
-    .testimonial-item.prev-item {
-        transform: translateX(-100%);
-    }
+@*     .testimonial-item.prev-item { *@
+@*         transform: translateX(-100%); *@
+@*     } *@
 
-    .testimonial-item.next-item {
-        transform: translateX(100%);
-    }
+@*     .testimonial-item.next-item { *@
+@*         transform: translateX(100%); *@
+@*     } *@
 
-    #testimonial-nav {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        transform: translateY(-50%);
-        z-index: 10;
-    }
+@*     #testimonial-nav { *@
+@*         position: absolute; *@
+@*         top: 50%; *@
+@*         left: 0; *@
+@*         right: 0; *@
+@*         transform: translateY(-50%); *@
+@*         z-index: 10; *@
+@*     } *@
 
-    #testimonial-nav span {
-        position: absolute;
-        cursor: pointer;
-        width: 40px;
-        height: 40px;
-        background: #fff;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-        color: #333;
-        font-size: 18px;
-    }
+@*     #testimonial-nav span { *@
+@*         position: absolute; *@
+@*         cursor: pointer; *@
+@*         width: 40px; *@
+@*         height: 40px; *@
+@*         background: #fff; *@
+@*         border-radius: 50%; *@
+@*         display: flex; *@
+@*         align-items: center; *@
+@*         justify-content: center; *@
+@*         box-shadow: 0 2px 10px rgba(0,0,0,0.1); *@
+@*         transition: all 0.3s ease; *@
+@*         color: #333; *@
+@*         font-size: 18px; *@
+@*     } *@
 
-    #testimonial-nav span:hover {
-        background: #007bff;
-        color: #fff;
-    }
+@*     #testimonial-nav span:hover { *@
+@*         background: #007bff; *@
+@*         color: #fff; *@
+@*     } *@
 
-    #testimonial-nav .prev {
-        left: 10px;
-    }
+@*     #testimonial-nav .prev { *@
+@*         left: 10px; *@
+@*     } *@
 
-    #testimonial-nav .next {
-        right: 10px;
-    }
+@*     #testimonial-nav .next { *@
+@*         right: 10px; *@
+@*     } *@
 
-    .testimonial-block {
-        border-radius: 50%;
-    }
+@*     .testimonial-block { *@
+@*         border-radius: 50%; *@
+@*     } *@
 
-    .author-pic img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin: 0 auto 15px;
-    }
-</style>
+@*     .author-pic img { *@
+@*         width: 80px; *@
+@*         height: 80px; *@
+@*         border-radius: 50%; *@
+@*         object-fit: cover; *@
+@*         margin: 0 auto 15px; *@
+@*     } *@
+@* </style> *@
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const slider = document.querySelector('.testimonial-slider');
-        const items = slider.querySelectorAll('.testimonial-item');
-        const prevBtn = document.querySelector('#testimonial-nav .prev');
-        const nextBtn = document.querySelector('#testimonial-nav .next');
+@* <script> *@
+@*     document.addEventListener('DOMContentLoaded', function() { *@
+@*         const slider = document.querySelector('.testimonial-slider'); *@
+@*         const items = slider.querySelectorAll('.testimonial-item'); *@
+@*         const prevBtn = document.querySelector('#testimonial-nav .prev'); *@
+@*         const nextBtn = document.querySelector('#testimonial-nav .next'); *@
 
-        let currentIndex = 0;
+@*         let currentIndex = 0; *@
 
-        function initSlider() {
-            if (items.length > 0) {
-                items.forEach((item, index) => {
-                    item.classList.remove('active', 'prev-item', 'next-item');
-                    if (index === currentIndex) {
-                        item.classList.add('active');
-                    } else if (index === (currentIndex + 1) % items.length) {
-                        item.classList.add('next-item');
-                    } else if (index === (currentIndex - 1 + items.length) % items.length) {
-                        item.classList.add('prev-item');
-                    }
-                });
-            }
-        }
+@*         function initSlider() { *@
+@*             if (items.length > 0) { *@
+@*                 items.forEach((item, index) => { *@
+@*                     item.classList.remove('active', 'prev-item', 'next-item'); *@
+@*                     if (index === currentIndex) { *@
+@*                         item.classList.add('active'); *@
+@*                     } else if (index === (currentIndex + 1) % items.length) { *@
+@*                         item.classList.add('next-item'); *@
+@*                     } else if (index === (currentIndex - 1 + items.length) % items.length) { *@
+@*                         item.classList.add('prev-item'); *@
+@*                     } *@
+@*                 }); *@
+@*             } *@
+@*         } *@
 
-        function goToSlide(index) {
-            items[currentIndex].classList.remove('active');
-            items[currentIndex].classList.add(index > currentIndex ? 'prev-item' : 'next-item');
+@*         function goToSlide(index) { *@
+@*             items[currentIndex].classList.remove('active'); *@
+@*             items[currentIndex].classList.add(index > currentIndex ? 'prev-item' : 'next-item'); *@
 
-            items[index].classList.remove('prev-item', 'next-item');
-            items[index].classList.add('active');
+@*             items[index].classList.remove('prev-item', 'next-item'); *@
+@*             items[index].classList.add('active'); *@
 
-            // Update adjacent slides
-            const nextIndex = (index + 1) % items.length;
-            const prevIndex = (index - 1 + items.length) % items.length;
+@*             // Update adjacent slides *@
+@*             const nextIndex = (index + 1) % items.length; *@
+@*             const prevIndex = (index - 1 + items.length) % items.length; *@
 
-            items.forEach(item => item.classList.remove('next-item', 'prev-item'));
-            items[nextIndex].classList.add('next-item');
-            items[prevIndex].classList.add('prev-item');
+@*             items.forEach(item => item.classList.remove('next-item', 'prev-item')); *@
+@*             items[nextIndex].classList.add('next-item'); *@
+@*             items[prevIndex].classList.add('prev-item'); *@
 
-            currentIndex = index;
-        }
+@*             currentIndex = index; *@
+@*         } *@
 
-        function showNext() {
-            const nextIndex = (currentIndex + 1) % items.length;
-            goToSlide(nextIndex);
-        }
+@*         function showNext() { *@
+@*             const nextIndex = (currentIndex + 1) % items.length; *@
+@*             goToSlide(nextIndex); *@
+@*         } *@
 
-        function showPrev() {
-            const prevIndex = (currentIndex - 1 + items.length) % items.length;
-            goToSlide(prevIndex);
-        }
+@*         function showPrev() { *@
+@*             const prevIndex = (currentIndex - 1 + items.length) % items.length; *@
+@*             goToSlide(prevIndex); *@
+@*         } *@
 
-        initSlider();
+@*         initSlider(); *@
 
-        nextBtn.addEventListener('click', showNext);
-        prevBtn.addEventListener('click', showPrev);
+@*         nextBtn.addEventListener('click', showNext); *@
+@*         prevBtn.addEventListener('click', showPrev); *@
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowRight') {
-                showNext();
-            } else if (e.key === 'ArrowLeft') {
-                showPrev();
-            }
-        });
+@*         document.addEventListener('keydown', function(e) { *@
+@*             if (e.key === 'ArrowRight') { *@
+@*                 showNext(); *@
+@*             } else if (e.key === 'ArrowLeft') { *@
+@*                 showPrev(); *@
+@*             } *@
+@*         }); *@
 
-        let touchStartX = 0;
-        let touchEndX = 0;
+@*         let touchStartX = 0; *@
+@*         let touchEndX = 0; *@
 
-        slider.addEventListener('touchstart', function(e) {
-            touchStartX = e.changedTouches[0].screenX;
-        }, false);
+@*         slider.addEventListener('touchstart', function(e) { *@
+@*             touchStartX = e.changedTouches[0].screenX; *@
+@*         }, false); *@
 
-        slider.addEventListener('touchend', function(e) {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, false);
+@*         slider.addEventListener('touchend', function(e) { *@
+@*             touchEndX = e.changedTouches[0].screenX; *@
+@*             handleSwipe(); *@
+@*         }, false); *@
 
-        function handleSwipe() {
-            if (touchEndX < touchStartX - 50) {
-                showNext(); 
-            }
-            if (touchEndX > touchStartX + 50) {
-                showPrev(); 
-            }
-        }
-    });
-</script>
+@*         function handleSwipe() { *@
+@*             if (touchEndX < touchStartX - 50) { *@
+@*                 showNext();  *@
+@*             } *@
+@*             if (touchEndX > touchStartX + 50) { *@
+@*                 showPrev();  *@
+@*             } *@
+@*         } *@
+@*     }); *@
+@* </script> *@

@@ -1,17 +1,15 @@
-
 # 🛒 Furni Ecommerce Website
 
 **Furni** is a modular, scalable, and professional eCommerce platform built using **ASP.NET MVC (Framework)**.  
-It offers a seamless online shopping experience for furniture with a modern **customer-facing storefront** and a secure **admin dashboard**.  
-The application follows **clean architecture principles** for maintainability, scalability, and separation of concerns.
+It provides a modern **customer-facing storefront** and a secure **admin dashboard** for furniture eCommerce, following **clean architecture principles** for maintainability and scalability.
 
 ---
 
 ## 📦 Solution Architecture
 
-The solution is structured into multiple projects with clear separation between presentation, business logic, and data access.
+The solution is structured with clear separation between presentation, business logic, and data access:
 
-```plaintext
+```
 /FurniEcommerceSolution
 │
 ├── Furni-Ecommerce-Website       → MVC frontend for customers
@@ -21,34 +19,15 @@ The solution is structured into multiple projects with clear separation between 
 ├── Furni_Ecommerce_Shared        → Shared DTOs, enums, interfaces
 ```
 
-### 🔗 Project Reference Diagram
+### 🔗 Project References
 
-```plaintext
-[Furni-Ecommerce-Website]
-   ├── references → BusinessLogic
-   └── references → Furni_Ecommerce_Shared
-
-[Furni-Ecommerce-DashBoard]
-   ├── references → BusinessLogic
-   └── references → Furni_Ecommerce_Shared
-
-[BusinessLogic]
-   ├── references → DataAccess
-   └── references → Furni_Ecommerce_Shared
-
-[DataAccess]
-   └── references → Furni_Ecommerce_Shared
-
-[Furni_Ecommerce_Shared]
-   └── No project dependencies (pure shared layer)
 ```
-
-### ✅ Highlights
-
-- Shared **SQL Server database** for all apps
-- Clean separation of business logic, UI, and data
-- Role-based access with **user/admin flows**
-- Each project can be independently deployed and maintained
+[Furni-Ecommerce-Website]       → BusinessLogic, Furni_Ecommerce_Shared
+[Furni-Ecommerce-DashBoard]     → BusinessLogic, Furni_Ecommerce_Shared
+[BusinessLogic]                 → DataAccess, Furni_Ecommerce_Shared
+[DataAccess]                    → Furni_Ecommerce_Shared
+[Furni_Ecommerce_Shared]        → No dependencies
+```
 
 ---
 
@@ -56,67 +35,107 @@ The solution is structured into multiple projects with clear separation between 
 
 ### 👤 User Website
 
-- Home, product listings, and detail views
-- Shopping cart & checkout flow
-- User registration and login
-- Responsive Razor views using Bootstrap
-- Role-based access control
+- Home, product listings, and detail views  
+- Shopping cart & checkout flow  
+- User registration and login  
+- **Stripe Payments Integration**  
+- **Email confirmation**  
+- **Password reset via email**  
+- **Order tracking system**  
+- Responsive Razor views using Bootstrap  
+- Role-based access control  
 
 ### 🛠 Admin Dashboard
 
-- Secure login for admins
+- Secure login for admins  
 - Admin dashboard with:
   - 🛋 Product Management
   - 🗂 Category Management
-  - 📦 Order Management
+  - 📦 Order Management (with delivery status)
   - 👥 User & Role Management
-- CRUD operations with validation and error handling
+  - 📊 **Sales & Order Analytics (Charts)**
+- View customer order history and transaction status  
 
 ### 🧠 Business Logic Layer
 
-- Centralized service classes for all operations
-- Clean abstraction of business rules
-- Reusable service interfaces
-- Handles business validation and orchestration
+- Centralized service classes  
+- Clean abstraction of business rules  
+- Interfaces for easy testing  
+- Handles validation, Stripe, and email orchestration  
 
 ### 💾 Data Access Layer
 
-- **Entity Framework 6 (EF6)** with Code-First
-- Repository & Unit of Work patterns
-- SQL Server integration
-- Lazy loading enabled
-- Centralized migrations
+- Entity Framework 6 (Code-First)  
+- Repository & Unit of Work patterns  
+- Lazy loading enabled  
+- Centralized migrations  
 
 ### 🧩 Shared Layer
 
-- DTOs and view models
-- Role enums and constants
-- Interfaces for services and repositories
-- Zero dependencies – usable across all layers
+- DTOs, Enums, Interfaces  
+- Role constants  
+- Zero dependencies  
+
+---
+
+## 💳 Stripe Payment Integration
+
+- Stripe Checkout for secure transactions  
+- Webhook support for post-payment confirmation  
+- Stores payment intent, transaction data  
+- Handles success/failure redirects  
+- Configured via `web.config`
+
+---
+
+## 📧 Account Email Features
+
+- **Email confirmation** after registration  
+- **Password reset** with secure token and email link  
+- Uses ASP.NET Identity token providers  
+- SMTP email service configured in `web.config`
+
+---
+
+## 🚚 Order Tracking
+
+- Track order by status: `Pending`, `Processing`, `Shipped`, `Delivered`  
+- Admin updates status in dashboard  
+- Customers receive email updates  
+
+---
+
+## 📈 Admin Analytics Dashboard
+
+- Line chart: Revenue over time  
+- Bar chart: Orders by category  
+- Pie chart: Delivery status  
+- Top-selling products  
+- Uses Chart.js (or similar) with AJAX for live data  
 
 ---
 
 ## 🔐 Authentication & Authorization
 
-- Powered by **ASP.NET Identity**
-- Role-based access (`User`, `Admin`)
-- Separate login endpoints for customers and admins
-- Route and view protection using `[Authorize]`
+- ASP.NET Identity-based authentication  
+- Role-based access (`User`, `Admin`)  
+- Separate login flows and areas  
+- `[Authorize]` attribute and route protection  
 
 ---
 
 ## ⚙️ Dependency Injection
 
-- Powered by `Microsoft.Extensions.DependencyInjection`
-- All services and repositories registered in `Startup.cs`
-- Shared `ServiceConfigurator` to wire up dependencies cleanly
-- Constructor injection throughout the solution
+- `Microsoft.Extensions.DependencyInjection`  
+- Central `ServiceConfigurator` registers:
+  - Services
+  - Repositories
+  - Email and Stripe handlers  
+- Constructor injection throughout  
 
 ---
 
 ## 🧪 Entity Framework Setup
-
-### 🔧 Configuration Example
 
 ```csharp
 services.AddDbContext<FurniDbContext>(options =>
@@ -127,16 +146,16 @@ services.AddDbContext<FurniDbContext>(options =>
 });
 ```
 
-### 🗃 EF Migrations
+### Migrations
 
-#### Using PMC:
+#### Package Manager Console
 
 ```powershell
 Add-Migration InitialCreate -Project DataAccess -StartupProject Furni-Ecommerce-Website
 Update-Database -Project DataAccess -StartupProject Furni-Ecommerce-Website
 ```
 
-#### Using .NET CLI:
+#### .NET CLI
 
 ```bash
 dotnet ef migrations add InitialCreate --project DataAccess --startup-project Furni-Ecommerce-Website
@@ -152,23 +171,26 @@ dotnet ef database update --project DataAccess --startup-project Furni-Ecommerce
 | User Website      | `https://www.furni.com`    |
 | Admin Dashboard   | `https://admin.furni.com`  |
 
-- Hosted on **IIS**, **Azure**, or compatible .NET hosting
-- One SQL Server instance
-- Can be deployed independently
-- Supports CI/CD and production-ready scaling
+- IIS, Azure, or any .NET-compatible hosting  
+- Shared SQL Server database  
+- Supports CI/CD pipelines  
+- Independent deployment for frontend/admin  
 
 ---
 
 ## 🧰 Tech Stack
 
-| Layer              | Technology                              |
-|--------------------|------------------------------------------|
-| Frontend           | Razor Views, Bootstrap                   |
-| Backend            | ASP.NET MVC (.NET Framework)             |
-| ORM                | Entity Framework 6 (EF6)                 |
-| Authentication     | ASP.NET Identity                         |
-| Dependency Injection | Microsoft.Extensions.DependencyInjection |
-| Database           | Microsoft SQL Server                     |
+| Layer               | Technology                             |
+|---------------------|-----------------------------------------|
+| Frontend            | Razor Views, Bootstrap                  |
+| Backend             | ASP.NET MVC (.NET Framework)            |
+| ORM                 | Entity Framework 6 (EF6)                |
+| Payments            | Stripe API                              |
+| Email               | SMTP (ASP.NET Identity support)         |
+| Authentication      | ASP.NET Identity                        |
+| Dependency Injection| Microsoft.Extensions.DependencyInjection|
+| Charting            | Chart.js or equivalent                  |
+| Database            | Microsoft SQL Server                    |
 
 ---
 
@@ -176,12 +198,12 @@ dotnet ef database update --project DataAccess --startup-project Furni-Ecommerce
 
 ### ✅ Prerequisites
 
-- Visual Studio 2019 or later
-- .NET Framework 4.7.2 or newer
-- SQL Server (Express or Full)
-- NuGet CLI / .NET CLI
+- Visual Studio 2019+  
+- .NET Framework 4.7.2+  
+- SQL Server  
+- NuGet CLI or .NET CLI  
 
-### ⚙️ Installation
+### ⚙️ Installation Steps
 
 1. **Clone the Repository**
 
@@ -191,45 +213,40 @@ dotnet ef database update --project DataAccess --startup-project Furni-Ecommerce
 
 2. **Configure Connection Strings**
 
-   Update the following:
-   - `Furni-Ecommerce-Website\web.config`
-   - `Furni-Ecommerce-DashBoard\web.config`
+   - `Furni-Ecommerce-Website\web.config`  
+   - `Furni-Ecommerce-DashBoard\web.config`  
 
-3. **Run EF Migrations**
+3. **Set up Stripe & SMTP Keys**
 
-   Execute migration commands as outlined above.
+4. **Run EF Migrations**
 
-4. **Run the Application**
+5. **Build and Run**
 
-   - Set either frontend or dashboard as the startup project
-   - Press `F5` to build and launch
+   - Set the desired project as startup  
+   - Press `F5` in Visual Studio  
 
 ---
 
-## 📷 Screenshots (Optional)
+## 📷 Screenshots _(Optional)_
 
-Include:
-- Product catalog view
-- Product detail page
-- Cart and checkout
-- Admin dashboard
-- Order history
-- Login / Register UI
+- Product catalog  
+- Product detail page  
+- Cart and checkout  
+- Login / Register  
+- Admin dashboard  
+- Sales chart  
+- Order tracking  
 
 ---
 
 ## 🙌 Contributing
 
-We welcome contributions!
+1. Fork the repository  
+2. Create a feature branch  
+3. Commit your changes  
+4. Open a pull request  
 
-### How to Contribute
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Push and create a Pull Request
-
-Open issues for bugs, enhancements, or discussions.
+Open issues for bugs, ideas, or suggestions.
 
 ---
 
@@ -242,7 +259,5 @@ See the [LICENSE](./LICENSE) file for details.
 
 ## 💬 Contact
 
-- 📧 Email: [youremail@example.com](mailto:youremail@example.com)
+- 📧 Email: [youremail@example.com](mailto:youremail@example.com)  
 - 🌐 Website: [yourwebsite.com](https://yourwebsite.com)
-
----

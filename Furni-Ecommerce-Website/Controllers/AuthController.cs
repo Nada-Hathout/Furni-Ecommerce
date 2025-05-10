@@ -218,15 +218,15 @@ namespace Furni_Ecommerce_Website.Controllers
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }
-            if (user != null && !await userManager.IsEmailConfirmedAsync(user))
-            {
-                var loginVM = new LoginViewModel()
-                {
-                    schemes = await signInManager.GetExternalAuthenticationSchemesAsync()
-                };
-                ModelState.AddModelError(string.Empty, "Please confirm your email first.");
-                return View(loginVM);
-            }
+            //if (user != null && !await userManager.IsEmailConfirmedAsync(user))
+            //{
+            //    var loginVM = new LoginViewModel()
+            //    {
+            //        schemes = await signInManager.GetExternalAuthenticationSchemesAsync()
+            //    };
+            //    ModelState.AddModelError(string.Empty, "Please confirm your email first.");
+            //    return View(loginVM);
+            //}
 
 
             var result = await signInManager.PasswordSignInAsync(

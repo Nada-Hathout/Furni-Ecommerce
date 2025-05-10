@@ -1,96 +1,131 @@
 ﻿@model Furni_Ecommerce_Shared.UserViewModel.LoginViewModel
 
 @{
-    Layout = "Auth"; // Use your auth layout or set to null if not needed
+    Layout = "Auth";
     ViewData["Title"] = "Login";
 }
 <!-- Bootstrap & Font Awesome -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-
 <link rel="stylesheet" href="~/css/login.css" />
 
+<style>
+    .main-container {
+        display: flex;
+        min-height: 100vh;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .form-container {
+        max-width: 500px; /* Adjust this as needed */
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .success-message {
+        position: absolute;
+        top: -60px;
+        left: 0;
+        right: 0;
+        z-index: 10;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .btn-login {
+       
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+    }
+</style>
+
 <section class="main-container">
-    <form asp-action="Login" method="post" style=" box-shadow: 0 4px 15px rgba(0, 0, 0, 1);border:.1rem solid rgb(28, 85, 49);">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success alert-dismissible fade show success-message" role="alert">
-                @TempData["SuccessMessage"]
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        }
+    <div class="container-fluid">
+        <div class="form-container">
+            <form asp-action="Login" method="post" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 1); border: .1rem solid rgb(28, 85, 49); border-radius: 8px 8px 0 0; border-bottom:hidden;">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show success-message" role="alert">
+                        @TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
 
-        <h1 class="Login-header">Login</h1>
+                <h1 class="Login-header text-center">Login</h1>
 
-        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
-        <!-- Username -->
-        <div class="mb-3">
-            <label asp-for="UserName" class="form-label">User Name</label>
-            <input asp-for="UserName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
-
-        <!-- Password -->
-        <div class="mb-3" style="position: relative; ">
-            <label asp-for="Password" class="form-label">Password</label>
-
-            <input asp-for="Password" type="password" class="form-control " id="exampleInputPassword1" />
-
-            <!-- Eye Icon Positioned Absolutely Inside Input -->
-            <i class="fa-solid fa-eye" onclick="togglePassword()" id="toggleIcon"
-            style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
-
-            <span asp-validation-for="Password" class="text-danger"></span>
-
-            <a  style="display: block; margin-top: 10px; color: rgb(0, 128, 75);" asp-action="ForgetPassword">
-                Forget your password?
-            </a>
-        </div>
-
-
-        <!-- Remember Me -->
-        <div class="mb-3 form-check">
-            <input asp-for="RememberMe" class="form-check-input bg-success" id="exampleCheck1" />
-            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
-        </div>
-
-        <!-- Login button -->
-        <button type="submit" class="btn btn-login">Login</button><br /><br />
-
-        <!-- Register link -->
-        <p style="display: inline;">Don't have an account?</p>
-        <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
-        <hr />
-
-
-    </form>
-        @if (Model.schemes?.Count() == 0 || Model.schemes == null)
-        {
-            <div class="alert alert-warning">No External Login Providers are configured.</div>
-        }
-        else
-        {
-            <form asp-action="ExternalLogin" asp-controller="Auth" method="post">
-                @Html.AntiForgeryToken() <!-- Required for security -->
-                <div>
-                    @foreach (var provider in Model.schemes)
-                    {
-                        <button type="submit"
-                                class="btn btn-login d-flex align-items-center justify-content-center"
-                                name="provider"
-                                value="@provider.Name"
-                                title="Login using your @provider.Name account"
-                                style="background-color: #4285F4; color: white; padding: 10px 15px; border-radius: 5px; border: none; font-size: 16px; cursor: pointer;">
-                            <img src="~/images/google.webp" style="width: 20px; height: 20px;" class="me-2" />
-                            Continue with @provider.DisplayName
-                        </button>
-                    }
+                <!-- Username -->
+                <div class="mb-3">
+                    <label asp-for="UserName" class="form-label">User Name</label>
+                    <input asp-for="UserName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
+
+                <!-- Password -->
+                <div class="mb-3" style="position: relative;">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" />
+                    <i class="fa-solid fa-eye" onclick="togglePassword()" id="toggleIcon"
+                       style="position: absolute; top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                    <a style="display: block; margin-top: 10px; color: rgb(0, 128, 75);" asp-action="ForgetPassword">
+                        Forget your password?
+                    </a>
+                </div>
+
+                <!-- Remember Me -->
+                <div class="mb-3 form-check">
+                    <input asp-for="RememberMe" class="form-check-input bg-success" id="exampleCheck1" />
+                    <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                </div>
+
+                <!-- Login button -->
+                <button type="submit" class="btn btn-login">Login</button>
+                <br /><br />
+
+                <!-- Register link -->
+                <p class="text-center">
+                    <span style="display: inline;">Don't have an account?</span>
+                    <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
+                </p>
+             
+               <p class="  text-dark" style="text-align:center">OR</p>
+               <hr />
             </form>
-        }
-   
+           
+            @if (Model.schemes?.Count() == 0 || Model.schemes == null)
+            {
+                <div class="alert alert-warning">No External Login Providers are configured.</div>
+            }
+            else
+            {
+                <form asp-action="ExternalLogin" asp-controller="Auth" method="post" style="box-shadow: 0 4px 15px rgba(0, 0, 0, 1); border: .1rem solid rgb(28, 85, 49); border-top: none; border-radius: 0 0 8px 8px; border-top:hidden;backdrop-filter: blur(22px);">
+                    @Html.AntiForgeryToken()
+                    <div>
+                        @foreach (var provider in Model.schemes)
+                        {
+                            <button type="submit"
+                                    class="btn d-flex align-items-center justify-content-center"
+                                    name="provider"
+                                    value="@provider.Name"
+                                    title="Login using your @provider.Name account"
+                                    style="background-color: #011408; color: white; padding: 10px 15px; border-radius: 5px; border: none; font-size: 16px; cursor: pointer; width: 100%; margin-bottom: 10px;">
+                                <img src="~/images/google.webp" style="width: 20px; height: 20px;" class="me-2" />
+                                Continue with @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
 </section>
 
 @section Scripts {
@@ -105,7 +140,6 @@
             alert.classList.add('fade');
         }
     }, 4000);
-    //hash password
 
     function togglePassword() {
         const input = document.getElementById('exampleInputPassword1');
@@ -121,20 +155,4 @@
             icon.classList.add('fa-eye');
         }
     }
-
-
 </script>
-
-<style>
-    /* Style for success message to appear on top without taking space */
-    .success-message {
-        position: absolute;
-        top: -60px;
-        left: 0;
-        right: 0;
-        z-index: 10;
-        width: 100%;
-        margin: 0 auto;
-    }
-
-</style>

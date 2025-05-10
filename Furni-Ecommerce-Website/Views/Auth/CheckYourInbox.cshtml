@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Check Your Inbox";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="card p-5 shadow-lg text-center" style="max-width: 450px; width: 100%; border-radius: 20px; border: 2px solid #1c5531; background: linear-gradient(to bottom, #d8e3c9, #f3f3f3);">
+
+        <i class="fa-solid fa-envelope-circle-check fa-4x mb-4" style="color: #1c5531;"></i>
+
+        <h2 class="mb-3" style="color: #1c5531;">Check Your Inbox</h2>
+
+        <p style="font-size: 1.1rem;">A password reset link has been sent to your email.  
+        <br />Please check your inbox and follow the instructions.</p>
+
+        <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="btn mt-4" style="background-color: #1c5531; color: #fff; padding: 0.5rem 1.5rem; border-radius: 8px;">
+            Go to your Gmail Inbox
+        </a>
+
+        <div class="mt-3">
+            <a asp-action="Login" asp-controller="Auth" class="text-decoration-none" style="color: #1c5531;">Back to Login</a>
+        </div>
+    </div>
+</div>

@@ -14,7 +14,7 @@ namespace BusinessLogic.Settings
             var client = new SmtpClient("smtp.gmail.com", 587);
             client.EnableSsl = true;
             client.Credentials = new System.Net.NetworkCredential("fatma.2002nagy@gmail.com", "zwwgjgtpbhjtyrey");
-            client.Send("fatma.2002nagy@gmail.com", email.To, email.Subject, email.Body);
+
             var message = new MailMessage("fatma.2002nagy@gmail.com", email.To)
             {
                 Subject = email.Subject,
@@ -23,7 +23,6 @@ namespace BusinessLogic.Settings
             };
 
             client.Send(message);
-
         }
     }
 }

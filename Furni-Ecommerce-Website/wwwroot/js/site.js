@@ -83,6 +83,9 @@ function UpdateCartCount() {
         }
     });
 }
+$(document).ready(function () {
+    UpdateCartCount();
+});
 
 //$(document).ready(function () {
 //    UpdateCartCount();

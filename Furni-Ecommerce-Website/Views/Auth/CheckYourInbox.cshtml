@@ -2,22 +2,102 @@
     ViewData["Title"] = "Check Your Inbox";
 }
 
+<style>
+    .card {
+        animation: fadeIn 0.5s ease-in-out;
+        transition: all 0.3s ease;
+    }
+
+    .btn-email {
+        background-color: #1c5531;
+        color: #fff;
+        padding: 0.6rem 2rem;
+        border-radius: 8px;
+        transition: all 0.3s;
+        border: none;
+        font-weight: 500;
+    }
+
+        .btn-email:hover {
+            background-color: #144126;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+    .progress-bar {
+        height: 5px;
+        background: #1c5531;
+        width: 0%;
+        border-radius: 5px;
+        transition: width 0.1s linear;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 <div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card p-5 shadow-lg text-center" style="max-width: 450px; width: 100%; border-radius: 20px; border: 2px solid #1c5531; background: linear-gradient(to bottom, #d8e3c9, #f3f3f3);">
+    <div class="card p-4 p-md-5 shadow-lg text-center" style="max-width: 500px; width: 100%; border-radius: 20px; border: 2px solid #1c5531; background: linear-gradient(to bottom, #d8e3c9, #f3f3f3);">
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success mb-4">
+                @TempData["SuccessMessage"]
+            </div>
+        }
 
         <i class="fa-solid fa-envelope-circle-check fa-4x mb-4" style="color: #1c5531;"></i>
 
-        <h2 class="mb-3" style="color: #1c5531;">Check Your Inbox</h2>
+        <h2 class="mb-3" style="color: #1c5531; font-weight: 600;">Check Your Inbox</h2>
 
-        <p style="font-size: 1.1rem;">A password reset link has been sent to your email.  
-        <br />Please check your inbox and follow the instructions.</p>
+        <p style="font-size: 1.1rem; color: #555;">
+            A password reset link has been sent to your email.
+            <br />Please check your inbox and follow the instructions.
+        </p>
 
-        <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="btn mt-4" style="background-color: #1c5531; color: #fff; padding: 0.5rem 1.5rem; border-radius: 8px;">
-            Go to your Gmail Inbox
+        <!-- Open Gmail directly (works if user is logged in) -->
+        <a href="https://mail.google.com/mail/u/0/#inbox" target="_blank" class="btn btn-email mt-4">
+            <i class="fas fa-envelope me-2"></i> Open Gmail
         </a>
 
+        <div class="mt-4">
+            <div class="progress-bar mb-2" id="redirectProgress"></div>
+            <p class="small text-muted">You will be redirected to login in <span id="countdown">10</span> seconds.</p>
+        </div>
+
         <div class="mt-3">
-            <a asp-action="Login" asp-controller="Auth" class="text-decoration-none" style="color: #1c5531;">Back to Login</a>
+            <a asp-action="Login" asp-controller="Auth" class="text-decoration-none" style="color: #1c5531; font-weight: 500;">
+                <i class="fas fa-arrow-left me-1"></i> Back to Login
+            </a>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Auto-redirect with progress bar
+        let timeLeft = 10;
+        const countdownElement = document.getElementById('countdown');
+        const progressBar = document.getElementById('redirectProgress');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownElement.textContent = timeLeft;
+            progressBar.style.width = (100 - (timeLeft * 10)) + '%';
+
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                window.location.href = '@Url.Action("Login", "Auth")';
+            }
+        }, 1000);
+    </script>
+}

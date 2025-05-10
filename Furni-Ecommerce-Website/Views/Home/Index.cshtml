@@ -270,6 +270,29 @@
 	</div>
 </div>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+
+	function UpdateCartCount()
+	{
+		$.ajax({
+	url:'/Cart/GetCartItemsCount',
+		method:'Get',
+		success: function (response){
+			if(response)
+			{
+				$("#cart-count").text(response.count);
+
+			}
+
+		}
+		});
+	}
+
+		$(document).ready( function(){
+			GetProducts();
+			UpdateCartCount();
+		});
+</script>
 
 <style>
 	.product-item:hover .icon-tools {

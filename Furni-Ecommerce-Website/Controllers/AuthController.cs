@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using System.Data;
 using BusinessLogic.External_Service;
 using Microsoft.AspNetCore.Authorization;
+using BusinessLogic.Settings;
 
 namespace Furni_Ecommerce_Website.Controllers
 {
@@ -343,5 +344,141 @@ namespace Furni_Ecommerce_Website.Controllers
             ModelState.AddModelError("", $"Something went wrong");
             return View("Login", loginVM);
         }
+     public IActionResult ForgetPassword()
+        {
+            return View();
+
+        }
+        //[HttpPost]
+        //public async Task<IActionResult> SendEmail(ForgetPasswordViewModel model)
+        //{
+        //    var token = await userManager.GeneratePasswordResetTokenAsync(userManager.FindByEmailAsync(model.Email).Result);
+        //    var ResetPasswordLink = Url.Action("ResetPassword", "Auth", new { email = model.Email, Token=token },Request.Scheme);
+        //    if (ModelState.IsValid)
+        //    {
+        //        var user = await userManager.FindByEmailAsync(model.Email);
+        //        if (user is not null)
+        //        {
+        //            var email = new Email()
+        //            {
+        //                To = model.Email,
+        //                Subject = "Reset Password",
+        //                Body = "Please click the link below to reset your password."
+        //            };
+        //            emailSettingg.SendEmail(email);
+        //            return RedirectToAction(nameof(CheckYourInbox));
+        //        }
+        //        else
+        //        {
+        //            ModelState.AddModelError("", "Email not found.");
+        //        }
+        //    }
+
+        //        return View("ForgetPassword",model);
+
+
+        //}
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SendEmail(ForgetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View("ForgetPassword", model);
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Email not found.");
+                return View("ForgetPassword", model);
+            }
+
+            // Generate token
+            var token = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            // Generate reset password link
+            var resetPasswordLink = Url.Action(
+                "ResetPassword",
+                "Auth",
+                new { email = model.Email, token = token },
+                protocol: HttpContext.Request.Scheme
+            );
+
+            // Create email body with link
+            var emailBody = $@"
+    <div style='font-family:Arial, sans-serif; padding:20px; background-color:#f4f4f4;'>
+        <div style='max-width:600px; margin:auto; background:white; padding:20px; border-radius:10px;'>
+            <h2 style='color:#1c5531;'>Hello {user.UserName},</h2>
+            <p style='font-size:16px; color:#333;'>We received a request to reset your password.</p>
+            <p style='margin:20px 0;'>
+                <a href='{resetPasswordLink}' style='background-color:#1c5531; color:white; padding:12px 20px; text-decoration:none; border-radius:5px;'>Reset Your Password</a>
+            </p>
+            <p style='font-size:14px; color:#888;'>If you did not request this, you can safely ignore this email.</p>
+        </div>
+    </div>";
+
+            // Prepare email
+            var email = new Email()
+            {
+                To = model.Email,
+                Subject = "Reset Your Password",
+                Body = emailBody
+            };
+
+            // Send email
+            emailSettingg.SendEmail(email);
+
+            // Redirect to check inbox view
+            TempData["SuccessMessage"] = "Please check your inbox for the password reset link.";
+            return RedirectToAction(nameof(CheckYourInbox));
+        }
+
+        public IActionResult CheckYourInbox()
+        {
+            return View();
+        }
+        [HttpGet]
+        public IActionResult ResetPassword(string email, string token)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Invalid password reset token.");
+            }
+
+            var model = new ResetPasswordViewModel { Email = email, Token = token };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("", "Invalid request.");
+                return View(model);
+            }
+
+            var result = await userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Your password has been reset successfully.";
+                return RedirectToAction("Login", "Auth");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(model);
+            }
+        }
+
+
+
     }
 }

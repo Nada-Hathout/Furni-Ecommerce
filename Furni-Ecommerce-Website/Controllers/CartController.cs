@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using BusinessLogic.Service;
+using DataAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -25,6 +26,7 @@ namespace Furni_Ecommerce_Website.Controllers
 
 
         [HttpPost]
+        [Authorize]
         public IActionResult AddItemToCart(int productId)
         {
             if(!User.Identity.IsAuthenticated)
@@ -38,6 +40,7 @@ namespace Furni_Ecommerce_Website.Controllers
             }
             string UserId = UserIdClaim.Value;
             cartService.AddItemToCart(UserId, productId);
+        
             return Json(new { success = true });
            
         }

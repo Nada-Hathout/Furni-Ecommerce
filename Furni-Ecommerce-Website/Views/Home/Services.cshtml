@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Services";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @* <h1>Services</h1> *@
@@ -12,9 +13,12 @@
 					<div class="row justify-content-between">
 						<div class="col-lg-5">
 							<div class="intro-excerpt">
-								<h1>Services</h1>
-								<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique.</p>
-								<p><a asp-controller="Shop" asp-action="Index" class="btn btn-secondary me-2">Shop Now</a><a  asp-controller="Home" asp-action="About" class="btn btn-white-outline">Explore</a></p>
+                    <h1 class="text-white">Stylish Furniture <span class="d-block h4 m-1 p-1">For Modern Living</span></h1>
+                    <p class="mb-4">Discover high-quality, stylish furniture designed to elevate your space. From cozy sofas to elegant tables — Furni makes your home feel like you.</p>
+                    <p>
+                        <a asp-controller="shop" asp-action="Index" class="btn btn-secondary me-2">Shop Now</a>
+                        <a asp-controller="Home" asp-action="About" class="btn btn-white-outline">Learn More</a>
+                    </p>
 							</div>
 						</div>
 						<div class="col-lg-7">
@@ -41,7 +45,7 @@
 								<img src="~/images/truck.svg" alt="Image" class="imf-fluid">
 							</div>
 							<h3>Fast &amp; Free Shipping</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+                    <p>Enjoy quick, reliable delivery on all your orders — no extra cost.</p>
 						</div>
 					</div>
 
@@ -51,7 +55,7 @@
 								<img src="~/images/bag.svg" alt="Image" class="imf-fluid">
 							</div>
 							<h3>Easy to Shop</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+                    <p>Simple online experience, intuitive search, and secure checkout.</p>
 						</div>
 					</div>
 
@@ -61,7 +65,7 @@
 								<img src="~/images/support.svg" alt="Image" class="imf-fluid">
 							</div>
 							<h3>24/7 Support</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+                    <p>Our customer support is here around the clock to assist you.</p>
 						</div>
 					</div>
 
@@ -71,7 +75,7 @@
 								<img src="~/images/return.svg" alt="Image" class="imf-fluid">
 							</div>
 							<h3>Hassle Free Returns</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
+                             <p>Changed your mind? Return your items easily within 30 days.</p>
 						</div>
 					</div>
 
@@ -85,35 +89,35 @@
 						</div>
 					</div>
 
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="~/images/bag.svg" alt="Image" class="imf-fluid">
-							</div>
-							<h3>Easy to Shop</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
-						</div>
-					</div>
+					@* <div class="col-6 col-md-6 col-lg-3 mb-4"> *@
+					@* 	<div class="feature"> *@
+					@* 		<div class="icon"> *@
+					@* 			<img src="~/images/bag.svg" alt="Image" class="imf-fluid"> *@
+					@* 		</div> *@
+					@* 		<h3>Easy to Shop</h3> *@
+					@* 		<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p> *@
+					@* 	</div> *@
+					@* </div> *@
 
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="~/images/support.svg" alt="Image" class="imf-fluid">
-							</div>
-							<h3>24/7 Support</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
-						</div>
-					</div>
+					@* <div class="col-6 col-md-6 col-lg-3 mb-4"> *@
+					@* 	<div class="feature"> *@
+					@* 		<div class="icon"> *@
+					@* 			<img src="~/images/support.svg" alt="Image" class="imf-fluid"> *@
+					@* 		</div> *@
+					@* 		<h3>24/7 Support</h3> *@
+					@* 		<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p> *@
+					@* 	</div> *@
+					@* </div> *@
 
-					<div class="col-6 col-md-6 col-lg-3 mb-4">
-						<div class="feature">
-							<div class="icon">
-								<img src="~/images/return.svg" alt="Image" class="imf-fluid">
-							</div>
-							<h3>Hassle Free Returns</h3>
-							<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p>
-						</div>
-					</div>
+					@* <div class="col-6 col-md-6 col-lg-3 mb-4"> *@
+					@* 	<div class="feature"> *@
+					@* 		<div class="icon"> *@
+					@* 			<img src="~/images/return.svg" alt="Image" class="imf-fluid"> *@
+					@* 		</div> *@
+					@* 		<h3>Hassle Free Returns</h3> *@
+					@* 		<p>Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate.</p> *@
+					@* 	</div> *@
+					@* </div> *@
 
 				</div>
 
@@ -129,8 +133,8 @@
 					<!-- Start Column 1 -->
 					<div class="col-md-12 col-lg-3 mb-5 mb-lg-0">
 						<h2 class="mb-4 section-title">Crafted with excellent material.</h2>
-						<p class="mb-4">Donec vitae odio quis nisl dapibus malesuada. Nullam ac aliquet velit. Aliquam vulputate velit imperdiet dolor tempor tristique. </p>
-						<p><a href="#" class="btn">Explore</a></p>
+                <p class="mb-4">Our pieces are built with care and attention to detail, offering comfort, quality, and timeless design for every room in your home.</p>
+                <p><a asp-controller="shop" asp-action="Index" class="btn">Browse Collection</a></p>
 					</div> 
 					<!-- End Column 1 -->
 

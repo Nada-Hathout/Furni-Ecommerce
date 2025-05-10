@@ -62,13 +62,13 @@
 <!-- Start Hero Section -->
 <div class="hero">
 
-	<input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()"
+	<input type="hidden" name="__RequestVerificationToken" value="@Html.AntiForgeryToken()"/>
 	<div class="container">
 		<div class="row justify-content-between">
 			<div class="col-lg-5">
 				<div class="intro-excerpt">
 					<h1>Shop</h1>
-				=	<div class="row">
+					<div class="row">
 						<form class="row g-2">
 							<div class="col-12 col-sm-6 col-md-6">
 								<input type="search" class="form-control" id="keyword" placeholder="Search Products..." />
@@ -298,14 +298,19 @@
 
 						} else if (response.redirectUrl)
 							{
-								window.location.href = response.redirectUrl;
+								window.location.href = "/Auth/Login";
 							}
 							else {
 							ShowErrorToast("Error!,Failed To Add To Cart");
 							}
 						},
-						error : function(err)
+					error : function(xhr)
 						{
+							if(xhr.status == 401 )
+							{
+								window.location.href = "/Auth/Login";
+
+							}
 							ShowErrorToast("Error!,Failed To Add To Cart");
 						}
 					});
@@ -372,7 +377,12 @@
 			url:'/Cart/GetCartItemsCount',
 				method:'Get',
 				success: function (response){
-					$("#cart-count").text(response.count)
+					if(response)
+					{
+						$("#cart-count").text(response.count);	
+
+					}
+					
 				}
 				});
 			}

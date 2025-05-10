@@ -38,11 +38,11 @@ namespace Furni_Ecommerce_Shared.UserViewModel
     {
         [Required(ErrorMessage = "Payment method is required.")]
         [MaxLength(50)]
-        public string PaymentMethod { get; set; }
+        public string PaymentMethod { get; set; } = "stripe";
 
         [Required(ErrorMessage = "Payment status is required.")]
         [MaxLength(20)]
-        public string PaymentStatus { get; set; }
+        public string? PaymentStatus { get; set; } = "paid";
 
         [MaxLength(100)]
         public string? TransactionId { get; set; }

@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.DataProtection;
 using System.IO;
 using BusinessLogic.External_Service;
 using BusinessLogic.Settings;
+using DataAccess;
+using Stripe;
+using ProductService = BusinessLogic.Service.ProductService;
+using ReviewService = BusinessLogic.Service.ReviewService;
 
 namespace Furni_Ecommerce_Website
 {
@@ -133,8 +137,7 @@ namespace Furni_Ecommerce_Website
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
-
-            // Important: UseSession must come before UseAuthentication and UseAuthorization
+            StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe:SecretKey").Get<string>();
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();

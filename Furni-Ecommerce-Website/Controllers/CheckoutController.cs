@@ -1,215 +1,212 @@
 ﻿using BusinessLogic.Service;
-using DataAccess.Models;
 using Furni_Ecommerce_Shared.UserViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using System.Linq;
+using Stripe.Checkout;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace YourNamespace.Controllers
+[Authorize]
+public class CheckoutController : Controller
 {
-    [Authorize]
-    public class CheckoutController : Controller
+    private readonly IAddressService _addressService;
+    private readonly IPaymentService _paymentService;
+    private readonly ICartItemService _cartItemService;
+    private readonly IOrderService _orderService;
+    private readonly IOrderItemService _orderItemService;
+    private readonly IPurchaseConfirmationService _purchaseConfirmationService;
+
+    public CheckoutController(
+        IAddressService addressService,
+        IPaymentService paymentService,
+        ICartItemService cartItemService,
+        IOrderService orderService,
+        IOrderItemService orderItemService,
+        IPurchaseConfirmationService purchaseConfirmationService)
     {
-        private readonly IAddressService _addressService;
-        private readonly IPaymentService _paymentService;
-        private readonly ICartItemService _cartItemService;
-        private readonly IOrderService _orderService;
-        private readonly IOrderItemService _orderItemService;
-        private readonly IPurchaseConfirmationService _purchaseConfirmationService;
+        _addressService = addressService;
+        _paymentService = paymentService;
+        _cartItemService = cartItemService;
+        _orderService = orderService;
+        _orderItemService = orderItemService;
+        _purchaseConfirmationService = purchaseConfirmationService;
+    }
 
-        public CheckoutController(
-            IAddressService addressService,
-            IPaymentService paymentService,
-            ICartItemService cartItemService,
-            IOrderService orderService,
-            IOrderItemService orderItemService,
-            IPurchaseConfirmationService purchaseConfirmationService)
-        {
-            _addressService = addressService;
-            _paymentService = paymentService;
-            _cartItemService = cartItemService;
-            _orderService = orderService;
-            _orderItemService = orderItemService;
-            _purchaseConfirmationService = purchaseConfirmationService;
-        }
+    [HttpGet]
+    public IActionResult Index()
+    {
+        ViewBag.Step = "Address";
+        return View(new CheckoutViewModel());
+    }
 
-        // Step 1: show address form
-        [HttpGet]
-        public IActionResult Index()
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult ValidateAddress(CheckoutViewModel model)
+    {
+        foreach (var key in ModelState.Keys.Where(k => k.StartsWith("PaymentDetails.")).ToList())
+            ModelState.Remove(key);
+
+        if (!ModelState.IsValid)
         {
             ViewBag.Step = "Address";
-            return View(new CheckoutViewModel());
+            return View("Index", model);
         }
 
-        // Step 2: validate address and move to payment step
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult ValidateAddress(CheckoutViewModel model)
+        TempData["ShippingAddress"] = JsonConvert.SerializeObject(model.ShippingAddress);
+        ViewBag.Step = "Payment";
+        return View("Index", model);
+    }
+
+    [HttpGet]
+    public IActionResult GoBackToAddress()
+    {
+        var addressJson = TempData["ShippingAddress"] as string;
+        var vm = new CheckoutViewModel();
+
+        if (!string.IsNullOrEmpty(addressJson))
+            vm.ShippingAddress = JsonConvert.DeserializeObject<AddressData>(addressJson);
+
+        ViewBag.Step = "Address";
+        return View("Index", vm);
+    }
+
+    // Stripe session creator
+    public async Task<IActionResult> PaymentStripe()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var cartItems = await _cartItemService.GetAllCartItemsAsc(userId);
+        var domain = "https://localhost:44332/";
+
+        var options = new SessionCreateOptions
         {
-            // remove any validation errors that came from PaymentDetails
-            foreach (var key in ModelState.Keys.Where(k => k.StartsWith("PaymentDetails.")).ToList())
-                ModelState.Remove(key);
+            SuccessUrl = domain + "Checkout/Confirmation?session_id={CHECKOUT_SESSION_ID}",
+            CancelUrl = domain + "CartItem/index",
+            LineItems = new List<SessionLineItemOptions>(),
+            Mode = "payment",
+        };
 
-            // now only ShippingAddress.* remains in ModelState
-            if (!ModelState.IsValid)
+        foreach (var item in cartItems)
+        {
+            options.LineItems.Add(new SessionLineItemOptions
             {
-                ViewBag.Step = "Address";
-                return View("Index", model);
-            }
+                PriceData = new SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = (long)(item.Product.Price * 100),
+                    Currency = "inr",
+                    ProductData = new SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = item.Product.Name
+                    }
+                },
+                Quantity = item.Quantity
+            });
+        }
 
-            TempData["ShippingAddress"] = JsonConvert.SerializeObject(model.ShippingAddress);
+        var service = new SessionService();
+        Session session = service.Create(options);
+        //TempData["CartData"] = JsonConvert.SerializeObject(cartItems);
+        return Redirect(session.Url);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult SubmitOrder(CheckoutViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
             ViewBag.Step = "Payment";
             return View("Index", model);
         }
 
-        [HttpPost]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult GoBackToAddress(CheckoutViewModel model)
+        // Store address in TempData
+        TempData["ShippingAddress"] = JsonConvert.SerializeObject(model.ShippingAddress);
+
+        // Redirect to Stripe
+        return RedirectToAction("PaymentStripe");
+    }
+
+    public async Task<IActionResult> Confirmation(string session_id)
+    {
+        try
         {
-            ModelState.Clear();
-            ViewBag.Step = "Address";
-            return View("Index", model);
-        }
-
-        // to this:
-        [HttpGet]
-        public IActionResult GoBackToAddress()
-        {
-            // pull the address back out of TempData
-            var addressJson = TempData["ShippingAddress"] as string;
-            var vm = new CheckoutViewModel();
-
-            if (!string.IsNullOrEmpty(addressJson))
-            {
-                vm.ShippingAddress = JsonConvert.DeserializeObject<AddressData>(addressJson)!;
-            }
-
-            ViewBag.Step = "Address";
-            return View("Index", vm);
-        }
-        // Step 3: submit order
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SubmitOrder(CheckoutViewModel model)
-        {
-            // Validate the payment details
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Step = "Payment"; // Stay in Payment form if not valid
-                return View("Index", model);
-            }
-
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (string.IsNullOrEmpty(userId))
-                return Unauthorized();
+            if (string.IsNullOrEmpty(userId)) return Unauthorized();
 
-            // Retrieve address from TempData
-            var addressJson = TempData["ShippingAddress"] as string;
-            model.ShippingAddress = JsonConvert.DeserializeObject<AddressData>(addressJson);
+            var service = new SessionService();
+            var session = service.Get(session_id);
 
-            // Save address and payment details
-            var address = await _addressService.SaveAddressData(model, userId);
-            var payment = await _paymentService.SavePaymentData(model, userId);
+            if (session.PaymentStatus != "paid")
+                return RedirectToAction("Index", "CartItem");
 
-            // Get cart items and calculate total
             var cartItems = await _cartItemService.GetAllCartItemsAsc(userId);
-            decimal totalAmount = cartItems.Sum(i => i.Quantity * i.Product.Price);
+            var addressJson = TempData["ShippingAddress"] as string;
+            var addressData = JsonConvert.DeserializeObject<AddressData>(addressJson);
+            var model = new CheckoutViewModel { ShippingAddress = addressData };
 
-            // Save the order and order items, then clear the cart
-            var order =await _orderService.SaveOrderASC(userId, payment.Id, address.Id, totalAmount);
+            var address = await _addressService.SaveAddressData(model, userId);
+
+            var payment = await _paymentService.SavePaymentData(new CheckoutViewModel
+            {
+                PaymentDetails = new PaymentData
+                {
+                    PaymentMethod = "stripe",
+                    PaymentStatus = "paid",
+                    TransactionId = session.Id
+                }
+            }, userId);
+
+            decimal totalAmount = cartItems.Sum(i => i.Quantity * i.Product.Price);
+            var order = await _orderService.SaveOrderASC(userId, payment.Id, address.Id, totalAmount);
             await _orderItemService.SaveOrderASC(cartItems, order.Id);
             await _cartItemService.RemoveRangeCartItemAsc(cartItems);
-
             DeleteCartItems();
-            return RedirectToAction("Confirmation");
-        }
 
-        public async void DeleteCartItems()
+            return RedirectToAction("OrderConfirmation");
+        }
+        catch (Exception ex)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var cartItems = await _cartItemService.GetAllCartItemsAsc(userId);
-
-
-
+            return StatusCode(500, $"Error: {ex.Message}");
         }
+    }
 
-        //// Step 5: confirmation page
-        public async Task<IActionResult> Confirmation()
+    [HttpGet]
+    public async Task<IActionResult> OrderConfirmation()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var order = await _orderService.GetOrderByUserId(userId);
+        var shippingAddress = await _addressService.GetAddressById(order.AddressId);
+        var payment = await _paymentService.GetPaymentById((int)order.PaymentId);
+        var cartItems = await _orderItemService.GetOrderItemsByOrderId(order.Id);
+        var totalAmount = cartItems.Sum(ci => ci.Quantity * ci.Product.Price);
+        var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+        var vm = new OrderConfirmationViewModel
         {
-            try
+            OrderId = order.Id,
+            OrderDate = order.OrderDate,
+            ShippingAddress = shippingAddress,
+            PaymentMethod = payment.PaymentMethod,
+            PaymentStatus = payment.PaymentStatus,
+            TransactionId = payment.TransactionId,
+            Items = cartItems.Select(ci => new OrderItemViewModel
             {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                if (string.IsNullOrEmpty(userId)) return Unauthorized();
+                ProductId = ci.ProductId,
+                ProductName = ci.Product.Name,
+                Quantity = ci.Quantity,
+                UnitPrice = ci.Product.Price
+            }).ToList(),
+            TotalAmount = totalAmount,
+            Email = userEmail
+        };
 
-                // Get the order based on the userId
-                var order = await _orderService.GetOrderByUserId(userId);
-                if (order == null) return NotFound("Order not found");
+        _purchaseConfirmationService.PurchaseConfirmationEmail(vm);
+        return View("OrderConfirmation", vm);
+    }
 
-                // Log order details for debugging purposes
-
-                // Retrieve shipping address
-                var shippingAddress = await _addressService.GetAddressById(order.AddressId);
-                if (shippingAddress == null)
-                    return BadRequest("Shipping address not found");
-
-                // Retrieve payment details
-                var payment = await _paymentService.GetPaymentById((int)order.PaymentId);
-                if (payment == null)
-                    return BadRequest("Payment details not found");
-
-                // Retrieve the items associated with the order
-                var cartItems = await _orderItemService.GetOrderItemsByOrderId(order.Id);
-                if (cartItems == null || !cartItems.Any())
-                    return BadRequest("No items found in order");
-
-                // Calculate total amount
-                decimal totalAmount = cartItems.Sum(ci => ci.Quantity * ci.Product.Price);
-
-                // Get the user's email address
-                var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-                if (string.IsNullOrEmpty(userEmail))
-                {
-                    return Unauthorized(); // Ensure the user has an email
-                }
-
-                // Prepare the OrderConfirmationViewModel
-                var vm = new OrderConfirmationViewModel
-                {
-                    OrderId = order.Id,
-                    OrderDate = order.OrderDate,
-                    ShippingAddress = shippingAddress,
-                    PaymentMethod = payment.PaymentMethod,
-                    PaymentStatus = payment.PaymentStatus,
-                    TransactionId = payment.TransactionId,
-                    Items = cartItems.Select(ci => new OrderItemViewModel
-                    {
-                        ProductId = ci.ProductId,
-                        ProductName = ci.Product.Name,
-                        Quantity = ci.Quantity,
-                        UnitPrice = ci.Product.Price
-                    }).ToList(),
-                    TotalAmount = totalAmount,
-                    Email = userEmail // Assign the user's email
-                };
-
-                // Send confirmation email (if required)
-                _purchaseConfirmationService.PurchaseConfirmationEmail(vm);
-                // Return the view with the model
-                return View("OrderConfirmation", vm);
-            }
-            catch (Exception ex)
-            {
-                // Log the error details for better debugging
-                return StatusCode(500,
-       $"An error occurred while processing your request. Error: {ex.Message} {(ex.InnerException != null ? "Inner: " + ex.InnerException.Message : "")}");
-
-            }
-        }
-
-
+    public async Task DeleteCartItems()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var cartItems = await _cartItemService.GetAllCartItemsAsc(userId);
+        await _cartItemService.RemoveRangeCartItemAsc(cartItems);
     }
 }

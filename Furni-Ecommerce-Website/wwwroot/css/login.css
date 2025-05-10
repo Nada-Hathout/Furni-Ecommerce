@@ -4,6 +4,7 @@
     height: 100vh;
     display: flex;
     justify-content: center;
+
     align-items: center;
     background-image: url("https://img.freepik.com/free-photo/retro-couch-living-room_23-2150711898.jpg?t=st=1744748696~exp=1744752296~hmac=421696c2c445be632b774a456934b6dd8a3aa11b83d251bde4385d84fc45fdca&w=996");
     background-size: cover;
@@ -16,13 +17,14 @@
 form {
     background-color: rgba(255, 255, 255, 0.1);
     padding: 4rem;
-    border-radius: 20px;
+/*    border-radius: 20px;*/
     border: .1rem solid rgb(41, 113, 67);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 1);
     backdrop-filter: blur(22px);
     width: 400px;
     padding: 20px 4rem;
     animation: fadeDown 1s ease-in-out;
+    
 }
   
  

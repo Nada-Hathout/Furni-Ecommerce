@@ -64,32 +64,32 @@
         <a asp-action="Register" asp-controller="Auth" style="display: inline; color: rgb(0, 128, 75);">Register Now</a>
         <hr />
 
-    
-        @if (Model.schemes?.Count() == 0|| Model.schemes==null)
+
+    </form>
+        @if (Model.schemes?.Count() == 0 || Model.schemes == null)
         {
-            <div>No External Login Providers have configured</div>
+            <div class="alert alert-warning">No External Login Providers are configured.</div>
         }
         else
         {
-            <form asp-action="ExternalLogin">
+            <form asp-action="ExternalLogin" asp-controller="Auth" method="post">
+                @Html.AntiForgeryToken() <!-- Required for security -->
                 <div>
                     @foreach (var provider in Model.schemes)
                     {
-                        <button type="submit" style=" color:antiquewhite;font-size: 16px;"
-                                class="btn btn-login"
+                        <button type="submit"
+                                class="btn btn-login d-flex align-items-center justify-content-center"
                                 name="provider"
                                 value="@provider.Name"
-                                title="Login using your @provider.Name account">
-                               <img src="~/images/google.webp" style="width:20px;height:20px;" class="me-1"/>
-                                Continue With your
-                                @provider.DisplayName
-
+                                title="Login using your @provider.Name account"
+                                style="background-color: #4285F4; color: white; padding: 10px 15px; border-radius: 5px; border: none; font-size: 16px; cursor: pointer;">
+                            <img src="~/images/google.webp" style="width: 20px; height: 20px;" class="me-2" />
+                            Continue with @provider.DisplayName
                         </button>
                     }
                 </div>
             </form>
         }
-    </form>
    
 </section>
 

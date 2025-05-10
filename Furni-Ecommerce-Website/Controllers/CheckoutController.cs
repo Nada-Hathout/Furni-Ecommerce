@@ -92,7 +92,7 @@ public class CheckoutController : Controller
                 PriceData = new SessionLineItemPriceDataOptions
                 {
                     UnitAmount = (long)(item.Product.Price * 100),
-                    Currency = "inr",
+                    Currency = "egp",
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
                         Name = item.Product.Name
